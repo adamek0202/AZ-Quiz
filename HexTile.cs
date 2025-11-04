@@ -41,7 +41,7 @@ namespace AZ_Kvíz
             {
                 var center = GetCenter();
                 var size = g.MeasureString(Label, font);
-                g.DrawString(Label, font, Brushes.Black,
+                g.DrawString(Label, font, FillColor == Color.Black ? Brushes.White : Brushes.Black,
                     center.X - size.Width / 2,
                     center.Y - size.Height / 2);
             }
