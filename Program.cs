@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
@@ -15,6 +12,7 @@ namespace AZ_Kviz
         static void Main()
         {
             Application.SetCompatibleTextRenderingDefault(false);
+            DatabaseFunctions.InitDatabase();
             Application.Run(new MainForm());
         }
     }
