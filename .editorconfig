@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0063: Použít jednoduchý příkaz using
+dotnet_diagnostic.IDE0063.severity = none
