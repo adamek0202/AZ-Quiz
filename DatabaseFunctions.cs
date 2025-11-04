@@ -128,7 +128,7 @@ namespace AZ_Kviz
         {
             if (!TableNotEmpty("QuestionSets"))
             {
-                throw new ;
+                throw new EmptyDatasetException("Tabulka neobsahuje žádná data");
             }
             string querry = "SELECT * FROM QuestionSets;";
             List<QuestionsSet> sets = new List<QuestionsSet>();
@@ -138,10 +138,11 @@ namespace AZ_Kviz
                 {
                     while (reader.Read())
                     {
-                        sets.Add(new QuestionsSet((int)reader["id"], reader["name"].ToString(), reader["scope"].ToString(), reader["author"].ToString(), reader["difficulty"].ToString())
+                        sets.Add(new QuestionsSet((int)reader["id"], reader["name"].ToString(), reader["scope"].ToString(), reader["author"].ToString(), reader["difficulty"].ToString()));
                     }
                 }
             }
+            return sets;
         }
     }
 }
