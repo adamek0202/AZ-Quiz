@@ -67,7 +67,7 @@ namespace AZ_Kvíz
         {
             for (int i = 0; i < tiles.Count; i++)
             {
-                if (tiles[i].HitTest(e.Location))
+                if (tiles[i].HitTest(e.Location) && tiles[i].State != TileStates.Blocked)
                 {
                     TileClicked?.Invoke(i, tiles[i]);
                     break;
@@ -80,6 +80,16 @@ namespace AZ_Kvíz
             if (index >= 0 && index < tiles.Count)
             {
                 tiles[index].FillColor = color;
+                Invalidate();
+            }
+        }
+
+        public void BlockTile(int index)
+        {
+            if (index >= 0 && index < tiles.Count)
+            {
+                tiles[index].FillColor = Color.Black;
+                tiles[index].State = TileStates.Blocked;
                 Invalidate();
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,9 +9,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("AZ Kvíz")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Youtube")]
-[assembly: AssemblyProduct("AZ Kvíz")]
-[assembly: AssemblyCopyright("Copyright © Youtube 2025")]
+[assembly: AssemblyCompany("Adam Benda")]
+[assembly: AssemblyProduct("AZ Kvíz pro Windows")]
+[assembly: AssemblyCopyright("Copyright ©Adam Benda 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,3 +32,4 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: NeutralResourcesLanguage("cs-CZ")]

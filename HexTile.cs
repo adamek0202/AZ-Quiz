@@ -8,6 +8,7 @@ namespace AZ_Kvíz
         public PointF[] Points;
         public Color FillColor;
         public string Label = "";
+        public TileStates State;
 
         public bool HitTest(PointF p) {
             using (var path = new GraphicsPath())
@@ -46,5 +47,14 @@ namespace AZ_Kvíz
                     center.Y - size.Height / 2);
             }
         }
+    }
+
+    internal enum TileStates
+    {
+        Clear,
+        FirtstPlayer_Used,
+        SecondPlayer_Used,
+        Incorrect,
+        Blocked
     }
 }
