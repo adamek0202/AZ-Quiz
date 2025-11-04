@@ -56,6 +56,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseFunctions.cs" />
+    <Compile Include="EmptyDatasetException.cs" />
+    <Compile Include="Forms\QuestionsSetSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\QuestionsSetSelectForm.Designer.cs">
+      <DependentUpon>QuestionsSetSelectForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GameBoard.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -63,16 +70,20 @@
       <DependentUpon>GameBoard.cs</DependentUpon>
     </Compile>
     <Compile Include="HexTile.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="MainForm.resx">
+    <Compile Include="QuestionsSet.cs" />
+    <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\QuestionsSetSelectForm.resx">
+      <DependentUpon>QuestionsSetSelectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -84,6 +95,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include=".editorconfig" />
     <None Include="data.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
