@@ -8,7 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
-namespace AZ_Kvíz
+namespace AZ_Kviz
 {
     public partial class GameBoard : Control
     {
@@ -16,6 +16,12 @@ namespace AZ_Kvíz
         private readonly Font labelFont = new Font("Segoe UI", 10, FontStyle.Bold);
 
         internal event Action<int, HexTile>? TileClicked;
+
+        public GameBoard()
+        {
+            InitializeComponent();
+            DoubleBuffered = true;
+        }
 
         public GameBoard(string svgFile)
         {

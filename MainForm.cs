@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AZ_Kvíz
+namespace AZ_Kviz
 {
     public partial class MainForm : Form
     {

@@ -1,4 +1,4 @@
-﻿namespace AZ_Kvíz
+﻿namespace AZ_Kviz
 {
     partial class GameBoard
     {

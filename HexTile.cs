@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace AZ_Kvíz
+namespace AZ_Kviz
 {
     internal class HexTile
     {
