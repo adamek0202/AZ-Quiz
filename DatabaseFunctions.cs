@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Windows.Forms;
@@ -65,9 +66,11 @@ namespace AZ_Kviz
 
         public static bool CheckDatabaseIntegrity()
         {
-            using var cmd = new SQLiteCommand("PRAGMA integrity_check;", DatabaseConnection.Connection);
-            var result = cmd.ExecuteScalar()?.ToString();
-            return result == "ok";
+            using (var cmd = new SQLiteCommand("PRAGMA integrity_check;", DatabaseConnection.Connection))
+            {
+                var result = cmd.ExecuteScalar()?.ToString();
+                return result == "ok";
+            }
         }
 
         public static void CreateDatabase()
@@ -92,12 +95,53 @@ namespace AZ_Kviz
                 CREATE TABLE ""QuestionSets"" (
 	                ""id""	INTEGER NOT NULL UNIQUE,
 	                ""name""	TEXT NOT NULL DEFAULT """",
+                    ""scope""	TEXT NOT NULL DEFAULT """",
+                    ""author""	TEXT NOT NULL DEFAULT """",
 	                ""difficulty""	INTEGER NOT NULL DEFAULT 0,
 	                PRIMARY KEY(""id"" AUTOINCREMENT)
-            )";
-            using var command = new SQLiteCommand(cmd, DatabaseConnection.Connection);
-            command.ExecuteNonQuery();
+            ); CREATE INDEX ""QuestionSetID"" ON ""Questions"" (""setid"" ASC);";
+            using (var command = new SQLiteCommand(cmd, DatabaseConnection.Connection))
+            {
+                command.ExecuteNonQuery();
+            }
             MessageBox.Show("Databáze byla úspěšně vytvořena", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public static bool TableNotEmpty(string table)
+        {
+            string querry = $"SELECT COUNT(*) from {table}";
+            using(var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
+            {
+                long count = (long)cmd.ExecuteScalar();
+                if(count == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+
+        public static List<QuestionsSet> GetQuestionSets()
+        {
+            if (!TableNotEmpty("QuestionSets"))
+            {
+                throw new ;
+            }
+            string querry = "SELECT * FROM QuestionSets;";
+            List<QuestionsSet> sets = new List<QuestionsSet>();
+            using(var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
+            {
+                using(var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        sets.Add(new QuestionsSet((int)reader["id"], reader["name"].ToString(), reader["scope"].ToString(), reader["author"].ToString(), reader["difficulty"].ToString())
+                    }
+                }
+            }
         }
     }
 }

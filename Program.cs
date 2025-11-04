@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AZ_Kviz.Forms;
+using System;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
