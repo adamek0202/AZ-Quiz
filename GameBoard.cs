@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -21,13 +21,7 @@ namespace AZ_Kviz
         {
             InitializeComponent();
             DoubleBuffered = true;
-        }
-
-        public GameBoard(string svgFile)
-        {
-            InitializeComponent();
-            DoubleBuffered = true;
-            LoadSvg(svgFile);
+            LoadSvg();
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -39,9 +33,10 @@ namespace AZ_Kviz
             }
         }
 
-        private void LoadSvg(string file)
+        private void LoadSvg()
         {
-            XDocument doc = XDocument.Load(file);
+            var stream = new MemoryStream(Properties.Resources.map);
+            XDocument doc = XDocument.Load(stream);
             XNamespace ns = "http://www.w3.org/2000/svg";
 
             int index = 1;
