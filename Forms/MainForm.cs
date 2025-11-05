@@ -15,6 +15,18 @@ namespace AZ_Kviz.Forms
         public MainForm()
         {
             InitializeComponent();
+            gameBoard1.TileClicked += (index, tile) =>
+            {
+                int n = index + 1;
+                gameBoard1.SetTileColor(index, Color.Sienna);
+                gameBoard1.Invalidate();
+                MessageBox.Show($"Dlaždice {n} byla kliknuta", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            gameBoard1.Reset();
         }
     }
 }
