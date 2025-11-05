@@ -6,7 +6,7 @@ namespace AZ_Kviz
     internal class HexTile
     {
         public PointF[] Points;
-        public Color FillColor;
+        public Color FillColor = Color.White;
         public string Label = "";
         public TileStates State;
 
