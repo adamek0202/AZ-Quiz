@@ -29,15 +29,14 @@
         private void InitializeComponent()
         {
             this.resetButton = new System.Windows.Forms.Button();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.gameBoard1 = new AZ_Kviz.GameBoard();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.playerOneScoreBox = new System.Windows.Forms.TextBox();
+            this.playerTwoScoreBox = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.exitButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // resetButton
@@ -50,11 +49,6 @@
             this.resetButton.Text = "Reset";
             this.resetButton.UseVisualStyleBackColor = true;
             this.resetButton.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // colorDialog1
-            // 
-            this.colorDialog1.AnyColor = true;
-            this.colorDialog1.FullOpen = true;
             // 
             // gameBoard1
             // 
@@ -84,25 +78,25 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Hráč 2:";
             // 
-            // textBox1
+            // playerOneScoreBox
             // 
-            this.textBox1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.textBox1.Location = new System.Drawing.Point(88, 6);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(42, 29);
-            this.textBox1.TabIndex = 5;
-            this.textBox1.Text = "0";
+            this.playerOneScoreBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerOneScoreBox.Location = new System.Drawing.Point(88, 6);
+            this.playerOneScoreBox.Name = "playerOneScoreBox";
+            this.playerOneScoreBox.ReadOnly = true;
+            this.playerOneScoreBox.Size = new System.Drawing.Size(42, 29);
+            this.playerOneScoreBox.TabIndex = 5;
+            this.playerOneScoreBox.Text = "0";
             // 
-            // textBox2
+            // playerTwoScoreBox
             // 
-            this.textBox2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.textBox2.Location = new System.Drawing.Point(351, 6);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(42, 29);
-            this.textBox2.TabIndex = 5;
-            this.textBox2.Text = "0";
+            this.playerTwoScoreBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerTwoScoreBox.Location = new System.Drawing.Point(351, 6);
+            this.playerTwoScoreBox.Name = "playerTwoScoreBox";
+            this.playerTwoScoreBox.ReadOnly = true;
+            this.playerTwoScoreBox.Size = new System.Drawing.Size(42, 29);
+            this.playerTwoScoreBox.TabIndex = 5;
+            this.playerTwoScoreBox.Text = "0";
             // 
             // button2
             // 
@@ -124,30 +118,31 @@
             this.button3.Text = "Reset";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // exitButton
             // 
-            this.button4.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button4.Location = new System.Drawing.Point(310, 395);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 40);
-            this.button4.TabIndex = 1;
-            this.button4.Text = "Konec";
-            this.button4.UseVisualStyleBackColor = true;
+            this.exitButton.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.exitButton.Location = new System.Drawing.Point(310, 395);
+            this.exitButton.Name = "exitButton";
+            this.exitButton.Size = new System.Drawing.Size(75, 40);
+            this.exitButton.TabIndex = 1;
+            this.exitButton.Text = "Konec";
+            this.exitButton.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(405, 443);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.playerTwoScoreBox);
+            this.Controls.Add(this.playerOneScoreBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.exitButton);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.resetButton);
             this.Controls.Add(this.gameBoard1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "AZ Kvíz";
@@ -160,14 +155,13 @@
 
         private GameBoard gameBoard1;
         private System.Windows.Forms.Button resetButton;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox playerOneScoreBox;
+        private System.Windows.Forms.TextBox playerTwoScoreBox;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button exitButton;
     }
 }
 
