@@ -18,9 +18,12 @@ namespace AZ_Kviz.Forms
             gameBoard1.TileClicked += (index, tile) =>
             {
                 int n = index + 1;
-                gameBoard1.SetTileColor(index, Color.Sienna);
-                gameBoard1.Invalidate();
-                MessageBox.Show($"Dlaždice {n} byla kliknuta", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (colorDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    gameBoard1.SetTileColor(index, colorDialog1.Color);
+                    gameBoard1.Invalidate();
+                }
+                //MessageBox.Show($"Dlaždice {n} byla kliknuta", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
         }
 

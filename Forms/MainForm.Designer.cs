@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.gameBoard1 = new AZ_Kviz.GameBoard();
             this.SuspendLayout();
             // 
@@ -41,6 +42,11 @@
             this.button1.Text = "Reset";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // colorDialog1
+            // 
+            this.colorDialog1.AnyColor = true;
+            this.colorDialog1.FullOpen = true;
             // 
             // gameBoard1
             // 
@@ -68,6 +74,7 @@
 
         private GameBoard gameBoard1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ColorDialog colorDialog1;
     }
 }
 
