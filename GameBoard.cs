@@ -22,6 +22,7 @@ namespace AZ_Kviz
             InitializeComponent();
             DoubleBuffered = true;
             LoadSvg();
+            MouseClick += OnMouseClick;
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -33,6 +34,15 @@ namespace AZ_Kviz
             }
         }
 
+        public void Reset()
+        {
+            foreach(var item in tiles)
+            {
+                item.FillColor = Color.White;
+            }
+            Invalidate();
+        }
+
         private void LoadSvg()
         {
             var stream = new MemoryStream(Properties.Resources.map);
@@ -40,6 +50,7 @@ namespace AZ_Kviz
             XNamespace ns = "http://www.w3.org/2000/svg";
 
             int index = 1;
+
             foreach (var polygon in doc.Descendants(ns + "polygon"))
             {
                 string pointsAttr = polygon.Attribute("points")?.Value;
