@@ -205,6 +205,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(571, 237);
+            this.ControlBox = false;
             this.Controls.Add(this.label4);
             this.Controls.Add(this.timeTextBox);
             this.Controls.Add(this.questionTypeTextBox);
