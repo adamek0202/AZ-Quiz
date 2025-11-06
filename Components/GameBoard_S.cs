@@ -23,6 +23,13 @@ namespace AZ_Kviz
             DoubleBuffered = true;
             LoadSvg();
             MouseClick += OnMouseClick;
+            TileManager.TileUpdated += TileManager_TileUpdated;
+        }
+
+        private void TileManager_TileUpdated(int id, TileManager.TileStates state)
+        {
+            SetTileColor(id, state.TileColor());
+            tiles[id].State = state;
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -92,25 +99,6 @@ namespace AZ_Kviz
             if (index >= 0 && index < tiles.Count)
             {
                 tiles[index].FillColor = color;
-                Invalidate();
-            }
-        }
-
-        public void BlockTile(int index)
-        {
-            if (index >= 0 && index < tiles.Count)
-            {
-                tiles[index].FillColor = Color.Black;
-                tiles[index].State = TileManager.TileStates.Blocked;
-                Invalidate();
-            }
-        }
-
-        public void SetTileLabel(int index, string text)
-        {
-            if (index >= 0 && index < tiles.Count)
-            {
-                tiles[index].Label = text;
                 Invalidate();
             }
         }

@@ -75,6 +75,7 @@
             this.secondIncorrectButton.TabIndex = 2;
             this.secondIncorrectButton.Text = "Špatně - 2";
             this.secondIncorrectButton.UseVisualStyleBackColor = false;
+            this.secondIncorrectButton.Click += new System.EventHandler(this.SecondIncorrectButton_Click);
             // 
             // secondCorrectButton
             // 
@@ -85,6 +86,7 @@
             this.secondCorrectButton.TabIndex = 2;
             this.secondCorrectButton.Text = "Správně - 2";
             this.secondCorrectButton.UseVisualStyleBackColor = false;
+            this.secondCorrectButton.Click += new System.EventHandler(this.SecondCorrectButton_Click);
             // 
             // incorrectButton
             // 
@@ -108,6 +110,7 @@
             this.correctButton.TabIndex = 2;
             this.correctButton.Text = "Správně";
             this.correctButton.UseVisualStyleBackColor = false;
+            this.correctButton.Click += new System.EventHandler(this.CorrectButton_Click);
             // 
             // label3
             // 
@@ -211,7 +214,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(566, 232);
+            this.ClientSize = new System.Drawing.Size(564, 232);
             this.ControlBox = false;
             this.Controls.Add(this.label4);
             this.Controls.Add(this.timeTextBox);
@@ -251,11 +254,8 @@
         private System.Windows.Forms.Button incorrectButton;
         private System.Windows.Forms.Button correctButton;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox6;
         private ReadOnlyTextBox timeTextBox;
         private ReadOnlyTextBox questionTypeTextBox;
         private ReadOnlyTextBox playerTextBox;

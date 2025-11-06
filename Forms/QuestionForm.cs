@@ -8,10 +8,13 @@ namespace AZ_Kviz.Forms
     {
         private int ID;
         private bool Replacement;
+        private bool TimerStarted = false;
+
+        internal Answers Answer;
+
         public QuestionForm(int id, bool replacement = false)
         {
             InitializeComponent();
-            CreateHandle();
             WindowUtils.ReallyCenterToScreen(this);
             ID = id;
             Countdown.TimerTicked += Countdown_TimerTicked;
@@ -39,26 +42,56 @@ namespace AZ_Kviz.Forms
 
         private void LoadData()
         {
-            var question = DatabaseFunctions.GetQuestion((uint)new Random(ID).Next(1, 6));
+            var question = DatabaseFunctions.GetQuestion((uint)new Random().Next(1, 6), Replacement);
             questionTextBox.Text = question.Text;
             answerTextBox.Text = question.Answer;
-            playerTextBox.Text = Player.currentPlayer.GetText();
+            playerTextBox.Text = Player.CurrentPlayer.GetText();
             questionTypeTextBox.Text = !Replacement ? "Normální" : "Náhradní";
         }
 
-        private void IncorrectButton_Click(object sender, System.EventArgs e)
+        private void Exit(Answers answer)
         {
-            Close();
+            if ( TimerStarted && !Countdown.TimerRunning)
+            {
+                DialogResult = DialogResult.OK;
+                Answer = answer;
+                Close();
+            }
         }
 
         private void StartButton_Click(object sender, System.EventArgs e)
         {
-            Countdown.StartTimer();
+            if (!TimerStarted)
+            {
+                Countdown.StartTimer();
+                TimerStarted = true; 
+            }
         }
 
         private void QuestionForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Countdown.StopTimer();
+            Countdown.TimerTicked -= Countdown_TimerTicked;
+            Countdown.Finished -= Countdown_Finished;
+        }
+        private void IncorrectButton_Click(object sender, System.EventArgs e)
+        {
+            Exit(Answers.Incorrect);
+        }
+
+        private void CorrectButton_Click(object sender, EventArgs e)
+        {
+            Exit(Answers.Correct);
+        }
+
+        private void SecondCorrectButton_Click(object sender, EventArgs e)
+        {
+            Exit(Answers.SecondCorrect);
+        }
+
+        private void SecondIncorrectButton_Click(object sender, EventArgs e)
+        {
+            Exit(Answers.SecondIncorrect);
         }
     }
 }

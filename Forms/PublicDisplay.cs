@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
@@ -8,18 +9,39 @@ namespace AZ_Kviz
         public PublicDisplay()
         {
             InitializeComponent();
-            EventManager.UpdateField += PublicDisplay_UpdateField;
+            LocalEvents.UpdateField += PublicDisplay_UpdateField;
             Countdown.Start += Countdown_Start;
             Countdown.TimerTicked += Countdown_TimerTicked;
             Countdown.Finished += Countdown_Finished;
+            Player.PlayerChanged += Player_PlayerChanged;
+            Player.StatsChanged += Player_StatsChanged;
+        }
 
+        private void Player_StatsChanged()
+        {
+            playerOneScoreLabel.Text = Player.Players.PlayerOne.Stats().Correct.ToString();
+            playerTwoScoreLabel.Text = Player.Players.PlayerTwo.Stats().Correct.ToString();
+        }
+
+        private void Player_PlayerChanged()
+        {
+            if(Player.CurrentPlayer == Player.Players.PlayerOne)
+            {
+                playerOneLabel.Font = new Font(playerOneLabel.Font, FontStyle.Underline);
+                playerTwoLabel.Font = new Font(playerTwoLabel.Font, FontStyle.Regular);
+            }
+            else
+            {
+                playerOneLabel.Font = new Font(playerOneLabel.Font, FontStyle.Regular);
+                playerTwoLabel.Font = new Font(playerTwoLabel.Font, FontStyle.Underline);
+            }
         }
 
         private void Countdown_Finished()
         {
             Invoke(new Action(() =>
             {
-                circularProgressBar.Visible = false;
+                timeIndicator.Visible = false;
             }));
         }
 
@@ -32,15 +54,16 @@ namespace AZ_Kviz
         {
             Invoke(new Action(() =>
             {
-                circularProgressBar.Visible = true;
-                circularProgressBar.AnimationSpeed = 0;
-                circularProgressBar.Value = 15;
-                circularProgressBar.AnimationSpeed = 1000;
+                timeIndicator.Visible = true;
+                timeIndicator.AnimationSpeed = 0;
+                timeIndicator.Value = 15;
+                timeIndicator.AnimationSpeed = 1000;
             }));
         }
 
         private void PublicDisplay_UpdateField(int ind, TileManager.TileStates state)
         {
+            gameBoard.SetTileColor(ind, state.TileColor());
         }
 
         protected override void OnShown(EventArgs e)
@@ -60,8 +83,8 @@ namespace AZ_Kviz
 
         private void UpdateCountdown(int seconds)
         {
-            circularProgressBar.Text = seconds.ToString();
-            circularProgressBar.Value = seconds;
+            timeIndicator.Text = seconds.ToString();
+            timeIndicator.Value = seconds;
         }
     }
 }

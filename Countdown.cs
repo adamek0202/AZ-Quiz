@@ -6,10 +6,16 @@ namespace AZ_Kviz
     internal static class Countdown
     {
         private static System.Timers.Timer TimerDown;
-        public static int Remaining = 15;
+        public static int Remaining = 5;
         public static event Action<int>? TimerTicked;
         public static event Action? Start;
         public static event Action? Finished;
+        public static bool TimerRunning {
+            get
+            {
+                return TimerDown.Enabled;
+            }
+        }
 
         public static void InitTimer()
         {
@@ -30,6 +36,7 @@ namespace AZ_Kviz
             else
             {
                 Finished();
+                StopTimer();
             }
         }
 

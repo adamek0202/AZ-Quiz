@@ -1,5 +1,6 @@
 ﻿using AZ_Kviz.Forms;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
@@ -17,5 +18,10 @@ namespace AZ_Kviz
             DatabaseFunctions.InitDatabase();
             Application.Run(new MainForm());
         }
+    }
+
+    internal static class LocalEvents
+    {
+        internal static event Action<int, TileManager.TileStates>? UpdateField;
     }
 }

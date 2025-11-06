@@ -66,10 +66,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Answers.cs" />
     <Compile Include="Countdown.cs" />
     <Compile Include="DatabaseFunctions.cs" />
     <Compile Include="EmptyDatasetException.cs" />
-    <Compile Include="EventManager.cs" />
     <Compile Include="Forms\QuestionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,7 +110,6 @@
       <DependentUpon>PublicDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="Question.cs" />
-    <Compile Include="QuestionsSet.cs" />
     <Compile Include="Components\ReadOnlyTextBox.cs">
       <SubType>Component</SubType>
     </Compile>

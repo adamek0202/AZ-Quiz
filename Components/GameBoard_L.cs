@@ -15,14 +15,18 @@ namespace AZ_Kviz
         private readonly List<HexTile> tiles = new List<HexTile>();
         private readonly Font labelFont = new Font("Arial", 20, FontStyle.Bold);
 
-        internal event Action<int, HexTile>? TileClicked;
-
         public GameBoard_L()
         {
             InitializeComponent();
             DoubleBuffered = true;
             LoadSvg();
-            MouseClick += OnMouseClick;
+            TileManager.TileUpdated += TileManager_TileUpdated;
+        }
+
+        private void TileManager_TileUpdated(int id, TileManager.TileStates state)
+        {
+            SetTileColor(id, state.TileColor());
+            tiles[id].State = state;
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -75,42 +79,11 @@ namespace AZ_Kviz
             }
         }
 
-        private void OnMouseClick(object sender, MouseEventArgs e)
-        {
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                if (tiles[i].HitTest(e.Location) && tiles[i].State != TileManager.TileStates.Blocked)
-                {
-                    TileClicked?.Invoke(i, tiles[i]);
-                    break;
-                }
-            }
-        }
-
         public void SetTileColor(int index, Color color)
         {
             if (index >= 0 && index < tiles.Count)
             {
                 tiles[index].FillColor = color;
-                Invalidate();
-            }
-        }
-
-        public void BlockTile(int index)
-        {
-            if (index >= 0 && index < tiles.Count)
-            {
-                tiles[index].FillColor = Color.Black;
-                tiles[index].State = TileManager.TileStates.Blocked;
-                Invalidate();
-            }
-        }
-
-        public void SetTileLabel(int index, string text)
-        {
-            if (index >= 0 && index < tiles.Count)
-            {
-                tiles[index].Label = text;
                 Invalidate();
             }
         }
