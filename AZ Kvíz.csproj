@@ -89,11 +89,18 @@
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PublicDisplay.Designer.cs">
+      <DependentUpon>PublicDisplay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Question.cs" />
     <Compile Include="QuestionsSet.cs" />
     <Compile Include="ReadOnlyTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="WindowUtils.cs" />
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -113,6 +120,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="PublicDisplay.resx">
+      <DependentUpon>PublicDisplay.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include=".editorconfig" />
     <None Include="app.manifest" />
     <None Include="data.db">

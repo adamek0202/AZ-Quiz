@@ -7,7 +7,8 @@ namespace AZ_Kviz.Forms
         private int ID;
         public QuestionForm(int id)
         {
-            InitializeComponent();;
+            InitializeComponent();
+            WindowUtils.ReallyCenterToScreen(this);
             ID = id;
             Text = $"Otázka číslo {id}";
         }
