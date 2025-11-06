@@ -41,13 +41,14 @@
             // 
             // resetButton
             // 
+            this.resetButton.BackColor = System.Drawing.Color.Orange;
             this.resetButton.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.resetButton.Location = new System.Drawing.Point(19, 395);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(75, 40);
             this.resetButton.TabIndex = 1;
             this.resetButton.Text = "Reset";
-            this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.UseVisualStyleBackColor = false;
             this.resetButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // gameBoard1
@@ -120,13 +121,15 @@
             // 
             // exitButton
             // 
+            this.exitButton.BackColor = System.Drawing.Color.Red;
             this.exitButton.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.exitButton.ForeColor = System.Drawing.Color.White;
             this.exitButton.Location = new System.Drawing.Point(310, 395);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(75, 40);
             this.exitButton.TabIndex = 1;
             this.exitButton.Text = "Konec";
-            this.exitButton.UseVisualStyleBackColor = true;
+            this.exitButton.UseVisualStyleBackColor = false;
             // 
             // MainForm
             // 
