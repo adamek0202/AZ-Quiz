@@ -19,6 +19,7 @@ namespace AZ_Kviz.Forms
                 var qf = new QuestionForm(n);
                 qf.ShowDialog();
             };
+            new PublicDisplay().Show();
         }
 
         

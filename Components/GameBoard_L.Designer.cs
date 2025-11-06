@@ -1,6 +1,6 @@
 ﻿namespace AZ_Kviz
 {
-    partial class GameBoard
+    partial class GameBoard_L
     {
         /// <summary>
         /// Vyžaduje se proměnná návrháře.

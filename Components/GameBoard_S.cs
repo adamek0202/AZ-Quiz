@@ -10,14 +10,14 @@ using System.Xml.Linq;
 
 namespace AZ_Kviz
 {
-    public partial class GameBoard : Control
+    public partial class GameBoard_S : Control
     {
         private readonly List<HexTile> tiles = new List<HexTile>();
         private readonly Font labelFont = new Font("Segoe UI", 10, FontStyle.Bold);
 
         internal event Action<int, HexTile>? TileClicked;
 
-        public GameBoard()
+        public GameBoard_S()
         {
             InitializeComponent();
             DoubleBuffered = true;
@@ -45,7 +45,7 @@ namespace AZ_Kviz
 
         private void LoadSvg()
         {
-            var stream = new MemoryStream(Properties.Resources.map);
+            var stream = new MemoryStream(Properties.Resources.map_s);
             XDocument doc = XDocument.Load(stream);
             XNamespace ns = "http://www.w3.org/2000/svg";
 

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.resetButton = new System.Windows.Forms.Button();
-            this.gameBoard1 = new AZ_Kviz.GameBoard();
+            this.gameBoard1 = new AZ_Kviz.GameBoard_S();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.playerOneScoreBox = new System.Windows.Forms.TextBox();
@@ -158,7 +158,7 @@
 
         #endregion
 
-        private GameBoard gameBoard1;
+        private GameBoard_S gameBoard1;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;

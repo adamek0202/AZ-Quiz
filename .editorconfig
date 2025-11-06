@@ -2,3 +2,6 @@
 
 # IDE0063: Použít jednoduchý příkaz using
 dotnet_diagnostic.IDE0063.severity = none
+
+# IDE0003: Odebrat kvalifikaci
+dotnet_diagnostic.IDE0003.severity = none

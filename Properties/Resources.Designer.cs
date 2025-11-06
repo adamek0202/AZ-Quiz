@@ -63,9 +63,19 @@ namespace AZ_Kviz.Properties {
         /// <summary>
         ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
         /// </summary>
-        internal static byte[] map {
+        internal static byte[] map_l {
             get {
-                object obj = ResourceManager.GetObject("map", resourceCulture);
+                object obj = ResourceManager.GetObject("map_l", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] map_s {
+            get {
+                object obj = ResourceManager.GetObject("map_s", resourceCulture);
                 return ((byte[])(obj));
             }
         }
