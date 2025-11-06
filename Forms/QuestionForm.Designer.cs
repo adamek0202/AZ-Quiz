@@ -44,7 +44,6 @@
             this.playerTextBox = new AZ_Kviz.ReadOnlyTextBox();
             this.answerTextBox = new AZ_Kviz.ReadOnlyTextBox();
             this.questionTextBox = new AZ_Kviz.ReadOnlyTextBox();
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -96,6 +95,7 @@
             this.incorrectButton.TabIndex = 2;
             this.incorrectButton.Text = "Špatně";
             this.incorrectButton.UseVisualStyleBackColor = false;
+            this.incorrectButton.Click += new System.EventHandler(this.incorrectButton_Click);
             // 
             // correctButton
             // 
