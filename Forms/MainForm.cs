@@ -8,7 +8,7 @@ namespace AZ_Kviz.Forms
         public static int PlayerOne_Points { get; private set; }
         public static int PlayerTwo_Points { get; private set; }
 
-        
+        private PublicDisplay pd;
 
         public MainForm()
         {
@@ -19,10 +19,9 @@ namespace AZ_Kviz.Forms
                 var qf = new QuestionForm(n);
                 qf.ShowDialog();
             };
-            new PublicDisplay().Show();
+            pd = new PublicDisplay();
+            pd.Show();
         }
-
-        
 
         private void button1_Click(object sender, EventArgs e)
         {

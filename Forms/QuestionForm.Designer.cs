@@ -39,6 +39,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.startButton = new System.Windows.Forms.Button();
             this.timeTextBox = new AZ_Kviz.ReadOnlyTextBox();
             this.questionTypeTextBox = new AZ_Kviz.ReadOnlyTextBox();
             this.playerTextBox = new AZ_Kviz.ReadOnlyTextBox();
@@ -95,7 +96,7 @@
             this.incorrectButton.TabIndex = 2;
             this.incorrectButton.Text = "Špatně";
             this.incorrectButton.UseVisualStyleBackColor = false;
-            this.incorrectButton.Click += new System.EventHandler(this.incorrectButton_Click);
+            this.incorrectButton.Click += new System.EventHandler(this.IncorrectButton_Click);
             // 
             // correctButton
             // 
@@ -139,6 +140,18 @@
             // 
             this.timer.Interval = 1000;
             // 
+            // startButton
+            // 
+            this.startButton.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.startButton.ForeColor = System.Drawing.Color.Black;
+            this.startButton.Location = new System.Drawing.Point(32, 186);
+            this.startButton.Name = "startButton";
+            this.startButton.Size = new System.Drawing.Size(91, 42);
+            this.startButton.TabIndex = 2;
+            this.startButton.Text = "Start";
+            this.startButton.UseVisualStyleBackColor = false;
+            this.startButton.Click += new System.EventHandler(this.StartButton_Click);
+            // 
             // timeTextBox
             // 
             this.timeTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -148,7 +161,7 @@
             this.timeTextBox.SelectionHighlightEnabled = false;
             this.timeTextBox.Size = new System.Drawing.Size(46, 29);
             this.timeTextBox.TabIndex = 4;
-            this.timeTextBox.Text = "5";
+            this.timeTextBox.Text = "15";
             // 
             // questionTypeTextBox
             // 
@@ -182,7 +195,6 @@
             this.answerTextBox.SelectionHighlightEnabled = false;
             this.answerTextBox.Size = new System.Drawing.Size(438, 51);
             this.answerTextBox.TabIndex = 0;
-            this.answerTextBox.Text = "Ota Pavel";
             // 
             // questionTextBox
             // 
@@ -194,17 +206,12 @@
             this.questionTextBox.SelectionHighlightEnabled = false;
             this.questionTextBox.Size = new System.Drawing.Size(438, 76);
             this.questionTextBox.TabIndex = 0;
-            this.questionTextBox.Text = "Kdo napsal dílo Smrt krásných srnců?";
-            // 
-            // timer
-            // 
-            this.timer.Interval = 1000;
             // 
             // QuestionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(571, 237);
+            this.ClientSize = new System.Drawing.Size(566, 232);
             this.ControlBox = false;
             this.Controls.Add(this.label4);
             this.Controls.Add(this.timeTextBox);
@@ -212,6 +219,7 @@
             this.Controls.Add(this.playerTextBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label3);
+            this.Controls.Add(this.startButton);
             this.Controls.Add(this.correctButton);
             this.Controls.Add(this.incorrectButton);
             this.Controls.Add(this.secondCorrectButton);
@@ -229,6 +237,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Otázka";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.QuestionForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -253,5 +262,6 @@
         private System.Windows.Forms.Timer timer;
         private ReadOnlyTextBox questionTextBox;
         private ReadOnlyTextBox answerTextBox;
+        private System.Windows.Forms.Button startButton;
     }
 }

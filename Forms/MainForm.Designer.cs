@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.resetButton = new System.Windows.Forms.Button();
-            this.gameBoard1 = new AZ_Kviz.GameBoard_S();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.playerOneScoreBox = new System.Windows.Forms.TextBox();
@@ -37,6 +36,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.exitButton = new System.Windows.Forms.Button();
+            this.gameBoard1 = new AZ_Kviz.GameBoard_S();
             this.SuspendLayout();
             // 
             // resetButton
@@ -50,14 +50,6 @@
             this.resetButton.Text = "Reset";
             this.resetButton.UseVisualStyleBackColor = false;
             this.resetButton.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // gameBoard1
-            // 
-            this.gameBoard1.Location = new System.Drawing.Point(12, 41);
-            this.gameBoard1.Name = "gameBoard1";
-            this.gameBoard1.Size = new System.Drawing.Size(379, 348);
-            this.gameBoard1.TabIndex = 0;
-            this.gameBoard1.Text = "gameBoard1";
             // 
             // label1
             // 
@@ -132,6 +124,14 @@
             this.exitButton.TabIndex = 1;
             this.exitButton.Text = "Konec";
             this.exitButton.UseVisualStyleBackColor = false;
+            // 
+            // gameBoard1
+            // 
+            this.gameBoard1.Location = new System.Drawing.Point(12, 41);
+            this.gameBoard1.Name = "gameBoard1";
+            this.gameBoard1.Size = new System.Drawing.Size(379, 348);
+            this.gameBoard1.TabIndex = 0;
+            this.gameBoard1.Text = "gameBoard1";
             // 
             // MainForm
             // 

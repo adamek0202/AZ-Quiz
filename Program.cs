@@ -13,6 +13,7 @@ namespace AZ_Kviz
         static void Main()
         {
             Application.SetCompatibleTextRenderingDefault(false);
+            Countdown.InitTimer();
             DatabaseFunctions.InitDatabase();
             Application.Run(new MainForm());
         }

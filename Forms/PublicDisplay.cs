@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
@@ -15,6 +8,39 @@ namespace AZ_Kviz
         public PublicDisplay()
         {
             InitializeComponent();
+            EventManager.UpdateField += PublicDisplay_UpdateField;
+            Countdown.Start += Countdown_Start;
+            Countdown.TimerTicked += Countdown_TimerTicked;
+            Countdown.Finished += Countdown_Finished;
+
+        }
+
+        private void Countdown_Finished()
+        {
+            Invoke(new Action(() =>
+            {
+                circularProgressBar.Visible = false;
+            }));
+        }
+
+        private void Countdown_TimerTicked(int obj)
+        {
+            Invoke(new Action(() => UpdateCountdown(obj)));
+        }
+
+        private void Countdown_Start()
+        {
+            Invoke(new Action(() =>
+            {
+                circularProgressBar.Visible = true;
+                circularProgressBar.AnimationSpeed = 0;
+                circularProgressBar.Value = 15;
+                circularProgressBar.AnimationSpeed = 1000;
+            }));
+        }
+
+        private void PublicDisplay_UpdateField(int ind, TileManager.TileStates state)
+        {
         }
 
         protected override void OnShown(EventArgs e)
@@ -35,7 +61,7 @@ namespace AZ_Kviz
         private void UpdateCountdown(int seconds)
         {
             circularProgressBar.Text = seconds.ToString();
-            circularProgressBar.Value = seconds * 10;
+            circularProgressBar.Value = seconds;
         }
     }
 }

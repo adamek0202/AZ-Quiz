@@ -93,14 +93,7 @@ namespace AZ_Kviz
 	                PRIMARY KEY(""id"" AUTOINCREMENT),
 	                FOREIGN KEY(""setid"") REFERENCES ""QuestionSets""(""id"")
                 );
-                CREATE TABLE ""QuestionSets"" (
-	                ""id""	INTEGER NOT NULL UNIQUE,
-	                ""name""	TEXT NOT NULL DEFAULT """",
-                    ""scope""	TEXT NOT NULL DEFAULT """",
-                    ""author""	TEXT NOT NULL DEFAULT """",
-	                ""difficulty""	INTEGER NOT NULL DEFAULT 0,
-	                PRIMARY KEY(""id"" AUTOINCREMENT)
-            ); CREATE INDEX ""QuestionSetID"" ON ""Questions"" (""setid"" ASC);";
+               CREATE INDEX ""QuestionSetID"" ON ""Questions"" (""setid"" ASC);";
             using (var command = new SQLiteCommand(cmd, DatabaseConnection.Connection))
             {
                 command.ExecuteNonQuery();
@@ -113,7 +106,8 @@ namespace AZ_Kviz
             string querry = $"SELECT COUNT(*) from {table}";
             using(var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
             {
-                ulong count = (ulong)cmd.ExecuteScalar();
+                object result = cmd.ExecuteScalar();
+                ulong count = Convert.ToUInt64(result);
                 if(count == 0)
                 {
                     return false;
@@ -125,30 +119,9 @@ namespace AZ_Kviz
             }
         }
 
-        public static List<QuestionsSet> GetQuestionSets()
+        public static Question GetQuestion(uint id, bool replacement = false)
         {
-            if (!TableNotEmpty("QuestionSets"))
-            {
-                throw new EmptyDatasetException("Tabulka neobsahuje žádná data");
-            }
-            string querry = "SELECT * FROM QuestionSets;";
-            List<QuestionsSet> sets = new List<QuestionsSet>();
-            using(var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
-            {
-                using(var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        sets.Add(new QuestionsSet((int)reader["id"], reader["name"].ToString(), reader["scope"].ToString(), reader["author"].ToString(), reader["difficulty"].ToString()));
-                    }
-                }
-            }
-            return sets;
-        }
-
-        public static Question GetQuestion(uint position, uint setId)
-        {
-            if(position == 0 || setId == 0)
+            if(id == 0)
             {
                 throw new ArgumentException("Neplatné ID");
             }
@@ -156,22 +129,31 @@ namespace AZ_Kviz
             {
                 throw new EmptyDatasetException("Tabulka neobsahuje žádná data");
             }
-            string querry = "SELECT text, answer FROM Questions WHERE (setid = @setid AND setpos = @setpos)";
+            string querry = $"SELECT id, text, answer FROM {(replacement ? "ReplacementQuestions" : "Questions")} WHERE id = @id";
             using (var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
             {
-                cmd.Parameters.AddWithValue("@setid", setId);
-                cmd.Parameters.AddWithValue("$setpos", position);
+                cmd.Parameters.AddWithValue("@id", id);
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        return new Question(reader["text"].ToString(), reader["answer"].ToString(), setId);
+                        return new Question(reader["text"].ToString(), reader["answer"].ToString(), id);
                     }
                     else
                     {
                         throw new EmptyDatasetException("Otázka nebyla nalezena");
                     }
                 }
+            }
+        }
+
+        public static void MarkQuestionUsed(uint id, bool replacement = false)
+        {
+            string querry = $"UPDATE {(!replacement ? "Questions" : "ReplacementQuestions")} SET used 1 WHERE id = @id";
+            using (var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
             }
         }
     }

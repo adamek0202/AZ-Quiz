@@ -69,6 +69,7 @@
     <Compile Include="Countdown.cs" />
     <Compile Include="DatabaseFunctions.cs" />
     <Compile Include="EmptyDatasetException.cs" />
+    <Compile Include="EventManager.cs" />
     <Compile Include="Forms\QuestionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,6 +114,7 @@
     <Compile Include="Components\ReadOnlyTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TileManager.cs" />
     <Compile Include="WindowUtils.cs" />
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

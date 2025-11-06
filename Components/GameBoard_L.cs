@@ -79,7 +79,7 @@ namespace AZ_Kviz
         {
             for (int i = 0; i < tiles.Count; i++)
             {
-                if (tiles[i].HitTest(e.Location) && tiles[i].State != TileStates.Blocked)
+                if (tiles[i].HitTest(e.Location) && tiles[i].State != TileManager.TileStates.Blocked)
                 {
                     TileClicked?.Invoke(i, tiles[i]);
                     break;
@@ -101,7 +101,7 @@ namespace AZ_Kviz
             if (index >= 0 && index < tiles.Count)
             {
                 tiles[index].FillColor = Color.Black;
-                tiles[index].State = TileStates.Blocked;
+                tiles[index].State = TileManager.TileStates.Blocked;
                 Invalidate();
             }
         }

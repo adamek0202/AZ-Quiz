@@ -6,9 +6,9 @@ namespace AZ_Kviz
     internal class HexTile
     {
         public PointF[] Points;
-        public Color FillColor = Color.White;
+        public Color FillColor = Color.WhiteSmoke;
         public string Label = "";
-        public TileStates State;
+        public TileManager.TileStates State;
 
         public bool HitTest(PointF p) {
             using (var path = new GraphicsPath())
@@ -49,12 +49,5 @@ namespace AZ_Kviz
         }
     }
 
-    internal enum TileStates
-    {
-        Clear,
-        FirtstPlayer_Used,
-        SecondPlayer_Used,
-        Incorrect,
-        Blocked
-    }
+    
 }
