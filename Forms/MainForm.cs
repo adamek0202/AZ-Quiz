@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AZ_Kviz.Forms
@@ -30,8 +31,32 @@ namespace AZ_Kviz.Forms
                     MessageBox.Show("Hráč nemá dost bodů k tomu, aby si vzal náhradní otázku", "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             };
+            Player.StatsChanged += Player_StatsChanged;
+            Player.PlayerChanged += Player_PlayerChanged;
             pd = new PublicDisplay();
             pd.Show();
+        }
+
+        private void Player_PlayerChanged()
+        {
+            if (Player.CurrentPlayer == Player.Players.PlayerOne)
+            {
+                playerOneLabel.Font = new Font(playerOneLabel.Font, FontStyle.Underline);
+                playerTwoLabel.Font = new Font(playerTwoLabel.Font, FontStyle.Regular);
+            }
+            else
+            {
+                playerOneLabel.Font = new Font(playerOneLabel.Font, FontStyle.Regular);
+                playerTwoLabel.Font = new Font(playerTwoLabel.Font, FontStyle.Underline);
+            }
+        }
+
+        private void Player_StatsChanged()
+        {
+            playerOneCorrectBox.Text = Player.Players.PlayerOne.Stats().Correct.ToString();
+            playerOneIncorrectBox.Text = Player.Players.PlayerOne.Stats().Incorrect.ToString();
+            playerTwoCorrectBox.Text = Player.Players.PlayerTwo.Stats().Correct.ToString();
+            playerTwoIncorrectBox.Text = Player.Players.PlayerTwo.Stats().Incorrect.ToString();
         }
 
         private void ProcessScoring(int id, Answers answer)
@@ -47,11 +72,13 @@ namespace AZ_Kviz.Forms
                     Player.CurrentPlayer.Stats().Incorrect += 1;
                     break;
                 case Answers.SecondCorrect:
-                    TileManager.UpdateTile(id, Player.CurrentPlayer == Player.Players.PlayerTwo ? TileManager.TileStates.SecondPlayer_Used : TileManager.TileStates.FirtstPlayer_Used);
+                    TileManager.UpdateTile(id, Player.CurrentPlayer == Player.Players.PlayerOne ? TileManager.TileStates.SecondPlayer_Used : TileManager.TileStates.FirtstPlayer_Used);
+                    Player.CurrentPlayer.Stats().Incorrect += 1;
                     Player.OtherPlayer.Stats().Correct += 1;
                     break;
                 case Answers.SecondIncorrect:
                     TileManager.UpdateTile(id, TileManager.TileStates.Incorrect);
+                    Player.CurrentPlayer.Stats().Incorrect += 1;
                     Player.OtherPlayer.Stats().Incorrect += 1;
                     break;
             }
@@ -61,6 +88,16 @@ namespace AZ_Kviz.Forms
         private void button1_Click(object sender, EventArgs e)
         {
             gameBoard1.Reset();
+        }
+
+        private void ExitButton_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Player.NextPlayer();
         }
     }
 }

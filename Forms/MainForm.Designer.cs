@@ -29,13 +29,15 @@
         private void InitializeComponent()
         {
             this.resetButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.playerOneScoreBox = new System.Windows.Forms.TextBox();
-            this.playerTwoScoreBox = new System.Windows.Forms.TextBox();
+            this.playerOneLabel = new System.Windows.Forms.Label();
+            this.playerTwoLabel = new System.Windows.Forms.Label();
+            this.playerOneCorrectBox = new System.Windows.Forms.TextBox();
+            this.playerTwoIncorrectBox = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.exitButton = new System.Windows.Forms.Button();
+            this.playerOneIncorrectBox = new System.Windows.Forms.TextBox();
+            this.playerTwoCorrectBox = new System.Windows.Forms.TextBox();
             this.gameBoard1 = new AZ_Kviz.GameBoard_S();
             this.SuspendLayout();
             // 
@@ -51,45 +53,48 @@
             this.resetButton.UseVisualStyleBackColor = false;
             this.resetButton.Click += new System.EventHandler(this.button1_Click);
             // 
-            // label1
+            // playerOneLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 22);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Hráč 1:";
+            this.playerOneLabel.AutoSize = true;
+            this.playerOneLabel.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerOneLabel.Location = new System.Drawing.Point(12, 9);
+            this.playerOneLabel.Name = "playerOneLabel";
+            this.playerOneLabel.Size = new System.Drawing.Size(70, 22);
+            this.playerOneLabel.TabIndex = 2;
+            this.playerOneLabel.Text = "Hráč 1:";
             // 
-            // label3
+            // playerTwoLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label3.Location = new System.Drawing.Point(275, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 22);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Hráč 2:";
+            this.playerTwoLabel.AutoSize = true;
+            this.playerTwoLabel.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerTwoLabel.Location = new System.Drawing.Point(227, 9);
+            this.playerTwoLabel.Name = "playerTwoLabel";
+            this.playerTwoLabel.Size = new System.Drawing.Size(70, 22);
+            this.playerTwoLabel.TabIndex = 4;
+            this.playerTwoLabel.Text = "Hráč 2:";
             // 
-            // playerOneScoreBox
+            // playerOneCorrectBox
             // 
-            this.playerOneScoreBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerOneScoreBox.Location = new System.Drawing.Point(88, 6);
-            this.playerOneScoreBox.Name = "playerOneScoreBox";
-            this.playerOneScoreBox.ReadOnly = true;
-            this.playerOneScoreBox.Size = new System.Drawing.Size(42, 29);
-            this.playerOneScoreBox.TabIndex = 5;
-            this.playerOneScoreBox.Text = "0";
+            this.playerOneCorrectBox.BackColor = System.Drawing.Color.Lime;
+            this.playerOneCorrectBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerOneCorrectBox.Location = new System.Drawing.Point(88, 6);
+            this.playerOneCorrectBox.Name = "playerOneCorrectBox";
+            this.playerOneCorrectBox.ReadOnly = true;
+            this.playerOneCorrectBox.Size = new System.Drawing.Size(42, 29);
+            this.playerOneCorrectBox.TabIndex = 5;
+            this.playerOneCorrectBox.Text = "0";
             // 
-            // playerTwoScoreBox
+            // playerTwoIncorrectBox
             // 
-            this.playerTwoScoreBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerTwoScoreBox.Location = new System.Drawing.Point(351, 6);
-            this.playerTwoScoreBox.Name = "playerTwoScoreBox";
-            this.playerTwoScoreBox.ReadOnly = true;
-            this.playerTwoScoreBox.Size = new System.Drawing.Size(42, 29);
-            this.playerTwoScoreBox.TabIndex = 5;
-            this.playerTwoScoreBox.Text = "0";
+            this.playerTwoIncorrectBox.BackColor = System.Drawing.Color.Red;
+            this.playerTwoIncorrectBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerTwoIncorrectBox.ForeColor = System.Drawing.Color.White;
+            this.playerTwoIncorrectBox.Location = new System.Drawing.Point(351, 6);
+            this.playerTwoIncorrectBox.Name = "playerTwoIncorrectBox";
+            this.playerTwoIncorrectBox.ReadOnly = true;
+            this.playerTwoIncorrectBox.Size = new System.Drawing.Size(42, 29);
+            this.playerTwoIncorrectBox.TabIndex = 5;
+            this.playerTwoIncorrectBox.Text = "0";
             // 
             // button2
             // 
@@ -112,6 +117,7 @@
             this.button3.TabIndex = 1;
             this.button3.Text = "Nový tah";
             this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // exitButton
             // 
@@ -124,6 +130,30 @@
             this.exitButton.TabIndex = 1;
             this.exitButton.Text = "Konec";
             this.exitButton.UseVisualStyleBackColor = false;
+            this.exitButton.Click += new System.EventHandler(this.ExitButton_Click);
+            // 
+            // playerOneIncorrectBox
+            // 
+            this.playerOneIncorrectBox.BackColor = System.Drawing.Color.Red;
+            this.playerOneIncorrectBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerOneIncorrectBox.ForeColor = System.Drawing.Color.White;
+            this.playerOneIncorrectBox.Location = new System.Drawing.Point(136, 6);
+            this.playerOneIncorrectBox.Name = "playerOneIncorrectBox";
+            this.playerOneIncorrectBox.ReadOnly = true;
+            this.playerOneIncorrectBox.Size = new System.Drawing.Size(42, 29);
+            this.playerOneIncorrectBox.TabIndex = 5;
+            this.playerOneIncorrectBox.Text = "0";
+            // 
+            // playerTwoCorrectBox
+            // 
+            this.playerTwoCorrectBox.BackColor = System.Drawing.Color.Lime;
+            this.playerTwoCorrectBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerTwoCorrectBox.Location = new System.Drawing.Point(303, 6);
+            this.playerTwoCorrectBox.Name = "playerTwoCorrectBox";
+            this.playerTwoCorrectBox.ReadOnly = true;
+            this.playerTwoCorrectBox.Size = new System.Drawing.Size(42, 29);
+            this.playerTwoCorrectBox.TabIndex = 5;
+            this.playerTwoCorrectBox.Text = "0";
             // 
             // gameBoard1
             // 
@@ -138,10 +168,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(405, 441);
-            this.Controls.Add(this.playerTwoScoreBox);
-            this.Controls.Add(this.playerOneScoreBox);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.playerTwoCorrectBox);
+            this.Controls.Add(this.playerTwoIncorrectBox);
+            this.Controls.Add(this.playerOneIncorrectBox);
+            this.Controls.Add(this.playerOneCorrectBox);
+            this.Controls.Add(this.playerTwoLabel);
+            this.Controls.Add(this.playerOneLabel);
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -160,13 +192,15 @@
 
         private GameBoard_S gameBoard1;
         private System.Windows.Forms.Button resetButton;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox playerOneScoreBox;
-        private System.Windows.Forms.TextBox playerTwoScoreBox;
+        private System.Windows.Forms.Label playerOneLabel;
+        private System.Windows.Forms.Label playerTwoLabel;
+        private System.Windows.Forms.TextBox playerOneCorrectBox;
+        private System.Windows.Forms.TextBox playerTwoIncorrectBox;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button exitButton;
+        private System.Windows.Forms.TextBox playerOneIncorrectBox;
+        private System.Windows.Forms.TextBox playerTwoCorrectBox;
     }
 }
 
