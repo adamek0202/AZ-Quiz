@@ -43,7 +43,7 @@
             // 
             this.resetButton.BackColor = System.Drawing.Color.Orange;
             this.resetButton.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.resetButton.Location = new System.Drawing.Point(19, 395);
+            this.resetButton.Location = new System.Drawing.Point(12, 395);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(75, 40);
             this.resetButton.TabIndex = 1;
@@ -101,30 +101,32 @@
             // 
             // button2
             // 
+            this.button2.BackColor = System.Drawing.Color.CornflowerBlue;
             this.button2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button2.Location = new System.Drawing.Point(116, 395);
+            this.button2.Location = new System.Drawing.Point(93, 395);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 40);
+            this.button2.Size = new System.Drawing.Size(109, 40);
             this.button2.TabIndex = 1;
-            this.button2.Text = "Reset";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Text = "Vyhodnotit";
+            this.button2.UseVisualStyleBackColor = false;
             // 
             // button3
             // 
+            this.button3.BackColor = System.Drawing.Color.LawnGreen;
             this.button3.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button3.Location = new System.Drawing.Point(213, 395);
+            this.button3.Location = new System.Drawing.Point(208, 395);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 40);
+            this.button3.Size = new System.Drawing.Size(98, 40);
             this.button3.TabIndex = 1;
-            this.button3.Text = "Reset";
-            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Text = "Nový tah";
+            this.button3.UseVisualStyleBackColor = false;
             // 
             // exitButton
             // 
             this.exitButton.BackColor = System.Drawing.Color.Red;
             this.exitButton.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.exitButton.ForeColor = System.Drawing.Color.White;
-            this.exitButton.Location = new System.Drawing.Point(310, 395);
+            this.exitButton.Location = new System.Drawing.Point(312, 395);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(75, 40);
             this.exitButton.TabIndex = 1;
@@ -135,7 +137,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(405, 443);
+            this.ClientSize = new System.Drawing.Size(405, 441);
             this.Controls.Add(this.playerTwoScoreBox);
             this.Controls.Add(this.playerOneScoreBox);
             this.Controls.Add(this.label3);
