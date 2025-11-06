@@ -89,6 +89,7 @@ namespace AZ_Kviz
 	                ""text""	TEXT NOT NULL DEFAULT """",
 	                ""answer""	TEXT NOT NULL DEFAULT """",
 	                ""setid""	INTEGER NOT NULL DEFAULT 0,
+                    ""setpos""	INTEGER NOT NULL DEFAULT 0,
 	                PRIMARY KEY(""id"" AUTOINCREMENT),
 	                FOREIGN KEY(""setid"") REFERENCES ""QuestionSets""(""id"")
                 );
@@ -112,7 +113,7 @@ namespace AZ_Kviz
             string querry = $"SELECT COUNT(*) from {table}";
             using(var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
             {
-                long count = (long)cmd.ExecuteScalar();
+                ulong count = (ulong)cmd.ExecuteScalar();
                 if(count == 0)
                 {
                     return false;
@@ -143,6 +144,35 @@ namespace AZ_Kviz
                 }
             }
             return sets;
+        }
+
+        public static Question GetQuestion(uint position, uint setId)
+        {
+            if(position == 0 || setId == 0)
+            {
+                throw new ArgumentException("Neplatné ID");
+            }
+            if (!TableNotEmpty("Questions"))
+            {
+                throw new EmptyDatasetException("Tabulka neobsahuje žádná data");
+            }
+            string querry = "SELECT text, answer FROM Questions WHERE (setid = @setid AND setpos = @setpos)";
+            using (var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
+            {
+                cmd.Parameters.AddWithValue("@setid", setId);
+                cmd.Parameters.AddWithValue("$setpos", position);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new Question(reader["text"].ToString(), reader["answer"].ToString(), setId);
+                    }
+                    else
+                    {
+                        throw new EmptyDatasetException("Otázka nebyla nalezena");
+                    }
+                }
+            }
         }
     }
 }
