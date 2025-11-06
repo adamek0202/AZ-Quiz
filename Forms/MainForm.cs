@@ -8,12 +8,7 @@ namespace AZ_Kviz.Forms
         public static int PlayerOne_Points { get; private set; }
         public static int PlayerTwo_Points { get; private set; }
 
-        private enum Player
-        {
-            PlayerOne,
-            PlayerTwo
-        }
-        private Player currentPlayer = Player.PlayerOne;
+        
 
         public MainForm()
         {
@@ -26,10 +21,7 @@ namespace AZ_Kviz.Forms
             };
         }
 
-        private void NextPlayer()
-        {
-            currentPlayer = (currentPlayer == Player.PlayerOne) ? Player.PlayerTwo : Player.PlayerOne;
-        }
+        
 
         private void button1_Click(object sender, EventArgs e)
         {
