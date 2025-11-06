@@ -38,6 +38,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.timeTextBox = new AZ_Kviz.ReadOnlyTextBox();
             this.questionTypeTextBox = new AZ_Kviz.ReadOnlyTextBox();
             this.playerTextBox = new AZ_Kviz.ReadOnlyTextBox();
@@ -133,6 +134,10 @@
             this.label6.Size = new System.Drawing.Size(99, 22);
             this.label6.TabIndex = 3;
             this.label6.Text = "Typ otázky";
+            // 
+            // timer
+            // 
+            this.timer.Interval = 1000;
             // 
             // timeTextBox
             // 
