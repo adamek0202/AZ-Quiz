@@ -118,32 +118,38 @@ namespace AZ_Kviz
             }
         }
 
-        public static Question GetQuestion(uint id, bool replacement = false)
+        public static Question GetQuestion(uint _, bool replacement = false)
         {
-            if(id == 0)
-            {
-                throw new ArgumentException("Neplatné ID");
-            }
+            //if(id == 0)
+            //{
+            //    throw new ArgumentException("Neplatné ID");
+            //}
             if (!TableNotEmpty("Questions"))
             {
                 throw new EmptyDatasetException("Tabulka neobsahuje žádná data");
             }
-            string querry = $"SELECT id, text, answer FROM Questions WHERE id = @id";
-            using (var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
+            var random = new Random();
+
+            while (true)
             {
-                cmd.Parameters.AddWithValue("@id", id);
-                using (var reader = cmd.ExecuteReader())
+                uint id = (uint)random.Next(1, 81); // náhodné číslo 1–80
+
+                using (var cmd = new SQLiteCommand("SELECT text, answer FROM questions WHERE id = @id AND used = 0", DatabaseConnection.Connection))
                 {
-                    if (reader.Read())
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        MarkQuestionUsed(id);
-                        return new Question(reader["text"].ToString(), reader["answer"].ToString(), id);
-                    }
-                    else
-                    {
-                        throw new EmptyDatasetException("Otázka nebyla nalezena");
+                        if (reader.Read())
+                        {
+                            // otázka existuje a ještě nebyla použita
+                            MarkQuestionUsed(id); // nastaví used = 1
+                            return new Question(reader["text"].ToString(), reader["answer"].ToString(), id);
+                        }
                     }
                 }
+
+                // pokud jsme se sem dostali, otázka neexistuje nebo je už použitá -> zkus jiné ID
             }
         }
 
