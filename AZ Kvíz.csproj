@@ -153,6 +153,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />
+    <None Include="LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Resources\map_l.svg" />
     <Content Include="Resources\map_s.svg" />
   </ItemGroup>
