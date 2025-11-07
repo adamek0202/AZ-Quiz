@@ -39,13 +39,15 @@
             this.playerOneIncorrectBox = new System.Windows.Forms.TextBox();
             this.playerTwoCorrectBox = new System.Windows.Forms.TextBox();
             this.gameBoard1 = new AZ_Kviz.GameBoard_S();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // resetButton
             // 
             this.resetButton.BackColor = System.Drawing.Color.Orange;
             this.resetButton.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.resetButton.Location = new System.Drawing.Point(12, 395);
+            this.resetButton.Location = new System.Drawing.Point(28, 488);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(75, 40);
             this.resetButton.TabIndex = 1;
@@ -57,7 +59,7 @@
             // 
             this.playerOneLabel.AutoSize = true;
             this.playerOneLabel.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerOneLabel.Location = new System.Drawing.Point(12, 9);
+            this.playerOneLabel.Location = new System.Drawing.Point(36, 9);
             this.playerOneLabel.Name = "playerOneLabel";
             this.playerOneLabel.Size = new System.Drawing.Size(70, 22);
             this.playerOneLabel.TabIndex = 2;
@@ -67,7 +69,7 @@
             // 
             this.playerTwoLabel.AutoSize = true;
             this.playerTwoLabel.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerTwoLabel.Location = new System.Drawing.Point(227, 9);
+            this.playerTwoLabel.Location = new System.Drawing.Point(324, 9);
             this.playerTwoLabel.Name = "playerTwoLabel";
             this.playerTwoLabel.Size = new System.Drawing.Size(70, 22);
             this.playerTwoLabel.TabIndex = 4;
@@ -77,7 +79,7 @@
             // 
             this.playerOneCorrectBox.BackColor = System.Drawing.Color.Lime;
             this.playerOneCorrectBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerOneCorrectBox.Location = new System.Drawing.Point(88, 6);
+            this.playerOneCorrectBox.Location = new System.Drawing.Point(112, 6);
             this.playerOneCorrectBox.Name = "playerOneCorrectBox";
             this.playerOneCorrectBox.ReadOnly = true;
             this.playerOneCorrectBox.Size = new System.Drawing.Size(42, 29);
@@ -89,7 +91,7 @@
             this.playerTwoIncorrectBox.BackColor = System.Drawing.Color.Red;
             this.playerTwoIncorrectBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playerTwoIncorrectBox.ForeColor = System.Drawing.Color.White;
-            this.playerTwoIncorrectBox.Location = new System.Drawing.Point(351, 6);
+            this.playerTwoIncorrectBox.Location = new System.Drawing.Point(448, 6);
             this.playerTwoIncorrectBox.Name = "playerTwoIncorrectBox";
             this.playerTwoIncorrectBox.ReadOnly = true;
             this.playerTwoIncorrectBox.Size = new System.Drawing.Size(42, 29);
@@ -100,7 +102,7 @@
             // 
             this.button2.BackColor = System.Drawing.Color.CornflowerBlue;
             this.button2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button2.Location = new System.Drawing.Point(93, 395);
+            this.button2.Location = new System.Drawing.Point(133, 488);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(109, 40);
             this.button2.TabIndex = 1;
@@ -111,7 +113,7 @@
             // 
             this.button3.BackColor = System.Drawing.Color.LawnGreen;
             this.button3.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button3.Location = new System.Drawing.Point(208, 395);
+            this.button3.Location = new System.Drawing.Point(272, 488);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(98, 40);
             this.button3.TabIndex = 1;
@@ -124,7 +126,7 @@
             this.exitButton.BackColor = System.Drawing.Color.Red;
             this.exitButton.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.exitButton.ForeColor = System.Drawing.Color.White;
-            this.exitButton.Location = new System.Drawing.Point(312, 395);
+            this.exitButton.Location = new System.Drawing.Point(400, 488);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(75, 40);
             this.exitButton.TabIndex = 1;
@@ -137,7 +139,7 @@
             this.playerOneIncorrectBox.BackColor = System.Drawing.Color.Red;
             this.playerOneIncorrectBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playerOneIncorrectBox.ForeColor = System.Drawing.Color.White;
-            this.playerOneIncorrectBox.Location = new System.Drawing.Point(136, 6);
+            this.playerOneIncorrectBox.Location = new System.Drawing.Point(160, 6);
             this.playerOneIncorrectBox.Name = "playerOneIncorrectBox";
             this.playerOneIncorrectBox.ReadOnly = true;
             this.playerOneIncorrectBox.Size = new System.Drawing.Size(42, 29);
@@ -148,7 +150,7 @@
             // 
             this.playerTwoCorrectBox.BackColor = System.Drawing.Color.Lime;
             this.playerTwoCorrectBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerTwoCorrectBox.Location = new System.Drawing.Point(303, 6);
+            this.playerTwoCorrectBox.Location = new System.Drawing.Point(400, 6);
             this.playerTwoCorrectBox.Name = "playerTwoCorrectBox";
             this.playerTwoCorrectBox.ReadOnly = true;
             this.playerTwoCorrectBox.Size = new System.Drawing.Size(42, 29);
@@ -157,17 +159,35 @@
             // 
             // gameBoard1
             // 
-            this.gameBoard1.Location = new System.Drawing.Point(12, 41);
+            this.gameBoard1.Location = new System.Drawing.Point(16, 52);
             this.gameBoard1.Name = "gameBoard1";
-            this.gameBoard1.Size = new System.Drawing.Size(379, 348);
+            this.gameBoard1.Size = new System.Drawing.Size(474, 430);
             this.gameBoard1.TabIndex = 0;
             this.gameBoard1.Text = "gameBoard1";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Orange;
+            this.panel1.Location = new System.Drawing.Point(16, 14);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(18, 17);
+            this.panel1.TabIndex = 6;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.panel2.Location = new System.Drawing.Point(300, 12);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(18, 17);
+            this.panel2.TabIndex = 6;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(405, 441);
+            this.ClientSize = new System.Drawing.Size(503, 541);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.playerTwoCorrectBox);
             this.Controls.Add(this.playerTwoIncorrectBox);
             this.Controls.Add(this.playerOneIncorrectBox);
@@ -201,6 +221,8 @@
         private System.Windows.Forms.Button exitButton;
         private System.Windows.Forms.TextBox playerOneIncorrectBox;
         private System.Windows.Forms.TextBox playerTwoCorrectBox;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
     }
 }
 

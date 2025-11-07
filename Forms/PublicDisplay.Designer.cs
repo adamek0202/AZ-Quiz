@@ -49,7 +49,7 @@
             this.timeIndicator.InnerWidth = 0;
             this.timeIndicator.Location = new System.Drawing.Point(1479, 404);
             this.timeIndicator.MarqueeAnimationSpeed = 2000;
-            this.timeIndicator.Maximum = 15;
+            this.timeIndicator.Maximum = 10;
             this.timeIndicator.Name = "timeIndicator";
             this.timeIndicator.OuterColor = System.Drawing.Color.Gray;
             this.timeIndicator.OuterMargin = -25;
@@ -59,7 +59,7 @@
             this.timeIndicator.SecondaryFont = new System.Drawing.Font("Tahoma", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.timeIndicator.Size = new System.Drawing.Size(396, 394);
             this.timeIndicator.StartAngle = 270;
-            this.timeIndicator.Step = 15;
+            this.timeIndicator.Step = 1;
             this.timeIndicator.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.timeIndicator.SubscriptColor = System.Drawing.Color.Transparent;
             this.timeIndicator.SubscriptMargin = new System.Windows.Forms.Padding(10, -35, 0, 0);
@@ -68,9 +68,9 @@
             this.timeIndicator.SuperscriptMargin = new System.Windows.Forms.Padding(10, 35, 0, 0);
             this.timeIndicator.SuperscriptText = "";
             this.timeIndicator.TabIndex = 3;
-            this.timeIndicator.Text = "15";
+            this.timeIndicator.Text = "10";
             this.timeIndicator.TextMargin = new System.Windows.Forms.Padding(8, 8, 0, 0);
-            this.timeIndicator.Value = 15;
+            this.timeIndicator.Value = 10;
             this.timeIndicator.Visible = false;
             // 
             // playerOneScoreLabel
@@ -147,7 +147,6 @@
             this.MinimizeBox = false;
             this.Name = "PublicDisplay";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "PublicDisplay";
             this.ResumeLayout(false);

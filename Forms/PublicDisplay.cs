@@ -56,7 +56,9 @@ namespace AZ_Kviz
             {
                 timeIndicator.Visible = true;
                 timeIndicator.AnimationSpeed = 0;
-                timeIndicator.Value = 15;
+                timeIndicator.Value = Countdown.Time;
+                timeIndicator.Maximum = Countdown.Time;
+                timeIndicator.Text = Countdown.Time.ToString();
                 timeIndicator.AnimationSpeed = 1000;
             }));
         }
