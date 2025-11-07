@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.resetButton = new System.Windows.Forms.Button();
             this.playerOneLabel = new System.Windows.Forms.Label();
             this.playerTwoLabel = new System.Windows.Forms.Label();
@@ -38,9 +39,9 @@
             this.exitButton = new System.Windows.Forms.Button();
             this.playerOneIncorrectBox = new System.Windows.Forms.TextBox();
             this.playerTwoCorrectBox = new System.Windows.Forms.TextBox();
-            this.gameBoard1 = new AZ_Kviz.GameBoard_S();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.gameBoard1 = new AZ_Kviz.GameBoard_S();
             this.SuspendLayout();
             // 
             // resetButton
@@ -49,7 +50,7 @@
             this.resetButton.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.resetButton.Location = new System.Drawing.Point(28, 488);
             this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(75, 40);
+            this.resetButton.Size = new System.Drawing.Size(78, 40);
             this.resetButton.TabIndex = 1;
             this.resetButton.Text = "Reset";
             this.resetButton.UseVisualStyleBackColor = false;
@@ -61,9 +62,9 @@
             this.playerOneLabel.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playerOneLabel.Location = new System.Drawing.Point(36, 9);
             this.playerOneLabel.Name = "playerOneLabel";
-            this.playerOneLabel.Size = new System.Drawing.Size(70, 22);
+            this.playerOneLabel.Size = new System.Drawing.Size(68, 22);
             this.playerOneLabel.TabIndex = 2;
-            this.playerOneLabel.Text = "Hráč 1:";
+            this.playerOneLabel.Text = "Tým 1:";
             // 
             // playerTwoLabel
             // 
@@ -71,9 +72,9 @@
             this.playerTwoLabel.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playerTwoLabel.Location = new System.Drawing.Point(324, 9);
             this.playerTwoLabel.Name = "playerTwoLabel";
-            this.playerTwoLabel.Size = new System.Drawing.Size(70, 22);
+            this.playerTwoLabel.Size = new System.Drawing.Size(68, 22);
             this.playerTwoLabel.TabIndex = 4;
-            this.playerTwoLabel.Text = "Hráč 2:";
+            this.playerTwoLabel.Text = "Tým 2:";
             // 
             // playerOneCorrectBox
             // 
@@ -104,10 +105,11 @@
             this.button2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.button2.Location = new System.Drawing.Point(133, 488);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(109, 40);
+            this.button2.Size = new System.Drawing.Size(114, 40);
             this.button2.TabIndex = 1;
             this.button2.Text = "Vyhodnotit";
             this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -157,14 +159,6 @@
             this.playerTwoCorrectBox.TabIndex = 5;
             this.playerTwoCorrectBox.Text = "0";
             // 
-            // gameBoard1
-            // 
-            this.gameBoard1.Location = new System.Drawing.Point(16, 52);
-            this.gameBoard1.Name = "gameBoard1";
-            this.gameBoard1.Size = new System.Drawing.Size(474, 430);
-            this.gameBoard1.TabIndex = 0;
-            this.gameBoard1.Text = "gameBoard1";
-            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Orange;
@@ -180,6 +174,14 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(18, 17);
             this.panel2.TabIndex = 6;
+            // 
+            // gameBoard1
+            // 
+            this.gameBoard1.Location = new System.Drawing.Point(16, 52);
+            this.gameBoard1.Name = "gameBoard1";
+            this.gameBoard1.Size = new System.Drawing.Size(474, 430);
+            this.gameBoard1.TabIndex = 0;
+            this.gameBoard1.Text = "gameBoard1";
             // 
             // MainForm
             // 
@@ -200,6 +202,7 @@
             this.Controls.Add(this.resetButton);
             this.Controls.Add(this.gameBoard1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "AZ Kvíz";

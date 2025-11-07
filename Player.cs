@@ -27,10 +27,28 @@ namespace AZ_Kviz
             StatsChanged?.Invoke();
         }
 
+        public static void ResetScore()
+        {
+            CurrentPlayer = Players.PlayerOne;
+            PlayerChanged?.Invoke();
+            Players.PlayerOne.Stats().Incorrect = 0;
+            Players.PlayerOne.Stats().Correct = 0;
+            Players.PlayerTwo.Stats().Correct = 0;
+            Players.PlayerTwo.Stats().Incorrect = 0;
+            StatsChanged?.Invoke();
+        }
+
         public class Stats
         {
             public int Correct { get; set; }
             public int Incorrect { get; set; }
+            public int Points
+            {
+                get
+                {
+                    return Correct + Incorrect;
+                }
+            }
         }
 
         internal static readonly Dictionary<Players, Stats> PlayerStats = new Dictionary<Players, Stats>()
@@ -46,8 +64,8 @@ namespace AZ_Kviz
         {
             return s switch
             {
-                Player.Players.PlayerOne => "Hráč 1",
-                Player.Players.PlayerTwo => "Hráč 2",
+                Player.Players.PlayerOne => "Tým 1",
+                Player.Players.PlayerTwo => "Tým 2",
                 _ => ""
             };
         }

@@ -186,7 +186,7 @@
             this.playerTextBox.SelectionHighlightEnabled = false;
             this.playerTextBox.Size = new System.Drawing.Size(100, 29);
             this.playerTextBox.TabIndex = 4;
-            this.playerTextBox.Text = "Hráč 1";
+            this.playerTextBox.Text = "Tým 1";
             // 
             // answerTextBox
             // 
@@ -214,7 +214,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(564, 232);
+            this.ClientSize = new System.Drawing.Size(560, 228);
             this.ControlBox = false;
             this.Controls.Add(this.label4);
             this.Controls.Add(this.timeTextBox);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Windows.Forms;
@@ -129,7 +128,7 @@ namespace AZ_Kviz
             {
                 throw new EmptyDatasetException("Tabulka neobsahuje žádná data");
             }
-            string querry = $"SELECT id, text, answer FROM {(replacement ? "ReplacementQuestions" : "Questions")} WHERE id = @id";
+            string querry = $"SELECT id, text, answer FROM Questions WHERE id = @id";
             using (var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
             {
                 cmd.Parameters.AddWithValue("@id", id);
@@ -137,6 +136,7 @@ namespace AZ_Kviz
                 {
                     if (reader.Read())
                     {
+                        MarkQuestionUsed(id);
                         return new Question(reader["text"].ToString(), reader["answer"].ToString(), id);
                     }
                     else
@@ -149,7 +149,7 @@ namespace AZ_Kviz
 
         public static void MarkQuestionUsed(uint id, bool replacement = false)
         {
-            string querry = $"UPDATE {(!replacement ? "Questions" : "ReplacementQuestions")} SET used 1 WHERE id = @id";
+            string querry = $"UPDATE Questions SET used = used + 1 WHERE id = @id";
             using (var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
             {
                 cmd.Parameters.AddWithValue("@id", id);

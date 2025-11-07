@@ -23,5 +23,11 @@ namespace AZ_Kviz
     internal static class LocalEvents
     {
         internal static event Action<int, TileManager.TileStates>? UpdateField;
+        internal static event Action? EConclude;
+
+        internal static void Conclude()
+        {
+            EConclude?.Invoke();
+        }
     }
 }

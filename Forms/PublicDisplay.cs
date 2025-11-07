@@ -15,6 +15,16 @@ namespace AZ_Kviz
             Countdown.Finished += Countdown_Finished;
             Player.PlayerChanged += Player_PlayerChanged;
             Player.StatsChanged += Player_StatsChanged;
+            LocalEvents.EConclude += PublicDisplay_Conclude;
+        }
+
+        private void PublicDisplay_Conclude()
+        {
+            conclusionPanel.Visible = true;
+            playerOneCorrectBox.Text = Player.Players.PlayerOne.Stats().Correct.ToString();
+            playerOneIncorrectBox.Text = Player.Players.PlayerOne.Stats().Incorrect.ToString();
+            playerTwoCorrectBox.Text = Player.Players.PlayerTwo.Stats().Correct.ToString();
+            playerTwoIncorrectBox.Text = Player.Players.PlayerTwo.Stats().Incorrect.ToString();
         }
 
         private void Player_StatsChanged()
@@ -66,6 +76,12 @@ namespace AZ_Kviz
         private void PublicDisplay_UpdateField(int ind, TileManager.TileStates state)
         {
             gameBoard.SetTileColor(ind, state.TileColor());
+        }
+
+        public void Reset()
+        {
+            conclusionPanel.Visible = false;
+            gameBoard.Reset();
         }
 
         protected override void OnShown(EventArgs e)

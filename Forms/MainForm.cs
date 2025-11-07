@@ -6,9 +6,6 @@ namespace AZ_Kviz.Forms
 {
     public partial class MainForm : Form
     {
-        public static int PlayerOne_Points { get; private set; }
-        public static int PlayerTwo_Points { get; private set; }
-
         private readonly PublicDisplay pd;
 
         public MainForm()
@@ -87,7 +84,13 @@ namespace AZ_Kviz.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            gameBoard1.Reset();
+            if (MessageBox.Show("Opravdu chcete resetovat hru?", "Dotaz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                Player.ResetScore();
+                gameBoard1.Reset();
+                pd.Reset();
+
+            }
         }
 
         private void ExitButton_Click(object sender, EventArgs e)
@@ -98,6 +101,18 @@ namespace AZ_Kviz.Forms
         private void button3_Click(object sender, EventArgs e)
         {
             Player.NextPlayer();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (Player.Players.PlayerOne.Stats().Points != 0 && Player.Players.PlayerTwo.Stats().Points != 0)
+            {
+                LocalEvents.Conclude();
+            }
+            else
+            {
+                MessageBox.Show("Pro vyhodnocení musí mít každý tým\nzodpovězenou alespoň jednu otázku", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }
