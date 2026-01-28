@@ -9,16 +9,15 @@ namespace AZ_Kviz
         public PublicDisplay()
         {
             InitializeComponent();
-            LocalEvents.UpdateField += PublicDisplay_UpdateField;
+            TileManager.TileUpdated += PublicDisplay_UpdateField;
             Countdown.Start += Countdown_Start;
             Countdown.TimerTicked += Countdown_TimerTicked;
             Countdown.Finished += Countdown_Finished;
             Player.PlayerChanged += Player_PlayerChanged;
             Player.StatsChanged += Player_StatsChanged;
-            LocalEvents.EConclude += PublicDisplay_Conclude;
         }
 
-        private void PublicDisplay_Conclude()
+        public void Conclude()
         {
             conclusionPanel.Visible = true;
             playerOneCorrectBox.Text = Player.Players.PlayerOne.Stats().Correct.ToString();

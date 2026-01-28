@@ -1,6 +1,5 @@
 ﻿using AZ_Kviz.Forms;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
@@ -10,24 +9,13 @@ namespace AZ_Kviz
         /// <summary>
         /// Hlavní vstupní bod aplikace.
         /// </summary>
-        [STAThread]
+        [MTAThread]
         static void Main()
         {
             Application.SetCompatibleTextRenderingDefault(false);
             Countdown.InitTimer();
             DatabaseFunctions.InitDatabase();
             Application.Run(new MainForm());
-        }
-    }
-
-    internal static class LocalEvents
-    {
-        internal static event Action<int, TileManager.TileStates>? UpdateField;
-        internal static event Action? EConclude;
-
-        internal static void Conclude()
-        {
-            EConclude?.Invoke();
         }
     }
 }

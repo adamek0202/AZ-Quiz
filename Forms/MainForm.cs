@@ -95,7 +95,10 @@ namespace AZ_Kviz.Forms
 
         private void ExitButton_Click(object sender, EventArgs e)
         {
-            Close();
+            if(MessageBox.Show("Opravdu chcete program ukončit?", "Dotaz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                Close();
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -107,7 +110,7 @@ namespace AZ_Kviz.Forms
         {
             if (Player.Players.PlayerOne.Stats().Points != 0 && Player.Players.PlayerTwo.Stats().Points != 0)
             {
-                LocalEvents.Conclude();
+                pd.Conclude();
             }
             else
             {

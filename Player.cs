@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AZ_Kviz
 {
-    internal static partial class Player
+    internal static class Player
     {
         public enum Players
         {
