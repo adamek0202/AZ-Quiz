@@ -159,7 +159,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Content Include="Resources\Icon.ico" />
+=======
+    <Content Include="Icon.ico" />
+    <None Include="LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+>>>>>>> 3f451cfd485b35cdd3dfd360aa551ff9af53e2ae
     <Content Include="Resources\map_l.svg" />
     <Content Include="Resources\map_s.svg" />
   </ItemGroup>
