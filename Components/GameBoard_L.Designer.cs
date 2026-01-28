@@ -1,4 +1,4 @@
-﻿namespace AZ_Kviz
+﻿namespace AZ_Kviz.Components
 {
     partial class GameBoard_L
     {

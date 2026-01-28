@@ -8,9 +8,9 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
-namespace AZ_Kviz
+namespace AZ_Kviz.Components
 {
-    public partial class GameBoard_S : Control
+    internal partial class GameBoard_S : Control
     {
         private readonly List<HexTile> tiles = new List<HexTile>();
         private readonly Font labelFont = new Font("Segoe UI", 10, FontStyle.Bold);
@@ -23,10 +23,9 @@ namespace AZ_Kviz
             DoubleBuffered = true;
             LoadSvg();
             MouseClick += OnMouseClick;
-            TileManager.TileUpdated += TileManager_TileUpdated;
         }
 
-        private void TileManager_TileUpdated(int id, TileManager.TileStates state)
+        public void UpdateTile(int id, TileManager.TileStates state)
         {
             SetTileColor(id, state.TileColor());
             tiles[id].State = state;

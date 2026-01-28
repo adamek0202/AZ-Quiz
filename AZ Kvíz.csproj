@@ -73,6 +73,12 @@
     <Compile Include="Countdown.cs" />
     <Compile Include="DatabaseFunctions.cs" />
     <Compile Include="EmptyDatasetException.cs" />
+    <Compile Include="Forms\PlayersSetupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PlayersSetupForm.Designer.cs">
+      <DependentUpon>PlayersSetupForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\QuestionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +103,12 @@
     <Compile Include="Forms\QuestionsEditor.Designer.cs">
       <DependentUpon>QuestionsEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\QuestionSetSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\QuestionSetSelectForm.Designer.cs">
+      <DependentUpon>QuestionSetSelectForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="HexTile.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
@@ -104,6 +116,7 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MyAppContext.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -127,11 +140,17 @@
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PlayersSetupForm.resx">
+      <DependentUpon>PlayersSetupForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\QuestionForm.resx">
       <DependentUpon>QuestionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\QuestionsEditor.resx">
       <DependentUpon>QuestionsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\QuestionSetSelectForm.resx">
+      <DependentUpon>QuestionSetSelectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

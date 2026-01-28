@@ -4,12 +4,11 @@ using System.Windows.Forms;
 
 namespace AZ_Kviz
 {
-    public partial class PublicDisplay : Form
+    internal partial class PublicDisplay : Form
     {
         public PublicDisplay()
         {
             InitializeComponent();
-            TileManager.TileUpdated += PublicDisplay_UpdateField;
             Countdown.Start += Countdown_Start;
             Countdown.TimerTicked += Countdown_TimerTicked;
             Countdown.Finished += Countdown_Finished;
@@ -72,7 +71,7 @@ namespace AZ_Kviz
             }));
         }
 
-        private void PublicDisplay_UpdateField(int ind, TileManager.TileStates state)
+        public void UpdateTile(int ind, TileManager.TileStates state)
         {
             gameBoard.SetTileColor(ind, state.TileColor());
         }

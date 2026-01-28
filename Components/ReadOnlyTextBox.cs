@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace AZ_Kviz
+namespace AZ_Kviz.Components
 {
     internal class ReadOnlyTextBox : TextBox
     {

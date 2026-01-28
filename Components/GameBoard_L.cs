@@ -8,9 +8,9 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
-namespace AZ_Kviz
+namespace AZ_Kviz.Components
 {
-    public partial class GameBoard_L : Control
+    internal partial class GameBoard_L : Control
     {
         private readonly List<HexTile> tiles = new List<HexTile>();
         private readonly Font labelFont = new Font("Arial", 20, FontStyle.Bold);
@@ -20,10 +20,9 @@ namespace AZ_Kviz
             InitializeComponent();
             DoubleBuffered = true;
             LoadSvg();
-            TileManager.TileUpdated += TileManager_TileUpdated;
         }
 
-        private void TileManager_TileUpdated(int id, TileManager.TileStates state)
+        public void UpdateTile(int id, TileManager.TileStates state)
         {
             SetTileColor(id, state.TileColor());
             tiles[id].State = state;

@@ -5,13 +5,6 @@ namespace AZ_Kviz
 {
     internal static class TileManager
     {
-        public static event Action<int, TileManager.TileStates> TileUpdated;
-        
-        public static void UpdateTile(int id, TileStates state)
-        {
-            TileUpdated?.Invoke(id - 1, state);
-        }
-
         internal enum TileStates
         {
             Clear,
@@ -19,6 +12,12 @@ namespace AZ_Kviz
             SecondPlayer_Used,
             Incorrect,
             Blocked
+        }
+
+        internal struct Colors
+        {
+            public static Color PlayerOneColor { get; set; }
+            public static Color PlayerTwoColor { get; set; }
         }
     }
 
@@ -29,8 +28,8 @@ namespace AZ_Kviz
                 return s switch
                 {
                     TileManager.TileStates.Clear => Color.WhiteSmoke,
-                    TileManager.TileStates.FirtstPlayer_Used => Color.Orange,
-                    TileManager.TileStates.SecondPlayer_Used => Color.DeepSkyBlue,
+                    TileManager.TileStates.FirtstPlayer_Used => TileManager.Colors.PlayerOneColor,
+                    TileManager.TileStates.SecondPlayer_Used => TileManager.Colors.PlayerTwoColor,
                     TileManager.TileStates.Incorrect => Color.Gray,
                     TileManager.TileStates.Blocked => Color.Black,
                     _ => Color.WhiteSmoke

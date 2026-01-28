@@ -40,11 +40,11 @@
             this.label6 = new System.Windows.Forms.Label();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.startButton = new System.Windows.Forms.Button();
-            this.timeTextBox = new AZ_Kviz.ReadOnlyTextBox();
-            this.questionTypeTextBox = new AZ_Kviz.ReadOnlyTextBox();
-            this.playerTextBox = new AZ_Kviz.ReadOnlyTextBox();
-            this.answerTextBox = new AZ_Kviz.ReadOnlyTextBox();
-            this.questionTextBox = new AZ_Kviz.ReadOnlyTextBox();
+            this.timeTextBox = new AZ_Kviz.Components.ReadOnlyTextBox();
+            this.questionTypeTextBox = new AZ_Kviz.Components.ReadOnlyTextBox();
+            this.playerTextBox = new AZ_Kviz.Components.ReadOnlyTextBox();
+            this.answerTextBox = new AZ_Kviz.Components.ReadOnlyTextBox();
+            this.questionTextBox = new AZ_Kviz.Components.ReadOnlyTextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -214,7 +214,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(560, 228);
+            this.ClientSize = new System.Drawing.Size(563, 233);
             this.ControlBox = false;
             this.Controls.Add(this.label4);
             this.Controls.Add(this.timeTextBox);
@@ -256,12 +256,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
-        private ReadOnlyTextBox timeTextBox;
-        private ReadOnlyTextBox questionTypeTextBox;
-        private ReadOnlyTextBox playerTextBox;
+        private AZ_Kviz.Components.ReadOnlyTextBox timeTextBox;
+        private AZ_Kviz.Components.ReadOnlyTextBox questionTypeTextBox;
+        private AZ_Kviz.Components.ReadOnlyTextBox playerTextBox;
         private System.Windows.Forms.Timer timer;
-        private ReadOnlyTextBox questionTextBox;
-        private ReadOnlyTextBox answerTextBox;
+        private AZ_Kviz.Components.ReadOnlyTextBox questionTextBox;
+        private AZ_Kviz.Components.ReadOnlyTextBox answerTextBox;
         private System.Windows.Forms.Button startButton;
     }
 }

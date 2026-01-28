@@ -61,25 +61,31 @@ namespace AZ_Kviz.Forms
             switch (answer)
             {
                 case Answers.Correct:
-                    TileManager.UpdateTile(id, Player.CurrentPlayer == Player.Players.PlayerOne ? TileManager.TileStates.FirtstPlayer_Used : TileManager.TileStates.SecondPlayer_Used);
+                    UpdateBoards(id, Player.CurrentPlayer == Player.Players.PlayerOne ? TileManager.TileStates.FirtstPlayer_Used : TileManager.TileStates.SecondPlayer_Used);
                     Player.CurrentPlayer.Stats().Correct += 1;
                     break;
                 case Answers.Incorrect:
-                    TileManager.UpdateTile(id, TileManager.TileStates.Incorrect);
+                    UpdateBoards(id, TileManager.TileStates.Incorrect);
                     Player.CurrentPlayer.Stats().Incorrect += 1;
                     break;
                 case Answers.SecondCorrect:
-                    TileManager.UpdateTile(id, Player.CurrentPlayer == Player.Players.PlayerOne ? TileManager.TileStates.SecondPlayer_Used : TileManager.TileStates.FirtstPlayer_Used);
+                    UpdateBoards(id, Player.CurrentPlayer == Player.Players.PlayerOne ? TileManager.TileStates.SecondPlayer_Used : TileManager.TileStates.FirtstPlayer_Used);
                     Player.CurrentPlayer.Stats().Incorrect += 1;
                     Player.OtherPlayer.Stats().Correct += 1;
                     break;
                 case Answers.SecondIncorrect:
-                    TileManager.UpdateTile(id, TileManager.TileStates.Incorrect);
+                    UpdateBoards(id, TileManager.TileStates.Incorrect);
                     Player.CurrentPlayer.Stats().Incorrect += 1;
                     Player.OtherPlayer.Stats().Incorrect += 1;
                     break;
             }
             Player.UpdateStats();
+        }
+
+        private void UpdateBoards(int id, TileManager.TileStates state)
+        {
+            gameBoard1.UpdateTile(id, state);
+            pd.UpdateTile(id, state);
         }
 
         private void button1_Click(object sender, EventArgs e)

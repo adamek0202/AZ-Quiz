@@ -34,19 +34,19 @@
             this.playerTwoScoreLabel = new System.Windows.Forms.Label();
             this.playerTwoLabel = new System.Windows.Forms.Label();
             this.playerOneLabel = new System.Windows.Forms.Label();
-            this.gameBoard = new AZ_Kviz.GameBoard_L();
             this.conclusionPanel = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.playerOneCorrectBox = new System.Windows.Forms.TextBox();
-            this.playerOneIncorrectBox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.playerTwoCorrectBox = new System.Windows.Forms.TextBox();
             this.playerTwoIncorrectBox = new System.Windows.Forms.TextBox();
+            this.playerOneIncorrectBox = new System.Windows.Forms.TextBox();
+            this.playerTwoCorrectBox = new System.Windows.Forms.TextBox();
+            this.playerOneCorrectBox = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.gameBoard = new AZ_Kviz.Components.GameBoard_L();
             this.conclusionPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -132,15 +132,6 @@
             this.playerOneLabel.TabIndex = 4;
             this.playerOneLabel.Text = "Tým 1";
             // 
-            // gameBoard
-            // 
-            this.gameBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gameBoard.Location = new System.Drawing.Point(0, 0);
-            this.gameBoard.Name = "gameBoard";
-            this.gameBoard.Size = new System.Drawing.Size(1920, 1080);
-            this.gameBoard.TabIndex = 2;
-            this.gameBoard.Text = "gameBoard_L1";
-            // 
             // conclusionPanel
             // 
             this.conclusionPanel.BackColor = System.Drawing.Color.DimGray;
@@ -161,49 +152,47 @@
             this.conclusionPanel.TabIndex = 5;
             this.conclusionPanel.Visible = false;
             // 
-            // label1
+            // playerTwoIncorrectBox
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(25, 64);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(103, 36);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Tým 1";
+            this.playerTwoIncorrectBox.BackColor = System.Drawing.Color.Red;
+            this.playerTwoIncorrectBox.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerTwoIncorrectBox.ForeColor = System.Drawing.Color.White;
+            this.playerTwoIncorrectBox.Location = new System.Drawing.Point(407, 152);
+            this.playerTwoIncorrectBox.Name = "playerTwoIncorrectBox";
+            this.playerTwoIncorrectBox.Size = new System.Drawing.Size(100, 44);
+            this.playerTwoIncorrectBox.TabIndex = 5;
+            this.playerTwoIncorrectBox.Text = "1";
             // 
-            // label2
+            // playerOneIncorrectBox
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(275, 64);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(103, 36);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Tým 2";
+            this.playerOneIncorrectBox.BackColor = System.Drawing.Color.Red;
+            this.playerOneIncorrectBox.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerOneIncorrectBox.ForeColor = System.Drawing.Color.White;
+            this.playerOneIncorrectBox.Location = new System.Drawing.Point(153, 147);
+            this.playerOneIncorrectBox.Name = "playerOneIncorrectBox";
+            this.playerOneIncorrectBox.Size = new System.Drawing.Size(100, 44);
+            this.playerOneIncorrectBox.TabIndex = 5;
+            this.playerOneIncorrectBox.Text = "1";
             // 
-            // label3
+            // playerTwoCorrectBox
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(16, 100);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(131, 36);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Správně";
+            this.playerTwoCorrectBox.BackColor = System.Drawing.Color.Lime;
+            this.playerTwoCorrectBox.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerTwoCorrectBox.Location = new System.Drawing.Point(407, 102);
+            this.playerTwoCorrectBox.Name = "playerTwoCorrectBox";
+            this.playerTwoCorrectBox.Size = new System.Drawing.Size(100, 44);
+            this.playerTwoCorrectBox.TabIndex = 5;
+            this.playerTwoCorrectBox.Text = "1";
             // 
-            // label5
+            // playerOneCorrectBox
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(16, 150);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(114, 36);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Špatně";
+            this.playerOneCorrectBox.BackColor = System.Drawing.Color.Lime;
+            this.playerOneCorrectBox.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerOneCorrectBox.Location = new System.Drawing.Point(153, 97);
+            this.playerOneCorrectBox.Name = "playerOneCorrectBox";
+            this.playerOneCorrectBox.Size = new System.Drawing.Size(100, 44);
+            this.playerOneCorrectBox.TabIndex = 5;
+            this.playerOneCorrectBox.Text = "1";
             // 
             // label7
             // 
@@ -217,26 +206,16 @@
             this.label7.TabIndex = 2;
             this.label7.Text = "Výsledky";
             // 
-            // playerOneCorrectBox
+            // label6
             // 
-            this.playerOneCorrectBox.BackColor = System.Drawing.Color.Lime;
-            this.playerOneCorrectBox.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerOneCorrectBox.Location = new System.Drawing.Point(153, 97);
-            this.playerOneCorrectBox.Name = "playerOneCorrectBox";
-            this.playerOneCorrectBox.Size = new System.Drawing.Size(100, 44);
-            this.playerOneCorrectBox.TabIndex = 5;
-            this.playerOneCorrectBox.Text = "1";
-            // 
-            // playerOneIncorrectBox
-            // 
-            this.playerOneIncorrectBox.BackColor = System.Drawing.Color.Red;
-            this.playerOneIncorrectBox.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerOneIncorrectBox.ForeColor = System.Drawing.Color.White;
-            this.playerOneIncorrectBox.Location = new System.Drawing.Point(153, 147);
-            this.playerOneIncorrectBox.Name = "playerOneIncorrectBox";
-            this.playerOneIncorrectBox.Size = new System.Drawing.Size(100, 44);
-            this.playerOneIncorrectBox.TabIndex = 5;
-            this.playerOneIncorrectBox.Text = "1";
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label6.ForeColor = System.Drawing.Color.White;
+            this.label6.Location = new System.Drawing.Point(270, 155);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(114, 36);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "Špatně";
             // 
             // label4
             // 
@@ -249,37 +228,58 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "Správně";
             // 
-            // label6
+            // label5
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(270, 155);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(114, 36);
-            this.label6.TabIndex = 4;
-            this.label6.Text = "Špatně";
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.Location = new System.Drawing.Point(16, 150);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(114, 36);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "Špatně";
             // 
-            // playerTwoCorrectBox
+            // label3
             // 
-            this.playerTwoCorrectBox.BackColor = System.Drawing.Color.Lime;
-            this.playerTwoCorrectBox.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerTwoCorrectBox.Location = new System.Drawing.Point(407, 102);
-            this.playerTwoCorrectBox.Name = "playerTwoCorrectBox";
-            this.playerTwoCorrectBox.Size = new System.Drawing.Size(100, 44);
-            this.playerTwoCorrectBox.TabIndex = 5;
-            this.playerTwoCorrectBox.Text = "1";
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(16, 100);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(131, 36);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Správně";
             // 
-            // playerTwoIncorrectBox
+            // label2
             // 
-            this.playerTwoIncorrectBox.BackColor = System.Drawing.Color.Red;
-            this.playerTwoIncorrectBox.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerTwoIncorrectBox.ForeColor = System.Drawing.Color.White;
-            this.playerTwoIncorrectBox.Location = new System.Drawing.Point(407, 152);
-            this.playerTwoIncorrectBox.Name = "playerTwoIncorrectBox";
-            this.playerTwoIncorrectBox.Size = new System.Drawing.Size(100, 44);
-            this.playerTwoIncorrectBox.TabIndex = 5;
-            this.playerTwoIncorrectBox.Text = "1";
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(275, 64);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(103, 36);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Tým 2";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(25, 64);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(103, 36);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Tým 1";
+            // 
+            // gameBoard
+            // 
+            this.gameBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gameBoard.Location = new System.Drawing.Point(0, 0);
+            this.gameBoard.Name = "gameBoard";
+            this.gameBoard.Size = new System.Drawing.Size(1920, 1080);
+            this.gameBoard.TabIndex = 2;
+            this.gameBoard.Text = "gameBoard_L1";
             // 
             // PublicDisplay
             // 
@@ -303,7 +303,7 @@
             this.MinimizeBox = false;
             this.Name = "PublicDisplay";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "PublicDisplay";
+            this.Text = "Herní plán";
             this.conclusionPanel.ResumeLayout(false);
             this.conclusionPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -312,7 +312,7 @@
         }
 
         #endregion
-        private GameBoard_L gameBoard;
+        private AZ_Kviz.Components.GameBoard_L gameBoard;
         private CircularProgressBar.CircularProgressBar timeIndicator;
         private System.Windows.Forms.Label playerOneScoreLabel;
         private System.Windows.Forms.Label playerTwoScoreLabel;

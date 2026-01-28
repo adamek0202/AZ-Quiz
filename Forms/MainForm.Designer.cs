@@ -34,14 +34,14 @@
             this.playerTwoLabel = new System.Windows.Forms.Label();
             this.playerOneCorrectBox = new System.Windows.Forms.TextBox();
             this.playerTwoIncorrectBox = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.concludeButton = new System.Windows.Forms.Button();
+            this.nextPlayerButton = new System.Windows.Forms.Button();
             this.exitButton = new System.Windows.Forms.Button();
             this.playerOneIncorrectBox = new System.Windows.Forms.TextBox();
             this.playerTwoCorrectBox = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.gameBoard1 = new AZ_Kviz.GameBoard_S();
+            this.gameBoard1 = new AZ_Kviz.Components.GameBoard_S();
             this.SuspendLayout();
             // 
             // resetButton
@@ -99,29 +99,29 @@
             this.playerTwoIncorrectBox.TabIndex = 5;
             this.playerTwoIncorrectBox.Text = "0";
             // 
-            // button2
+            // concludeButton
             // 
-            this.button2.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.button2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button2.Location = new System.Drawing.Point(133, 488);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(114, 40);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Vyhodnotit";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.concludeButton.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.concludeButton.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.concludeButton.Location = new System.Drawing.Point(133, 488);
+            this.concludeButton.Name = "concludeButton";
+            this.concludeButton.Size = new System.Drawing.Size(114, 40);
+            this.concludeButton.TabIndex = 1;
+            this.concludeButton.Text = "Vyhodnotit";
+            this.concludeButton.UseVisualStyleBackColor = false;
+            this.concludeButton.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button3
+            // nextPlayerButton
             // 
-            this.button3.BackColor = System.Drawing.Color.LawnGreen;
-            this.button3.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button3.Location = new System.Drawing.Point(272, 488);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(98, 40);
-            this.button3.TabIndex = 1;
-            this.button3.Text = "Nový tah";
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.nextPlayerButton.BackColor = System.Drawing.Color.LawnGreen;
+            this.nextPlayerButton.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.nextPlayerButton.Location = new System.Drawing.Point(272, 488);
+            this.nextPlayerButton.Name = "nextPlayerButton";
+            this.nextPlayerButton.Size = new System.Drawing.Size(98, 40);
+            this.nextPlayerButton.TabIndex = 1;
+            this.nextPlayerButton.Text = "Nový tah";
+            this.nextPlayerButton.UseVisualStyleBackColor = false;
+            this.nextPlayerButton.Click += new System.EventHandler(this.button3_Click);
             // 
             // exitButton
             // 
@@ -197,8 +197,8 @@
             this.Controls.Add(this.playerTwoLabel);
             this.Controls.Add(this.playerOneLabel);
             this.Controls.Add(this.exitButton);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.nextPlayerButton);
+            this.Controls.Add(this.concludeButton);
             this.Controls.Add(this.resetButton);
             this.Controls.Add(this.gameBoard1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -213,14 +213,14 @@
 
         #endregion
 
-        private GameBoard_S gameBoard1;
+        private AZ_Kviz.Components.GameBoard_S gameBoard1;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Label playerOneLabel;
         private System.Windows.Forms.Label playerTwoLabel;
         private System.Windows.Forms.TextBox playerOneCorrectBox;
         private System.Windows.Forms.TextBox playerTwoIncorrectBox;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button concludeButton;
+        private System.Windows.Forms.Button nextPlayerButton;
         private System.Windows.Forms.Button exitButton;
         private System.Windows.Forms.TextBox playerOneIncorrectBox;
         private System.Windows.Forms.TextBox playerTwoCorrectBox;
