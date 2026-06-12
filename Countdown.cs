@@ -5,40 +5,31 @@ namespace AZ_Kviz
 {
     internal static class Countdown
     {
-        private static System.Timers.Timer TimerDown;
-        public static int Remaining = 10;
+        private static Timer TimerDown;
+
+        public const int MaxTime = 10;
+        public static int Remaining { get; set; } = MaxTime;
+
         public static event Action<int>? TimerTicked;
         public static event Action? Start;
         public static event Action? Finished;
-        public const int Time = 10;
-        public static bool TimerRunning {
-            get
-            {
-                return TimerDown.Enabled;
-            }
-        }
 
-        public static void InitTimer()
+        public static bool TimerRunning => TimerDown.Enabled;
+
+        static Countdown()
         {
-            TimerDown = new System.Timers.Timer(1000)
+            TimerDown = new Timer(1000)
             {
                 AutoReset = true
             };
             TimerDown.Elapsed += OnTimerEvent;
         }
 
-        private static void OnTimerEvent(object sender, ElapsedEventArgs e)
+        public static void StartTimer()
         {
-            if(Remaining > 1)
-            {
-                Remaining -= 1;
-                TimerTicked(Remaining);
-            }
-            else
-            {
-                Finished();
-                StopTimer();
-            }
+            Remaining = MaxTime;
+            Start?.Invoke(); // Bezpečné vyvolání
+            TimerDown.Start();
         }
 
         public static void StopTimer()
@@ -46,11 +37,18 @@ namespace AZ_Kviz
             TimerDown.Stop();
         }
 
-        public static void StartTimer()
+        private static void OnTimerEvent(object sender, ElapsedEventArgs e)
         {
-            Remaining = Time;
-            Start();
-            TimerDown.Enabled = true;
+            if (Remaining > 1)
+            {
+                Remaining -= 1;
+                TimerTicked?.Invoke(Remaining); // Bezpečné vyvolání
+            }
+            else
+            {
+                StopTimer();
+                Finished?.Invoke(); // Bezpečné vyvolání
+            }
         }
     }
 }

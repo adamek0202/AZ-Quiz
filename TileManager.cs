@@ -14,7 +14,7 @@ namespace AZ_Kviz
             Blocked
         }
 
-        internal struct Colors
+        internal static class Colors
         {
             public static Color PlayerOneColor { get; set; }
             public static Color PlayerTwoColor { get; set; }

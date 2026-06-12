@@ -70,6 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Answers.cs" />
+    <Compile Include="Components\GameBoardBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Countdown.cs" />
     <Compile Include="DatabaseFunctions.cs" />
     <Compile Include="EmptyDatasetException.cs" />
@@ -88,14 +91,8 @@
     <Compile Include="Components\GameBoard_L.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Components\GameBoard_L.Designer.cs">
-      <DependentUpon>GameBoard_L.cs</DependentUpon>
-    </Compile>
     <Compile Include="Components\GameBoard_S.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Components\GameBoard_S.Designer.cs">
-      <DependentUpon>GameBoard_S.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\QuestionsEditor.cs">
       <SubType>Form</SubType>

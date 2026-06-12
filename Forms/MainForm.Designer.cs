@@ -41,7 +41,7 @@
             this.playerTwoCorrectBox = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.gameBoard1 = new AZ_Kviz.Components.GameBoard_S();
+            this.gameBoard = new AZ_Kviz.Components.GameBoard_S();
             this.SuspendLayout();
             // 
             // resetButton
@@ -54,7 +54,7 @@
             this.resetButton.TabIndex = 1;
             this.resetButton.Text = "Reset";
             this.resetButton.UseVisualStyleBackColor = false;
-            this.resetButton.Click += new System.EventHandler(this.button1_Click);
+            this.resetButton.Click += new System.EventHandler(this.ResetButton_Click);
             // 
             // playerOneLabel
             // 
@@ -109,7 +109,7 @@
             this.concludeButton.TabIndex = 1;
             this.concludeButton.Text = "Vyhodnotit";
             this.concludeButton.UseVisualStyleBackColor = false;
-            this.concludeButton.Click += new System.EventHandler(this.button2_Click);
+            this.concludeButton.Click += new System.EventHandler(this.EvaluateButton_Click);
             // 
             // nextPlayerButton
             // 
@@ -121,7 +121,7 @@
             this.nextPlayerButton.TabIndex = 1;
             this.nextPlayerButton.Text = "Nový tah";
             this.nextPlayerButton.UseVisualStyleBackColor = false;
-            this.nextPlayerButton.Click += new System.EventHandler(this.button3_Click);
+            this.nextPlayerButton.Click += new System.EventHandler(this.SkipPlayerButton_Click);
             // 
             // exitButton
             // 
@@ -177,11 +177,11 @@
             // 
             // gameBoard1
             // 
-            this.gameBoard1.Location = new System.Drawing.Point(16, 52);
-            this.gameBoard1.Name = "gameBoard1";
-            this.gameBoard1.Size = new System.Drawing.Size(474, 430);
-            this.gameBoard1.TabIndex = 0;
-            this.gameBoard1.Text = "gameBoard1";
+            this.gameBoard.Location = new System.Drawing.Point(16, 52);
+            this.gameBoard.Name = "gameBoard1";
+            this.gameBoard.Size = new System.Drawing.Size(474, 430);
+            this.gameBoard.TabIndex = 0;
+            this.gameBoard.Text = "gameBoard";
             // 
             // MainForm
             // 
@@ -200,7 +200,7 @@
             this.Controls.Add(this.nextPlayerButton);
             this.Controls.Add(this.concludeButton);
             this.Controls.Add(this.resetButton);
-            this.Controls.Add(this.gameBoard1);
+            this.Controls.Add(this.gameBoard);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -213,7 +213,7 @@
 
         #endregion
 
-        private AZ_Kviz.Components.GameBoard_S gameBoard1;
+        private AZ_Kviz.Components.GameBoard_S gameBoard;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Label playerOneLabel;
         private System.Windows.Forms.Label playerTwoLabel;
