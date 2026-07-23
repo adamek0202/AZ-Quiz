@@ -32,19 +32,21 @@ namespace AZ_Kviz
         public void Draw(Graphics g, Font font)
         {
             using (var brush = new SolidBrush(FillColor))
-            using (var pen = new Pen(Color.Black, 1))
             {
                 g.FillPolygon(brush, Points);
-                g.DrawPolygon(pen, Points);
+                g.DrawPolygon(Pens.Black, Points);
             }
 
             if (!string.IsNullOrEmpty(Label))
             {
                 var center = GetCenter();
-                var size = g.MeasureString(Label, font);
-                g.DrawString(Label, font, FillColor == Color.Black ? Brushes.White : Brushes.Black,
-                    center.X - (size.Width / 2) + 15,
-                    center.Y - (size.Height / 2) - 5);
+                var textBrush = (FillColor == Color.Black) ? Brushes.White : Brushes.Black;
+                using(var sf = new StringFormat())
+                {
+                    sf.Alignment = StringAlignment.Center;
+                    sf.LineAlignment = StringAlignment.Center;
+                    g.DrawString(Label, font, textBrush, center, sf);
+                }
             }
         }
     }

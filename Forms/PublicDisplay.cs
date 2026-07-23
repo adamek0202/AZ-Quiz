@@ -64,16 +64,16 @@ namespace AZ_Kviz
             {
                 timeIndicator.Visible = true;
                 timeIndicator.AnimationSpeed = 0;
-                timeIndicator.Value = Countdown.Time;
-                timeIndicator.Maximum = Countdown.Time;
-                timeIndicator.Text = Countdown.Time.ToString();
+                timeIndicator.Value = Countdown.MaxTime;
+                timeIndicator.Maximum = Countdown.MaxTime;
+                timeIndicator.Text = Countdown.MaxTime.ToString();
                 timeIndicator.AnimationSpeed = 1000;
             }));
         }
 
         public void UpdateTile(int ind, TileManager.TileStates state)
         {
-            gameBoard.SetTileColor(ind, state.TileColor());
+            gameBoard.UpdateTile(ind, state);
         }
 
         public void Reset()
@@ -94,7 +94,20 @@ namespace AZ_Kviz
 
                 this.StartPosition = FormStartPosition.Manual;
                 this.Location = external.WorkingArea.Location;
+                this.WindowState = FormWindowState.Maximized;
             }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            // Odhlášení eventů, aby nevznikal memory leak
+            Countdown.Start -= Countdown_Start;
+            Countdown.TimerTicked -= Countdown_TimerTicked;
+            Countdown.Finished -= Countdown_Finished;
+            Player.PlayerChanged -= Player_PlayerChanged;
+            Player.StatsChanged -= Player_StatsChanged;
         }
 
         private void UpdateCountdown(int seconds)
