@@ -7,6 +7,7 @@ namespace AZ_Kviz.Forms
     public partial class MainForm : Form
     {
         private readonly PublicDisplay pd;
+        private int SetID;
 
         public MainForm()
         {
@@ -16,7 +17,7 @@ namespace AZ_Kviz.Forms
                 if (tile.State == TileManager.TileStates.Clear || (tile.State == TileManager.TileStates.Incorrect && Player.CurrentPlayer.Stats().Correct >= 3))
                 {
                     int n = index + 1;
-                    var qf = new QuestionForm(n, tile.State == TileManager.TileStates.Incorrect);
+                    var qf = new QuestionForm(n, SetID, tile.State == TileManager.TileStates.Incorrect);
                     if (qf.ShowDialog() == DialogResult.OK)
                     {
                         ProcessScoring(n, qf.Answer);

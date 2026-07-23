@@ -1,4 +1,6 @@
 ﻿using AZ_Kviz.Forms;
+using NAudio.Wave;
+using System;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
@@ -7,28 +9,53 @@ namespace AZ_Kviz
     {
         public MyAppContext()
         {
-            if (ShowSelectionForm() == DialogResult.OK)
+            if(WaveOut.DeviceCount > 1)
             {
-                if (ShowSetupForm() == DialogResult.OK)
+                if(ShowAudioOutputSelector() == DialogResult.Cancel)
                 {
-
-                }
-                else
-                {
-                    ExitThread();
+                    Environment.Exit(0);
+                    return;
                 }
             }
-            else
+            if (!ShowSelectionForm())
             {
-                ExitThread();
+                Environment.Exit(0);
+                return;
             }
+            if(ShowSetupForm() != DialogResult.OK)
+            {
+                Environment.Exit(0);
+                return;
+            }
+            this.MainForm = new MainForm();
         }
 
-        private DialogResult ShowSelectionForm()
+        private bool ShowSelectionForm()
         {
-            using(var selectForm = new QuestionSetSelectForm())
+            bool result = false;
+            while (true)
             {
-                return selectForm.ShowDialog();
+                using (var selectForm = new QuestionSetSelectForm())
+                {
+                    result = selectForm.ShowDialog() == DialogResult.OK;
+                    if (selectForm.Action == Utilities.Actions.Edit)
+                    {
+
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        private DialogResult ShowAudioOutputSelector()
+        {
+            using(var selForm = new AudioOutSelectForm())
+            {
+                return selForm.ShowDialog();
             }
         }
 

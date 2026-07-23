@@ -10,6 +10,19 @@ namespace AZ_Kviz
             PlayerOne,
             PlayerTwo
         }
+        public class PlayerData
+        {
+            public string Name { get; set; }
+            public int Correct { get; set; }
+            public int Incorrect { get; set; }
+            public int Points => Correct + Incorrect;
+
+            public PlayerData(string defaultName)
+            {
+                Name = defaultName;
+            }
+        }
+
         public static Players CurrentPlayer { get; private set; } = Players.PlayerOne;
         public static Players OtherPlayer => (CurrentPlayer == Players.PlayerOne) ? Players.PlayerTwo : Players.PlayerOne;
 
@@ -22,57 +35,39 @@ namespace AZ_Kviz
             PlayerChanged?.Invoke();
         }
 
-        public static void UpdateStats()
-        {
-            StatsChanged?.Invoke();
-        }
+        public static void UpdateStats() => StatsChanged?.Invoke();
 
         public static void ResetScore()
         {
             CurrentPlayer = Players.PlayerOne;
+            foreach (var data in PlayerRegistry.Values)
+            {
+                data.Correct = 0;
+                data.Incorrect = 0;
+            }
             PlayerChanged?.Invoke();
-            Players.PlayerOne.Stats().Incorrect = 0;
-            Players.PlayerOne.Stats().Correct = 0;
-            Players.PlayerTwo.Stats().Correct = 0;
-            Players.PlayerTwo.Stats().Incorrect = 0;
             StatsChanged?.Invoke();
         }
 
-        public class Stats
+        internal static readonly Dictionary<Players, PlayerData> PlayerRegistry = new Dictionary<Players, PlayerData>
         {
-            public int Correct { get; set; }
-            public int Incorrect { get; set; }
-            public int Points
-            {
-                get
-                {
-                    return Correct + Incorrect;
-                }
-            }
-        }
-
-        internal static readonly Dictionary<Players, Stats> PlayerStats = new Dictionary<Players, Stats>()
-        {
-            { Players.PlayerOne, new Stats() },
-            { Players.PlayerTwo, new Stats() }
+            { Players.PlayerOne, new PlayerData("Hráč 1") },
+            { Players.PlayerTwo, new PlayerData("Hráč 2") }
         };
+
+        public static void SetPlayerNames(string firstPlayer, string secondPlayer)
+        {
+            if (!string.IsNullOrWhiteSpace(firstPlayer)) PlayerRegistry[Players.PlayerOne].Name = firstPlayer;
+            if (!string.IsNullOrWhiteSpace(secondPlayer)) PlayerRegistry[Players.PlayerTwo].Name = secondPlayer;
+
+            StatsChanged?.Invoke();
+        }
     }
 
     internal static partial class PlayerExtensions
     {
-        public static string GetText(this Player.Players s)
-        {
-            return s switch
-            {
-                Player.Players.PlayerOne => "Tým 1",
-                Player.Players.PlayerTwo => "Tým 2",
-                _ => ""
-            };
-        }
+        public static string GetName(this Player.Players s) => Player.PlayerRegistry[s].Name;
 
-        public static Player.Stats Stats(this Player.Players s)
-        {
-            return Player.PlayerStats[s];
-        }
+        public static Player.PlayerData Stats(this Player.Players s) => Player.PlayerRegistry[s];
     }
 }

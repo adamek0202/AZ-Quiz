@@ -1,5 +1,4 @@
-﻿using AZ_Kviz.Forms;
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
@@ -15,7 +14,7 @@ namespace AZ_Kviz
             Application.SetCompatibleTextRenderingDefault(false);
             Countdown.InitTimer();
             DatabaseFunctions.InitDatabase();
-            Application.Run(new MainForm());
+            Application.Run(new MyAppContext());
         }
     }
 }

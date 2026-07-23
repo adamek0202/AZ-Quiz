@@ -1,5 +1,5 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using AZ_Kviz.Utilities;
+using System;
 using System.Windows.Forms;
 
 namespace AZ_Kviz.Forms
@@ -7,16 +7,18 @@ namespace AZ_Kviz.Forms
     public partial class QuestionForm : Form
     {
         private int ID;
+        private int SetID;
         private bool Replacement;
         private bool TimerStarted = false;
 
         internal Answers Answer;
 
-        public QuestionForm(int id, bool replacement = false)
+        public QuestionForm(int id, int setID, bool replacement = false)
         {
             InitializeComponent();
             WindowUtils.ReallyCenterToScreen(this);
             ID = id;
+            SetID = setID;
             Countdown.TimerTicked += Countdown_TimerTicked;
             Countdown.Finished += Countdown_Finished;
             Replacement = replacement;
@@ -42,10 +44,10 @@ namespace AZ_Kviz.Forms
 
         private void LoadData()
         {
-            var question = DatabaseFunctions.GetQuestion((uint)new Random().Next(1, 6), Replacement);
+            var question = DatabaseFunctions.GetQuestion(SetID, ID, Replacement);
             questionTextBox.Text = question.Text;
             answerTextBox.Text = question.Answer;
-            playerTextBox.Text = Player.CurrentPlayer.GetText();
+            playerTextBox.Text = Player.CurrentPlayer.GetName();
             questionTypeTextBox.Text = !Replacement ? "Normální" : "Náhradní";
         }
 

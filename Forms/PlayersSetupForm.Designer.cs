@@ -31,8 +31,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.playerNamesGroupBox = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.playerOneNameBox = new System.Windows.Forms.TextBox();
-            this.plyerTwoNameBox = new System.Windows.Forms.TextBox();
+            this.firstPlayerNameBox = new System.Windows.Forms.TextBox();
+            this.secondPlayerNameBox = new System.Windows.Forms.TextBox();
             this.playerColorsGroupBox = new System.Windows.Forms.GroupBox();
             this.secondPlayerColorPanel = new System.Windows.Forms.Panel();
             this.firstPlayerColorPanel = new System.Windows.Forms.Panel();
@@ -41,7 +41,7 @@
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.firstPlayerGroupBox = new System.Windows.Forms.GroupBox();
             this.secondPlayerRadio = new System.Windows.Forms.RadioButton();
-            this.FirstPlayerRadio = new System.Windows.Forms.RadioButton();
+            this.firstPlayerRadio = new System.Windows.Forms.RadioButton();
             this.startButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.playerNamesGroupBox.SuspendLayout();
@@ -62,8 +62,8 @@
             // 
             this.playerNamesGroupBox.Controls.Add(this.label1);
             this.playerNamesGroupBox.Controls.Add(this.label2);
-            this.playerNamesGroupBox.Controls.Add(this.playerOneNameBox);
-            this.playerNamesGroupBox.Controls.Add(this.plyerTwoNameBox);
+            this.playerNamesGroupBox.Controls.Add(this.firstPlayerNameBox);
+            this.playerNamesGroupBox.Controls.Add(this.secondPlayerNameBox);
             this.playerNamesGroupBox.Location = new System.Drawing.Point(0, 0);
             this.playerNamesGroupBox.Name = "playerNamesGroupBox";
             this.playerNamesGroupBox.Size = new System.Drawing.Size(159, 71);
@@ -80,21 +80,21 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Hráč 2";
             // 
-            // playerOneNameBox
+            // firstPlayerNameBox
             // 
-            this.playerOneNameBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playerOneNameBox.Location = new System.Drawing.Point(51, 16);
-            this.playerOneNameBox.Name = "playerOneNameBox";
-            this.playerOneNameBox.Size = new System.Drawing.Size(100, 21);
-            this.playerOneNameBox.TabIndex = 2;
+            this.firstPlayerNameBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.firstPlayerNameBox.Location = new System.Drawing.Point(51, 16);
+            this.firstPlayerNameBox.Name = "firstPlayerNameBox";
+            this.firstPlayerNameBox.Size = new System.Drawing.Size(100, 21);
+            this.firstPlayerNameBox.TabIndex = 2;
             // 
-            // plyerTwoNameBox
+            // secondPlayerNameBox
             // 
-            this.plyerTwoNameBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.plyerTwoNameBox.Location = new System.Drawing.Point(51, 42);
-            this.plyerTwoNameBox.Name = "plyerTwoNameBox";
-            this.plyerTwoNameBox.Size = new System.Drawing.Size(100, 21);
-            this.plyerTwoNameBox.TabIndex = 3;
+            this.secondPlayerNameBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.secondPlayerNameBox.Location = new System.Drawing.Point(51, 42);
+            this.secondPlayerNameBox.Name = "secondPlayerNameBox";
+            this.secondPlayerNameBox.Size = new System.Drawing.Size(100, 21);
+            this.secondPlayerNameBox.TabIndex = 3;
             // 
             // playerColorsGroupBox
             // 
@@ -116,7 +116,7 @@
             this.secondPlayerColorPanel.Name = "secondPlayerColorPanel";
             this.secondPlayerColorPanel.Size = new System.Drawing.Size(62, 18);
             this.secondPlayerColorPanel.TabIndex = 3;
-            this.secondPlayerColorPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.SecondPlayerColorPanel_Paint);
+            this.secondPlayerColorPanel.Click += new System.EventHandler(this.SecondPlayerColorPanel_Click);
             // 
             // firstPlayerColorPanel
             // 
@@ -152,7 +152,7 @@
             // firstPlayerGroupBox
             // 
             this.firstPlayerGroupBox.Controls.Add(this.secondPlayerRadio);
-            this.firstPlayerGroupBox.Controls.Add(this.FirstPlayerRadio);
+            this.firstPlayerGroupBox.Controls.Add(this.firstPlayerRadio);
             this.firstPlayerGroupBox.Location = new System.Drawing.Point(0, 77);
             this.firstPlayerGroupBox.Name = "firstPlayerGroupBox";
             this.firstPlayerGroupBox.Size = new System.Drawing.Size(134, 43);
@@ -171,16 +171,16 @@
             this.secondPlayerRadio.Text = "Hráč 2";
             this.secondPlayerRadio.UseVisualStyleBackColor = true;
             // 
-            // FirstPlayerRadio
+            // firstPlayerRadio
             // 
-            this.FirstPlayerRadio.AutoSize = true;
-            this.FirstPlayerRadio.Location = new System.Drawing.Point(9, 19);
-            this.FirstPlayerRadio.Name = "FirstPlayerRadio";
-            this.FirstPlayerRadio.Size = new System.Drawing.Size(57, 17);
-            this.FirstPlayerRadio.TabIndex = 0;
-            this.FirstPlayerRadio.TabStop = true;
-            this.FirstPlayerRadio.Text = "Hráč 1";
-            this.FirstPlayerRadio.UseVisualStyleBackColor = true;
+            this.firstPlayerRadio.AutoSize = true;
+            this.firstPlayerRadio.Location = new System.Drawing.Point(9, 19);
+            this.firstPlayerRadio.Name = "firstPlayerRadio";
+            this.firstPlayerRadio.Size = new System.Drawing.Size(57, 17);
+            this.firstPlayerRadio.TabIndex = 0;
+            this.firstPlayerRadio.TabStop = true;
+            this.firstPlayerRadio.Text = "Hráč 1";
+            this.firstPlayerRadio.UseVisualStyleBackColor = true;
             // 
             // startButton
             // 
@@ -235,8 +235,8 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox playerNamesGroupBox;
-        private System.Windows.Forms.TextBox plyerTwoNameBox;
-        private System.Windows.Forms.TextBox playerOneNameBox;
+        private System.Windows.Forms.TextBox secondPlayerNameBox;
+        private System.Windows.Forms.TextBox firstPlayerNameBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox playerColorsGroupBox;
         private System.Windows.Forms.Label label4;
@@ -244,7 +244,7 @@
         private System.Windows.Forms.ColorDialog colorDialog;
         private System.Windows.Forms.GroupBox firstPlayerGroupBox;
         private System.Windows.Forms.RadioButton secondPlayerRadio;
-        private System.Windows.Forms.RadioButton FirstPlayerRadio;
+        private System.Windows.Forms.RadioButton firstPlayerRadio;
         private System.Windows.Forms.Button startButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Panel secondPlayerColorPanel;

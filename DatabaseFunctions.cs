@@ -118,48 +118,33 @@ namespace AZ_Kviz
             }
         }
 
-        public static Question GetQuestion(uint _, bool replacement = false)
+        public static Question GetQuestion(int setID, int position, bool replacement = false)
         {
-            //if(id == 0)
-            //{
-            //    throw new ArgumentException("Neplatné ID");
-            //}
+            if(setID == 0 || position == 0)
+            {
+               throw new ArgumentException("Neplatné ID");
+            }
             if (!TableNotEmpty("Questions"))
             {
                 throw new EmptyDatasetException("Tabulka neobsahuje žádná data");
             }
-            var random = new Random();
 
             while (true)
             {
-                uint id = (uint)random.Next(1, 81); // náhodné číslo 1–80
-
-                using (var cmd = new SQLiteCommand("SELECT text, answer FROM questions WHERE id = @id AND used = 0", DatabaseConnection.Connection))
+                using (var cmd = new SQLiteCommand("SELECT text, answer FROM questions WHERE setid = @setid AND position = @position", DatabaseConnection.Connection))
                 {
-                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@setid", setID);
+                    cmd.Parameters.AddWithValue("@position", position);
 
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
                             // otázka existuje a ještě nebyla použita
-                            MarkQuestionUsed(id); // nastaví used = 1
-                            return new Question(reader["text"].ToString(), reader["answer"].ToString(), id);
+                            return new Question(reader["text"].ToString(), reader["answer"].ToString(), position);
                         }
                     }
                 }
-
-                // pokud jsme se sem dostali, otázka neexistuje nebo je už použitá -> zkus jiné ID
-            }
-        }
-
-        public static void MarkQuestionUsed(uint id, bool replacement = false)
-        {
-            string querry = $"UPDATE Questions SET used = used + 1 WHERE id = @id";
-            using (var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
-            {
-                cmd.Parameters.AddWithValue("@id", id);
-                cmd.ExecuteNonQuery();
             }
         }
     }

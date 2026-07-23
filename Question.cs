@@ -10,13 +10,13 @@ namespace AZ_Kviz
     {
         public string Text { get; }
         public string Answer { get; }
-        public uint SetID { get; }
+        public int Position { get; }
 
-        public Question(string text, string answer, uint setID)
+        public Question(string text, string answer, int position)
         {
             Text = text;
             Answer = answer;
-            SetID = setID;
+            Position = position;
         }
     }
 }
