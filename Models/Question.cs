@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AZ_Kviz
+﻿namespace AZ_Kviz.Models
 {
     internal class Question
     {

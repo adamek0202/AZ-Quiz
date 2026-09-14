@@ -240,7 +240,6 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Otázka";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.QuestionForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

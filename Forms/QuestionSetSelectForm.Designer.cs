@@ -28,24 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Slovní zásoba - úroveň B1",
-            "Angličtina",
-            "10"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Česká literatura na přelomu 19. a 20. století",
-            "Literatura",
-            "6"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Zákonník práce",
-            "Právo",
-            "8"}, -1);
+            this.components = new System.ComponentModel.Container();
             this.listView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.edittToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitButton = new System.Windows.Forms.Button();
+            this.createButton = new System.Windows.Forms.Button();
+            this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView
@@ -58,16 +53,15 @@
             this.listView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.listView.FullRowSelect = true;
             this.listView.HideSelection = false;
-            this.listView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3});
             this.listView.Location = new System.Drawing.Point(0, 0);
             this.listView.Name = "listView";
             this.listView.Size = new System.Drawing.Size(413, 372);
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
+            this.listView.DoubleClick += new System.EventHandler(this.ListView_DoubleClick);
+            this.listView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListView_KeyDown);
+            this.listView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListView_MouseClick);
             // 
             // columnHeader1
             // 
@@ -84,23 +78,64 @@
             this.columnHeader3.Text = "Obtížnost";
             this.columnHeader3.Width = 68;
             // 
-            // button1
+            // contextMenuStrip
             // 
-            this.button1.Location = new System.Drawing.Point(326, 378);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Konec";
-            this.button1.UseVisualStyleBackColor = true;
+            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.playToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.edittToolStripMenuItem,
+            this.removeToolStripMenuItem});
+            this.contextMenuStrip.Name = "contextMenuStrip";
+            this.contextMenuStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.contextMenuStrip.ShowImageMargin = false;
+            this.contextMenuStrip.Size = new System.Drawing.Size(117, 76);
             // 
-            // button2
+            // playToolStripMenuItem
             // 
-            this.button2.Location = new System.Drawing.Point(12, 378);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Vytvořit...";
-            this.button2.UseVisualStyleBackColor = true;
+            this.playToolStripMenuItem.Name = "playToolStripMenuItem";
+            this.playToolStripMenuItem.ShortcutKeyDisplayString = "Enter";
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.playToolStripMenuItem.Text = "Hrát";
+            this.playToolStripMenuItem.Click += new System.EventHandler(this.PlayToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(113, 6);
+            // 
+            // edittToolStripMenuItem
+            // 
+            this.edittToolStripMenuItem.Name = "edittToolStripMenuItem";
+            this.edittToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.edittToolStripMenuItem.Text = "Upravit";
+            this.edittToolStripMenuItem.Click += new System.EventHandler(this.EditSetButton_Click);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.ShortcutKeyDisplayString = "Del";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.removeToolStripMenuItem.Text = "Odstranit";
+            // 
+            // exitButton
+            // 
+            this.exitButton.Location = new System.Drawing.Point(326, 378);
+            this.exitButton.Name = "exitButton";
+            this.exitButton.Size = new System.Drawing.Size(75, 23);
+            this.exitButton.TabIndex = 1;
+            this.exitButton.Text = "Konec";
+            this.exitButton.UseVisualStyleBackColor = true;
+            this.exitButton.Click += new System.EventHandler(this.ExitButton_Click);
+            // 
+            // createButton
+            // 
+            this.createButton.Location = new System.Drawing.Point(12, 378);
+            this.createButton.Name = "createButton";
+            this.createButton.Size = new System.Drawing.Size(75, 23);
+            this.createButton.TabIndex = 1;
+            this.createButton.Text = "Vytvořit...";
+            this.createButton.UseVisualStyleBackColor = true;
+            this.createButton.Click += new System.EventHandler(this.CreateNewSetButton_Click);
             // 
             // QuestionSetSelectForm
             // 
@@ -108,8 +143,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(413, 406);
             this.ControlBox = false;
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.createButton);
+            this.Controls.Add(this.exitButton);
             this.Controls.Add(this.listView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -118,6 +153,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Výběr sady otázek";
+            this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -128,7 +164,12 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button exitButton;
+        private System.Windows.Forms.Button createButton;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem edittToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

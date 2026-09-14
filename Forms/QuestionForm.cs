@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AZ_Kviz.Models;
+using System;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace AZ_Kviz.Forms
 {
-    public partial class QuestionForm : Form
+    internal partial class QuestionForm : BaseForm
     {
         private int id;
         private bool isReplacement;
@@ -15,7 +16,6 @@ namespace AZ_Kviz.Forms
         public QuestionForm(int id, uint setId, bool isReplacement = false)
         {
             InitializeComponent();
-            WindowUtils.ReallyCenterToScreen(this);
 
             this.id = id;
             this.isReplacement = isReplacement;
@@ -47,12 +47,18 @@ namespace AZ_Kviz.Forms
         {
             try
             {
-                // Použije se setId určené pro tuto konkrétní hru
-                var question = DatabaseFunctions.GetQuestion(setId, isReplacement);
-
+                Question question;
+                using(SqlCursorManager.Show())
+                { 
+                    question = DatabaseFunctions.GetQuestion(setId, isReplacement);
+                }
+                if(question == null)
+                {
+                    throw new Exception("Obecná chyba aplikace.");
+                }
                 questionTextBox.Text = question.Text;
                 answerTextBox.Text = question.Answer;
-                playerTextBox.Text = Player.CurrentPlayer.GetText();
+                playerTextBox.Text = Game.CurrentPlayer.ToString();
                 questionTypeTextBox.Text = !isReplacement ? "Normální" : "Náhradní";
             }
             catch (Exception ex)

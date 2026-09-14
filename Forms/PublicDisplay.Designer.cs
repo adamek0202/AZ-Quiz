@@ -134,7 +134,7 @@
             // 
             // conclusionPanel
             // 
-            this.conclusionPanel.BackColor = System.Drawing.Color.DimGray;
+            this.conclusionPanel.BackColor = System.Drawing.Color.Gray;
             this.conclusionPanel.Controls.Add(this.playerTwoIncorrectBox);
             this.conclusionPanel.Controls.Add(this.playerOneIncorrectBox);
             this.conclusionPanel.Controls.Add(this.playerTwoCorrectBox);

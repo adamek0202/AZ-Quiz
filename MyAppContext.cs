@@ -1,4 +1,5 @@
 ﻿using AZ_Kviz.Forms;
+using System;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
@@ -7,38 +8,49 @@ namespace AZ_Kviz
     {
         public MyAppContext()
         {
-            if (ShowSelectionForm() == DialogResult.OK)
-            {
-                if (ShowSetupForm() == DialogResult.OK)
-                {
+            RunGameFlow();
+        }
 
-                }
-                else
-                {
-                    ExitThread();
-                }
-            }
-            else
+        private void RunGameFlow()
+        {
+            while (true)
             {
-                ExitThread();
+                uint selectedSetId = 0;
+                using (var selectForm = new QuestionSetSelectForm())
+                {
+                    if (selectForm.ShowDialog() != DialogResult.OK)
+                    {
+                        Shutdown();
+                        return;
+                    }
+                    selectedSetId = selectForm.SelectedSetId;
+                }
+
+                using (var setupForm = new PlayersSetupForm())
+                {
+                    if (setupForm.ShowDialog() != DialogResult.OK)
+                    {
+                        continue;
+                    }
+
+                    Game.Init(
+                        setupForm.PlayerOneName, setupForm.PlayerOneColor,
+                        setupForm.PlayerTwoName, setupForm.PlayerTwoColor);
+                }
+                DatabaseFunctions.ResetQuestionUsage(selectedSetId);
+
+                using (var mainForm = new MainForm(selectedSetId))
+                {
+                    mainForm.ShowDialog();
+                }
             }
         }
 
-        private DialogResult ShowSelectionForm()
+        private void Shutdown()
         {
-            using(var selectForm = new QuestionSetSelectForm())
-            {
-                return selectForm.ShowDialog();
-            }
-        }
-
-        private DialogResult ShowSetupForm()
-        {
-            using(var setupForm = new PlayersSetupForm())
-            {
-                return setupForm.ShowDialog();
-            }
-
+            ExitThread();
+            Application.Exit();
+            Environment.Exit(0);
         }
     }
 }

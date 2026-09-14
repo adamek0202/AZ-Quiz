@@ -1,43 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AZ_Kviz.Forms
 {
-    public partial class PlayersSetupForm : Form
+    internal partial class PlayersSetupForm : BaseForm
     {
+        public string PlayerOneName => playerOneNameBox.Text.Trim();
+        public string PlayerTwoName => playerTwoNameBox.Text.Trim();
+        public Color PlayerOneColor => firstPlayerColorPanel.BackColor;
+        public Color PlayerTwoColor => secondPlayerColorPanel.BackColor;
+
         public PlayersSetupForm()
         {
             InitializeComponent();
+
+            firstPlayerColorPanel.BackColor = Color.Orange;
+            secondPlayerColorPanel.BackColor = Color.DeepSkyBlue;
         }
 
+        private void StartButton_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(PlayerOneName) || string.IsNullOrEmpty(PlayerTwoName))
+            {
+                MessageBox.Show("Zadejte jména obou hráčů!", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (PlayerOneColor == PlayerTwoColor)
+            {
+                MessageBox.Show("Hráči nemohou mít stejnou barvu!", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+        
         private void CancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
 
-        private void StartButton_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-            Close();
-        }
-
         private void FirstPlayerColorPanel_Click(object sender, EventArgs e)
         {
-            if(colorDialog.ShowDialog() == DialogResult.OK)
+            if (colorDialog.ShowDialog() == DialogResult.OK)
             {
                 firstPlayerColorPanel.BackColor = colorDialog.Color;
             }
         }
 
-        private void SecondPlayerColorPanel_Paint(object sender, PaintEventArgs e)
+        // OPRAVA: Změněno z Paint na Click!
+        private void SecondPlayerColorPanel_Click(object sender, EventArgs e)
         {
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {

@@ -18,16 +18,29 @@ namespace AZ_Kviz.Components
         {
             DoubleBuffered = true;
             this.labelFont = font;
+            LoadSvg(svgResource);
         }
 
-        public void UpdateTile(int id, TileManager.TileStates state)
+        public bool UpdateTile(int id, TileManager.TileStates state)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if(id >= 0 && id < tiles.Count)
             {
                 tiles[id].FillColor = state.TileColor();
                 tiles[id].State = state;
                 Invalidate();
+
+                if(state == TileManager.TileStates.FirtstPlayer_Used || state == TileManager.TileStates.SecondPlayer_Used)
+                {
+                    if(WinChecker.CheckWin(tiles, state))
+                    {
+                        Cursor.Current = Cursors.Default;
+                        return true;
+                    }
+                }
             }
+            Cursor.Current = Cursors.Default;
+            return false;
         }
 
         public void Reset()

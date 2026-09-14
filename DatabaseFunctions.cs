@@ -1,4 +1,9 @@
-﻿using System;
+﻿using AZ_Kviz.Forms;
+using AZ_Kviz.Models;
+using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Windows.Forms;
@@ -35,6 +40,7 @@ namespace AZ_Kviz
         {
             if (!File.Exists(DbName))
             {
+                Log.Debug("Databáze neexistuje. Pokus o vytvoření nové...");
                 CreateDatabase();
                 return true;
             }
@@ -64,6 +70,7 @@ namespace AZ_Kviz
 
         public static bool CheckDatabaseIntegrity()
         {
+            using (SqlCursorManager.Show())
             using (var cmd = new SQLiteCommand("PRAGMA integrity_check;", DatabaseConnection.Connection))
             {
                 var result = cmd.ExecuteScalar()?.ToString();
@@ -87,13 +94,13 @@ namespace AZ_Kviz
                     ""id""     INTEGER NOT NULL UNIQUE,
                     ""text""   TEXT NOT NULL DEFAULT """",
                     ""answer"" TEXT NOT NULL DEFAULT """",
-                    ""setid""  INTEGER NOT NULL DEFAULT 0,
+                    ""set_id""  INTEGER NOT NULL DEFAULT 0,
                     ""setpos"" INTEGER NOT NULL DEFAULT 0,
                     ""used""   INTEGER NOT NULL DEFAULT 0,
                     PRIMARY KEY(""id"" AUTOINCREMENT),
                     FOREIGN KEY(""setid"") REFERENCES ""QuestionSets""(""id"")
                 );
-               CREATE INDEX ""QuestionSetID"" ON ""Questions"" (""setid"" ASC);";
+               CREATE INDEX ""QuestionSetID"" ON ""Questions"" (""set_id"" ASC);";
 
             try
             {
@@ -105,6 +112,7 @@ namespace AZ_Kviz
             }
             catch (Exception ex)
             {
+                Log.Error($"Nastala chyba při vytváření tabulek: {ex.Message}");                                                  
                 MessageBox.Show($"Nastala chyba při vytváření tabulek: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -120,6 +128,130 @@ namespace AZ_Kviz
             }
         }
 
+        public static DataTable GetTable(string sqlQuerry)
+        {
+            var dataTable = new DataTable();
+            try
+            {
+                using(var adapter = new SQLiteDataAdapter(sqlQuerry, DatabaseConnection.Connection))
+                {
+                    adapter.Fill(dataTable);
+                }
+            } catch (Exception ex)
+            {
+                throw new Exception($"Chyba při načítání dat: {ex.Message}", ex);
+            }
+            return dataTable;
+        }
+
+        public static void SaveTable(DataTable table, string selectQuerry)
+        {
+            try
+            {
+                using(SqlCursorManager.Show())
+                using(var adapter = new SQLiteDataAdapter(selectQuerry, DatabaseConnection.Connection))
+                {
+                    using(var builder = new SQLiteCommandBuilder(adapter))
+                    {
+                        adapter.Update(table);
+                    }
+                }
+            } catch(Exception ex)
+            {
+                throw new Exception($"Chyba při ukládání dat do databáze: {ex.Message}", ex);
+            }
+        }
+
+        public static uint CreateNewQuestionSet(string setName, string scope, uint difficulty)
+        {
+            uint newSetId = 0;
+
+            using (var transaction = DatabaseConnection.Connection.BeginTransaction())
+            {
+                try
+                {
+                    // 1. Vložíme novou sadu
+                    string insertSetQuery = "INSERT INTO QuestionSets (name, scope, difficulty) VALUES (@name, @scope, @difficulty); SELECT last_insert_rowid();";
+                    using (var cmd = new SQLiteCommand(insertSetQuery, DatabaseConnection.Connection, transaction))
+                    {
+                        cmd.Parameters.AddWithValue("@name", setName);
+                        cmd.Parameters.AddWithValue("@scope", scope); // OPRAVENO: Už žádná složená závorka
+                        cmd.Parameters.AddWithValue("@difficulty", difficulty);
+                        newSetId = Convert.ToUInt32(cmd.ExecuteScalar());
+                    }
+
+                    // 2. Vygenerujeme 28 normálních a 28 náhradních otázek
+                    string insertQuestionQuery = "INSERT INTO Questions (set_id, text, answer, is_replacement) VALUES (@set_id, @text, @answer, @isReplacement)";
+                    using (var cmd = new SQLiteCommand(insertQuestionQuery, DatabaseConnection.Connection, transaction))
+                    {
+                        // Parametry stačí založit jednou před cykly
+                        cmd.Parameters.AddWithValue("@set_id", newSetId);
+                        var textParam = cmd.Parameters.AddWithValue("@text", string.Empty);
+                        cmd.Parameters.AddWithValue("@answer", string.Empty);
+                        var replacementParam = cmd.Parameters.AddWithValue("@isReplacement", 0);
+
+                        // Normální otázky 1-28
+                        replacementParam.Value = 0;
+                        for (int i = 1; i <= 28; i++)
+                        {
+                            textParam.Value = $"Otázka {i}";
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // Náhradní otázky 1-28
+                        replacementParam.Value = 1;
+                        for (int i = 1; i <= 28; i++)
+                        {
+                            textParam.Value = $"Náhradní otázka {i}";
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception($"Chyba při vytváření sady: {ex.Message}", ex);
+                }
+            }
+
+            return newSetId;
+        }
+
+        public static void DeleteQuestionSet(uint setId)
+        {
+            // Vše zabalíme do transakce, buď se smaže komplet všechno, nebo nic
+            using (var transaction = DatabaseConnection.Connection.BeginTransaction())
+            {
+                try
+                {
+                    // 1. Nejdřív vymažeme všech 56 otázek patřících k této sadě
+                    string deleteQuestionsQuery = "DELETE FROM Questions WHERE set_id = @set_Id";
+                    using (var cmd = new SQLiteCommand(deleteQuestionsQuery, DatabaseConnection.Connection, transaction))
+                    {
+                        cmd.Parameters.AddWithValue("@set_Id", setId);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 2. Potom vymažeme samotnou sadu z číselníku
+                    string deleteSetQuery = "DELETE FROM QuestionSets WHERE id = @set_Id";
+                    using (var cmd = new SQLiteCommand(deleteSetQuery, DatabaseConnection.Connection, transaction))
+                    {
+                        cmd.Parameters.AddWithValue("@set_Id", setId);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception($"Chyba při čištění stornované sady (ID {setId}): {ex.Message}", ex);
+                }
+            }
+        }
+
         public static Question GetQuestion(uint setid, bool replacement = false)
         {
             if (!TableNotEmpty("Questions"))
@@ -129,11 +261,11 @@ namespace AZ_Kviz
 
             // Vybere JEDNU náhodnou otázku z dané sady, která ještě nebyla použitá
             // ORDER BY RANDOM() je pro SQLite ideální způsob
-            string query = "SELECT id, text, answer FROM Questions WHERE setid = @setid AND used = 0 ORDER BY RANDOM() LIMIT 1";
+            string query = "SELECT id, text, answer FROM Questions WHERE set_id = @set_id AND used = 0 ORDER BY RANDOM() LIMIT 1";
 
             using (var cmd = new SQLiteCommand(query, DatabaseConnection.Connection))
             {
-                cmd.Parameters.AddWithValue("@setid", setid);
+                cmd.Parameters.AddWithValue("@set_id", setid);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -142,8 +274,6 @@ namespace AZ_Kviz
                         uint id = Convert.ToUInt32(reader["id"]);
                         string text = reader["text"].ToString();
                         string answer = reader["answer"].ToString();
-
-                        MarkQuestionUsed(id);
                         return new Question(text, answer, id);
                     }
                 }
@@ -160,6 +290,54 @@ namespace AZ_Kviz
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        public static void ResetQuestionUsage(uint setId)
+        {
+
+            string query = "UPDATE Questions SET used = 0 WHERE set_id = @set_id";
+            try
+            {
+                using(SqlCursorManager.Show())
+                using (var cmd = new SQLiteCommand(query, DatabaseConnection.Connection))
+                {
+                    cmd.Parameters.AddWithValue("@set_id", setId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Chyba při resetování příznaku použití otázek: {ex.Message}", ex);
+            }
+        }
+
+        public static List<QuestionSet> GetAllQuestionSets()
+        {
+            var sets = new List<QuestionSet>();
+            string querry = "SELECT id, name, scope, difficulty FROM QuestionSets ORDER BY id ASC";
+
+            try
+            {
+                using(var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
+                {
+                    using(var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            uint id = Convert.ToUInt32(reader["id"]);
+                            string name = reader["name"].ToString() ?? "?";
+                            string scope = reader["scope"].ToString() ?? "?";
+                            uint difficulty = Convert.ToUInt32(reader["difficulty"]);
+
+                            sets.Add(new QuestionSet(id, name, scope, difficulty));
+                        }
+                    }
+                }
+            } catch(Exception ex)
+            {
+                throw new Exception($"Chyba při načítání sad otázek z DB: {ex.Message}", ex);
+            }
+            return sets;
         }
     }
 }

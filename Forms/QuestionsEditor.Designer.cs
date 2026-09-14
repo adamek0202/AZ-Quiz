@@ -1,6 +1,6 @@
 ﻿namespace AZ_Kviz.Forms
 {
-    partial class QuestionsEditor
+    partial class QuestionsEditorForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,152 +28,263 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(QuestionsEditor));
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.toolStrip1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(QuestionsEditorForm));
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.saveButton = new System.Windows.Forms.ToolStripButton();
+            this.cancelButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.importExportMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.importButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.normalQuestionsPage = new System.Windows.Forms.TabPage();
+            this.dgvNormal = new System.Windows.Forms.DataGridView();
+            this.colNormalId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNormalText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNormalAnswer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.replacementQuestionsPage = new System.Windows.Forms.TabPage();
+            this.dgvReplacement = new System.Windows.Forms.DataGridView();
+            this.colReplacementId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colReplacementText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colReplacementAnswer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStrip.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.normalQuestionsPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvNormal)).BeginInit();
+            this.replacementQuestionsPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvReplacement)).BeginInit();
             this.SuspendLayout();
             // 
-            // toolStrip1
+            // toolStrip
             // 
-            this.toolStrip1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripLabel1});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1117, 29);
-            this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Text = "toolStrip1";
+            this.toolStrip.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveButton,
+            this.cancelButton,
+            this.toolStripSeparator1,
+            this.importExportMenu});
+            this.toolStrip.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(1169, 29);
+            this.toolStrip.TabIndex = 0;
+            this.toolStrip.Text = "toolStrip";
             // 
-            // toolStripButton1
+            // saveButton
             // 
-            this.toolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(60, 26);
-            this.toolStripButton1.Text = "Uložit";
+            this.saveButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.saveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.saveButton.Image = ((System.Drawing.Image)(resources.GetObject("saveButton.Image")));
+            this.saveButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(60, 26);
+            this.saveButton.Text = "Uložit";
+            this.saveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
-            // toolStripLabel1
+            // cancelButton
             // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(57, 26);
-            this.toolStripLabel1.Text = "Zrušit";
+            this.cancelButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.cancelButton.Image = ((System.Drawing.Image)(resources.GetObject("cancelButton.Image")));
+            this.cancelButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(61, 26);
+            this.cancelButton.Text = "Zrušit";
+            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // tabControl1
+            // toolStripSeparator1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 29);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1117, 531);
-            this.tabControl1.TabIndex = 1;
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 29);
             // 
-            // tabPage1
+            // importExportMenu
             // 
-            this.tabPage1.Controls.Add(this.dataGridView1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 31);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1109, 496);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Otázky";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.importExportMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.importExportMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importButton,
+            this.exportButton});
+            this.importExportMenu.Image = ((System.Drawing.Image)(resources.GetObject("importExportMenu.Image")));
+            this.importExportMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.importExportMenu.Name = "importExportMenu";
+            this.importExportMenu.Size = new System.Drawing.Size(138, 26);
+            this.importExportMenu.Text = "Import/Export";
             // 
-            // dataGridView1
+            // importButton
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3});
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1103, 490);
-            this.dataGridView1.TabIndex = 0;
+            this.importButton.Name = "importButton";
+            this.importButton.Size = new System.Drawing.Size(180, 26);
+            this.importButton.Text = "Import";
+            this.importButton.Click += new System.EventHandler(this.ImportButton_Click);
             // 
-            // Column1
+            // exportButton
             // 
-            this.Column1.HeaderText = "Column1";
-            this.Column1.Name = "Column1";
+            this.exportButton.Name = "exportButton";
+            this.exportButton.Size = new System.Drawing.Size(180, 26);
+            this.exportButton.Text = "Export";
+            this.exportButton.Click += new System.EventHandler(this.ExportButton_Click);
             // 
-            // Column2
+            // tabControl
             // 
-            this.Column2.HeaderText = "Column2";
-            this.Column2.Name = "Column2";
+            this.tabControl.Controls.Add(this.normalQuestionsPage);
+            this.tabControl.Controls.Add(this.replacementQuestionsPage);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 29);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(1169, 584);
+            this.tabControl.TabIndex = 1;
             // 
-            // Column3
+            // normalQuestionsPage
             // 
-            this.Column3.HeaderText = "Column3";
-            this.Column3.Name = "Column3";
+            this.normalQuestionsPage.Controls.Add(this.dgvNormal);
+            this.normalQuestionsPage.Location = new System.Drawing.Point(4, 31);
+            this.normalQuestionsPage.Name = "normalQuestionsPage";
+            this.normalQuestionsPage.Padding = new System.Windows.Forms.Padding(3);
+            this.normalQuestionsPage.Size = new System.Drawing.Size(1161, 549);
+            this.normalQuestionsPage.TabIndex = 0;
+            this.normalQuestionsPage.Text = "Otázky";
+            this.normalQuestionsPage.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // dgvNormal
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 31);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1109, 496);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Náhradní otázky";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.dgvNormal.AllowUserToAddRows = false;
+            this.dgvNormal.AllowUserToDeleteRows = false;
+            this.dgvNormal.AllowUserToResizeRows = false;
+            this.dgvNormal.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.dgvNormal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvNormal.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colNormalId,
+            this.colNormalText,
+            this.colNormalAnswer});
+            this.dgvNormal.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvNormal.EnableHeadersVisualStyles = false;
+            this.dgvNormal.Location = new System.Drawing.Point(3, 3);
+            this.dgvNormal.MultiSelect = false;
+            this.dgvNormal.Name = "dgvNormal";
+            this.dgvNormal.RowHeadersVisible = false;
+            this.dgvNormal.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dgvNormal.Size = new System.Drawing.Size(1155, 543);
+            this.dgvNormal.TabIndex = 0;
             // 
-            // QuestionsEditor
+            // colNormalId
+            // 
+            this.colNormalId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colNormalId.FillWeight = 50F;
+            this.colNormalId.Frozen = true;
+            this.colNormalId.HeaderText = "ID";
+            this.colNormalId.Name = "colNormalId";
+            this.colNormalId.Width = 50;
+            // 
+            // colNormalText
+            // 
+            this.colNormalText.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colNormalText.FillWeight = 111.9289F;
+            this.colNormalText.HeaderText = "Otázka";
+            this.colNormalText.Name = "colNormalText";
+            // 
+            // colNormalAnswer
+            // 
+            this.colNormalAnswer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colNormalAnswer.FillWeight = 111.9289F;
+            this.colNormalAnswer.HeaderText = "Odpověď";
+            this.colNormalAnswer.Name = "colNormalAnswer";
+            // 
+            // replacementQuestionsPage
+            // 
+            this.replacementQuestionsPage.Controls.Add(this.dgvReplacement);
+            this.replacementQuestionsPage.Location = new System.Drawing.Point(4, 31);
+            this.replacementQuestionsPage.Name = "replacementQuestionsPage";
+            this.replacementQuestionsPage.Padding = new System.Windows.Forms.Padding(3);
+            this.replacementQuestionsPage.Size = new System.Drawing.Size(1161, 549);
+            this.replacementQuestionsPage.TabIndex = 1;
+            this.replacementQuestionsPage.Text = "Náhradní otázky";
+            this.replacementQuestionsPage.UseVisualStyleBackColor = true;
+            // 
+            // dgvReplacement
+            // 
+            this.dgvReplacement.AllowUserToAddRows = false;
+            this.dgvReplacement.AllowUserToDeleteRows = false;
+            this.dgvReplacement.AllowUserToResizeRows = false;
+            this.dgvReplacement.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.dgvReplacement.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvReplacement.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colReplacementId,
+            this.colReplacementText,
+            this.colReplacementAnswer});
+            this.dgvReplacement.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvReplacement.EnableHeadersVisualStyles = false;
+            this.dgvReplacement.Location = new System.Drawing.Point(3, 3);
+            this.dgvReplacement.Name = "dgvReplacement";
+            this.dgvReplacement.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dgvReplacement.RowHeadersVisible = false;
+            this.dgvReplacement.Size = new System.Drawing.Size(1155, 543);
+            this.dgvReplacement.TabIndex = 0;
+            // 
+            // colReplacementId
+            // 
+            this.colReplacementId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colReplacementId.Frozen = true;
+            this.colReplacementId.HeaderText = "ID";
+            this.colReplacementId.Name = "colReplacementId";
+            this.colReplacementId.Width = 50;
+            // 
+            // colReplacementText
+            // 
+            this.colReplacementText.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colReplacementText.HeaderText = "Text otázky";
+            this.colReplacementText.Name = "colReplacementText";
+            // 
+            // colReplacementAnswer
+            // 
+            this.colReplacementAnswer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colReplacementAnswer.HeaderText = "Odpověď";
+            this.colReplacementAnswer.Name = "colReplacementAnswer";
+            // 
+            // QuestionsEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1117, 560);
+            this.ClientSize = new System.Drawing.Size(1169, 613);
             this.ControlBox = false;
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.tabControl);
+            this.Controls.Add(this.toolStrip);
             this.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "QuestionsEditor";
+            this.Name = "QuestionsEditorForm";
             this.Text = "Editor otázek";
             this.TopMost = true;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
+            this.tabControl.ResumeLayout(false);
+            this.normalQuestionsPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvNormal)).EndInit();
+            this.replacementQuestionsPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvReplacement)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.ToolStrip toolStrip;
+        private System.Windows.Forms.ToolStripButton saveButton;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage normalQuestionsPage;
+        private System.Windows.Forms.TabPage replacementQuestionsPage;
+        private System.Windows.Forms.DataGridView dgvNormal;
+        private System.Windows.Forms.DataGridView dgvReplacement;
+        private System.Windows.Forms.ToolStripButton cancelButton;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNormalQuestion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colReplacementId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colReplacementText;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colReplacementAnswer;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNormalId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNormalText;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNormalAnswer;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripDropDownButton importExportMenu;
+        private System.Windows.Forms.ToolStripMenuItem importButton;
+        private System.Windows.Forms.ToolStripMenuItem exportButton;
     }
 }

@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace AZ_Kviz
+namespace AZ_Kviz.Forms
 {
     internal static class WindowUtils
     {

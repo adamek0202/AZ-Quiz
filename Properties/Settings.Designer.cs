@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AZ_Kvíz.Properties
+namespace AZ_Kviz.Properties
 {
 
 

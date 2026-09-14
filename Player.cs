@@ -1,78 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Drawing;
 
 namespace AZ_Kviz
 {
-    internal static class Player
+    internal class Player
     {
-        public enum Players
-        {
-            PlayerOne,
-            PlayerTwo
-        }
-        public static Players CurrentPlayer { get; private set; } = Players.PlayerOne;
-        public static Players OtherPlayer => (CurrentPlayer == Players.PlayerOne) ? Players.PlayerTwo : Players.PlayerOne;
+        public string Name { get; set; }
+        public Color Color { get; set; }
+        public int Correct { get; set; }
+        public int Incorrect { get; set; }
+        public int Points => Correct + Incorrect;
 
-        public static event Action PlayerChanged;
-        public static event Action StatsChanged;
-        
-        public static void NextPlayer()
+        public Player(string name, Color color)
         {
-            CurrentPlayer = (CurrentPlayer == Players.PlayerOne) ? Players.PlayerTwo : Players.PlayerOne;
-            PlayerChanged?.Invoke();
+            Name = name;
+            Color = color;
         }
 
-        public static void UpdateStats()
+        public void Reset()
         {
-            StatsChanged?.Invoke();
+            Correct = 0;
+            Incorrect = 0;
         }
 
-        public static void ResetScore()
+        // Nahrazuje původní GetText()
+        public override string ToString()
         {
-            CurrentPlayer = Players.PlayerOne;
-            PlayerChanged?.Invoke();
-            Players.PlayerOne.Stats().Incorrect = 0;
-            Players.PlayerOne.Stats().Correct = 0;
-            Players.PlayerTwo.Stats().Correct = 0;
-            Players.PlayerTwo.Stats().Incorrect = 0;
-            StatsChanged?.Invoke();
-        }
-
-        public class Stats
-        {
-            public int Correct { get; set; }
-            public int Incorrect { get; set; }
-            public int Points
-            {
-                get
-                {
-                    return Correct + Incorrect;
-                }
-            }
-        }
-
-        internal static readonly Dictionary<Players, Stats> PlayerStats = new Dictionary<Players, Stats>()
-        {
-            { Players.PlayerOne, new Stats() },
-            { Players.PlayerTwo, new Stats() }
-        };
-    }
-
-    internal static partial class PlayerExtensions
-    {
-        public static string GetText(this Player.Players s)
-        {
-            return s switch
-            {
-                Player.Players.PlayerOne => "Tým 1",
-                Player.Players.PlayerTwo => "Tým 2",
-                _ => ""
-            };
-        }
-
-        public static Player.Stats Stats(this Player.Players s)
-        {
-            return Player.PlayerStats[s];
+            return string.IsNullOrEmpty(Name) ? "Anonymní hráč" : Name;
         }
     }
 }

@@ -10,48 +10,57 @@ namespace AZ_Kviz.Forms
         private readonly Font activeFont = new Font("Segoe UI", 12, FontStyle.Underline);
         private readonly Font inactiveFont = new Font("Segoe UI", 12, FontStyle.Regular);
 
-        private uint currentSetId = 1;
+        private readonly uint currentSetId;
 
-        public MainForm()
+        public MainForm(uint setId)
         {
             InitializeComponent();
 
+            currentSetId = setId;
+
+            // Navázání eventů na novou statickou třídu Game
             gameBoard.TileClicked += OnGameBoardTileClicked;
-            Player.StatsChanged += Player_StatsChanged;
-            Player.PlayerChanged += Player_PlayerChanged;
+            Game.StatsChanged += Game_StatsChanged;
+            Game.PlayerChanged += Game_PlayerChanged;
 
             pd = new PublicDisplay();
             pd.Show();
 
-            // Inicializace výchozího vzhledu
-            Player_PlayerChanged();
+            // Nastavení jmen do Labelů z dat, která přišla ze SetupFormu
+            playerOneLabel.Text = Game.PlayerOne.Name;
+            playerTwoLabel.Text = Game.PlayerTwo.Name;
+
+            // Inicializace výchozího vzhledu (fonty aktivního hráče)
+            Game_PlayerChanged();
+            Game_StatsChanged();
         }
 
         private void OnGameBoardTileClicked(int index, HexTile tile)
         {
             bool isAlternativeQuestion = tile.State == TileManager.TileStates.Incorrect;
 
-            if (tile.State == TileManager.TileStates.Clear || (isAlternativeQuestion && Player.CurrentPlayer.Stats().Correct >= 3))
+            // Kontrola bodů upravena na nový model (Game.CurrentPlayer.Correct)
+            if (tile.State == TileManager.TileStates.Clear || (isAlternativeQuestion && Game.CurrentPlayer.Correct >= 3))
             {
-                // Korektní disposal dialogu, index + 1 posíláme jen pro lidi do okna
-                using (var qf = new QuestionForm(index + 1,currentSetId, isAlternativeQuestion))
+                using (var qf = new QuestionForm(index + 1, currentSetId, isAlternativeQuestion))
                 {
                     if (qf.ShowDialog() == DialogResult.OK)
                     {
                         ProcessScoring(index, qf.Answer);
-                        Player.NextPlayer();
+                        Game.NextPlayer();
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Hráč nemá dost bodů k tomu, aby si vzal náhradní otázku.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Hráč nemá dost bodů (alespoň 3 správné odpovědi) k tomu, aby si vzal náhradní otázku.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
-        private void Player_PlayerChanged()
+        private void Game_PlayerChanged()
         {
-            if (Player.CurrentPlayer == Player.Players.PlayerOne)
+            // Jednoduché porovnání referencí objektů
+            if (Game.CurrentPlayer == Game.PlayerOne)
             {
                 playerOneLabel.Font = activeFont;
                 playerTwoLabel.Font = inactiveFont;
@@ -63,50 +72,55 @@ namespace AZ_Kviz.Forms
             }
         }
 
-        private void Player_StatsChanged()
+        private void Game_StatsChanged()
         {
-            playerOneCorrectBox.Text = Player.Players.PlayerOne.Stats().Correct.ToString();
-            playerOneIncorrectBox.Text = Player.Players.PlayerOne.Stats().Incorrect.ToString();
-            playerTwoCorrectBox.Text = Player.Players.PlayerTwo.Stats().Correct.ToString();
-            playerTwoIncorrectBox.Text = Player.Players.PlayerTwo.Stats().Incorrect.ToString();
+            playerOneCorrectBox.Text = Game.PlayerOne.Correct.ToString();
+            playerOneIncorrectBox.Text = Game.PlayerOne.Incorrect.ToString();
+            playerTwoCorrectBox.Text = Game.PlayerTwo.Correct.ToString();
+            playerTwoIncorrectBox.Text = Game.PlayerTwo.Incorrect.ToString();
         }
 
         private void ProcessScoring(int id, Answers answer)
         {
-            var current = Player.CurrentPlayer;
-            var other = Player.OtherPlayer;
+            var current = Game.CurrentPlayer;
+            var other = Game.OtherPlayer;
 
             switch (answer)
             {
                 case Answers.Correct:
-                    UpdateBoards(id, current == Player.Players.PlayerOne ? TileManager.TileStates.FirtstPlayer_Used : TileManager.TileStates.SecondPlayer_Used);
-                    current.Stats().Correct += 1;
+                    UpdateBoards(id, current == Game.PlayerOne ? TileManager.TileStates.FirtstPlayer_Used : TileManager.TileStates.SecondPlayer_Used);
+                    current.Correct += 1;
                     break;
 
                 case Answers.Incorrect:
                     UpdateBoards(id, TileManager.TileStates.Incorrect);
-                    current.Stats().Incorrect += 1;
+                    current.Incorrect += 1;
                     break;
 
                 case Answers.SecondCorrect:
-                    UpdateBoards(id, current == Player.Players.PlayerOne ? TileManager.TileStates.SecondPlayer_Used : TileManager.TileStates.FirtstPlayer_Used);
-                    current.Stats().Incorrect += 1;
-                    other.Stats().Correct += 1;
+                    // Pole získává ten druhý hráč (other)
+                    UpdateBoards(id, other == Game.PlayerOne ? TileManager.TileStates.FirtstPlayer_Used : TileManager.TileStates.SecondPlayer_Used);
+                    // OPRAVA LOGIKY: Bod dostává pouze ten, kdo odpověděl správně. Current hráč body nemění.
+                    other.Correct += 1;
                     break;
 
                 case Answers.SecondIncorrect:
-                    // Pokud oba odpověděli špatně, pole se zablokuje (zčerná)
+                    // Pokud oba odpověděli špatně na stejném políčku, pole zčerná (Blocked)
                     UpdateBoards(id, TileManager.TileStates.Blocked);
-                    current.Stats().Incorrect += 1;
-                    other.Stats().Incorrect += 1;
+                    current.Incorrect += 1;
+                    other.Incorrect += 1;
                     break;
             }
-            Player.UpdateStats();
+            Game.UpdateStats();
         }
 
         private void UpdateBoards(int id, TileManager.TileStates state)
         {
-            gameBoard.UpdateTile(id, state);
+            bool isWinner = gameBoard.UpdateTile(id, state);
+            if (isWinner)
+            {
+
+            }
             pd.UpdateTile(id, state);
         }
 
@@ -114,28 +128,33 @@ namespace AZ_Kviz.Forms
         {
             if (MessageBox.Show("Opravdu chcete resetovat hru?", "Dotaz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                Player.ResetScore();
+                DatabaseFunctions.ResetQuestionUsage(currentSetId);
+                Cursor.Current = Cursors.WaitCursor;
+                Game.ResetScore();
                 gameBoard.Reset();
                 pd.Reset();
+                Cursor.Current = Cursors.Default;
             }
         }
 
         private void ExitButton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Opravdu chcete program ukončit?", "Dotaz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Opravdu chcete ukončit aktuální?", "Dotaz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                DatabaseFunctions.ResetQuestionUsage(currentSetId);
+                pd.Close();
                 Close();
             }
         }
 
         private void SkipPlayerButton_Click(object sender, EventArgs e)
         {
-            Player.NextPlayer();
+            Game.NextPlayer();
         }
 
         private void EvaluateButton_Click(object sender, EventArgs e)
         {
-            if (Player.Players.PlayerOne.Stats().Points != 0 && Player.Players.PlayerTwo.Stats().Points != 0)
+            if (Game.PlayerOne.Points != 0 && Game.PlayerTwo.Points != 0)
             {
                 pd.Conclude();
             }
