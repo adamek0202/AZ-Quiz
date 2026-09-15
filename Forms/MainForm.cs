@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AZ_Kviz.Utils;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -53,11 +55,11 @@ namespace AZ_Kviz.Forms
             }
             else if (isAlternativeQuestion)
             {
-                MessageBox.Show("Hráč nemá dost bodů (alespoň 3 správné odpovědi) k tomu, aby si vzal náhradní otázku.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MsgBoxes.InfoBox("Hráč nemá dost bodů (alespoň 3 správné odpovědi) k tomu, aby si vzal náhradní otázku.");
             }
             else
             {
-                MessageBox.Show("Toto políčko již je obsazené.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MsgBoxes.InfoBox("Toto políčko již je obsazené.");
             }
         }
 
@@ -126,14 +128,20 @@ namespace AZ_Kviz.Forms
                 string winnerName = state == TileManager.TileStates.FirstPlayer_Used
                     ? Game.PlayerOne.Name
                     : Game.PlayerTwo.Name;
-                MessageBox.Show($"{winnerName} spojil všechny tři strany a vítězí!", "Konec hry", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (GameWinner.GameWinAnounce(Game.CurrentPlayer.Name))
+                {
+                    var cf = new ConclusionForm();
+                    cf.ShowDialog();
+                }
             }
             pd.UpdateTile(id, state);
         }
 
+        
+
         private void ResetButton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Opravdu chcete resetovat hru?", "Dotaz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MsgBoxes.QuestionBox("Opravdu chcete resetovat hru?"))
             {
                 DatabaseFunctions.ResetQuestionUsage(currentSetId);
                 Cursor.Current = Cursors.WaitCursor;
@@ -147,7 +155,7 @@ namespace AZ_Kviz.Forms
 
         private void ExitButton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Opravdu chcete ukončit aktuální hru?", "Dotaz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MsgBoxes.QuestionBox("Opravdu chcete ukončit aktuální hru?"))
             {
                 DatabaseFunctions.ResetQuestionUsage(currentSetId);
                 pd.Close();
@@ -162,14 +170,19 @@ namespace AZ_Kviz.Forms
 
         private void EvaluateButton_Click(object sender, EventArgs e)
         {
-            if (Game.PlayerOne.Points != 0 && Game.PlayerTwo.Points != 0)
+            if ((Game.PlayerOne.Points != 0 && Game.PlayerTwo.Points != 0) && MsgBoxes.QuestionBox("Opravdu chcete hru vyhodnotit a ukončit?"))
             {
                 pd.Conclude();
-                concludeButton.Enabled = false;
+                var cf = new ConclusionForm();
+                cf.ShowDialog();
+                if (!cf.RepeatGame)
+                {
+                    Close();
+                }
             }
             else
             {
-                MessageBox.Show("Pro vyhodnocení musí mít každý tým\nzodpovězenou alespoň jednu otázku.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MsgBoxes.ErrorBox("Pro vyhodnocení musí mít každý tým\nzodpovězenou alespoň jednu otázku.");
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using AZ_Kviz.Models;
+using AZ_Kviz.Utils;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -100,7 +101,7 @@ namespace AZ_Kviz.Forms
 
         private void EditSetButton_Click(object sender, EventArgs e)
         {
-            if (listView.SelectedItems.Count > 0)
+            if (listView.SelectedItems.Count == 1)
             {
                 ListViewItem selectedItem = listView.SelectedItems[0];
                 if (selectedItem.Tag is QuestionSet selectedSet)
@@ -148,6 +149,23 @@ namespace AZ_Kviz.Forms
                 if(focusedItem != null && focusedItem.Bounds.Contains(e.Location))
                 {
                     contextMenuStrip.Show(Cursor.Position);
+                }
+            }
+        }
+
+        private void RemoveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewItem selectedItem = listView.SelectedItems[0];
+            if (listView.SelectedItems.Count == 1 && MsgBoxes.QuestionBox("Opravdu chcete smazat vybranou sadu otázek?") && (selectedItem.Tag is QuestionSet selectedSet))
+            {
+                try
+                {
+                    DatabaseFunctions.DeleteQuestionsSet(selectedSet.Id);
+                    LoadQuestionsSets();
+                }
+                catch (Exception ex)
+                {
+                    MsgBoxes.ErrorBox("Nepodařilo se smazat sadu otázek");
                 }
             }
         }

@@ -183,12 +183,13 @@
             // 
             // startButton
             // 
+            this.startButton.BackColor = System.Drawing.Color.Lime;
             this.startButton.Location = new System.Drawing.Point(140, 97);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(75, 23);
             this.startButton.TabIndex = 3;
             this.startButton.Text = "Start";
-            this.startButton.UseVisualStyleBackColor = true;
+            this.startButton.UseVisualStyleBackColor = false;
             this.startButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // cancelButton

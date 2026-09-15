@@ -22,7 +22,6 @@ namespace AZ_Kviz
             Incorrect = 0;
         }
 
-        // Nahrazuje původní GetText()
         public override string ToString()
         {
             return string.IsNullOrEmpty(Name) ? "Anonymní hráč" : Name;

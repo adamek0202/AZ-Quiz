@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AZ_Kviz.Utils;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -23,13 +24,18 @@ namespace AZ_Kviz.Forms
         {
             if (string.IsNullOrEmpty(PlayerOneName) || string.IsNullOrEmpty(PlayerTwoName))
             {
-                MessageBox.Show("Zadejte jména obou hráčů!", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MsgBoxes.WarningBox("Zadejte jména obou hráčů!");
                 return;
+            }
+
+            if(playerOneNameBox.Text.Length > 12 || playerTwoNameBox.Text.Length > 12)
+            {
+                MsgBoxes.WarningBox("Jména hráčů nesmí být delší než 12 znaků");
             }
 
             if (PlayerOneColor == PlayerTwoColor)
             {
-                MessageBox.Show("Hráči nemohou mít stejnou barvu!", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MsgBoxes.WarningBox("Hráči nemohou mít stejnou barvu!");
                 return;
             }
 

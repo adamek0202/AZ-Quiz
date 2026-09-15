@@ -1,5 +1,6 @@
 ﻿using AZ_Kviz.Forms;
 using AZ_Kviz.Models;
+using AZ_Kviz.Utils;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace AZ_Kviz
         {
             if (!File.Exists(DbName))
             {
-                Log.Debug("Databáze neexistuje. Pokus o vytvoření nové...");
+                Log.Warning("Databáze neexistuje. Pokus o vytvoření nové...");
                 CreateDatabase();
                 return true;
             }
@@ -50,13 +51,15 @@ namespace AZ_Kviz
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Nelze otevřít databázi: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MsgBoxes.ErrorBox($"Nelze otevřít databázi: {ex.Message}");
+                Log.Error($"Selhalo otevření databáze: {ex.Message}");
                 return false;
             }
             if (!CheckDatabaseIntegrity())
             {
-                MessageBox.Show("Integrita databáze byla porušena!", "Chyba databáze", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (MessageBox.Show("Chcete vytvořit novou (prázdnou) databázi?", "Dotaz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                MsgBoxes.FatalBox("Integrita databáze byla porušena!", "Chyba databáze");
+                Log.Fatal("Došlo k porušení integrity databáze");
+                if (MsgBoxes.QuestionBox("Chcete vytvořit novou (prázdnou) databázi?"))
                 {
                     DatabaseConnection.CloseConnection(); // Musíme uvolnit zámek souboru
                     File.Delete(DbName);
@@ -81,6 +84,7 @@ namespace AZ_Kviz
         public static void CreateDatabase()
         {
             MessageBox.Show("Databáze nebyla nalezena, bude vytvořena nová...", "Chybí databáze", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            Log.Information("Vytváření nové databáze...");
 
             // Nejdřív vytvoříme strukturu tabulek včetně chybějící QuestionSets a sloupce used
             string cmd = @"
@@ -111,12 +115,13 @@ namespace AZ_Kviz
                 {
                     command.ExecuteNonQuery();
                 }
-                MessageBox.Show("Databáze byla úspěšně vytvořena.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MsgBoxes.InfoBox("Databáze byla úspěšně vytvořena.");
+                Log.Information("Nová databáze byla úspěšně vytvořena");
             }
             catch (Exception ex)
             {
                 Log.Error($"Nastala chyba při vytváření tabulek: {ex.Message}");                                                  
-                MessageBox.Show($"Nastala chyba při vytváření tabulek: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MsgBoxes.ErrorBox($"Nastala chyba při vytváření tabulek: {ex.Message}");
             }
         }
 
@@ -222,14 +227,16 @@ namespace AZ_Kviz
             return newSetId;
         }
 
-        public static void DeleteQuestionSet(uint setId)
+        public static void DeleteQuestionsSet(uint setId)
         {
-            // Vše zabalíme do transakce, buď se smaže komplet všechno, nebo nic
+            if(setId == 0)
+            {
+                throw new ArgumentException("ID sady nemůže být nula");
+            }
             using (var transaction = DatabaseConnection.Connection.BeginTransaction())
             {
                 try
                 {
-                    // 1. Nejdřív vymažeme všech 56 otázek patřících k této sadě
                     string deleteQuestionsQuery = "DELETE FROM Questions WHERE set_id = @set_Id";
                     using (var cmd = new SQLiteCommand(deleteQuestionsQuery, DatabaseConnection.Connection, transaction))
                     {
@@ -237,7 +244,6 @@ namespace AZ_Kviz
                         cmd.ExecuteNonQuery();
                     }
 
-                    // 2. Potom vymažeme samotnou sadu z číselníku
                     string deleteSetQuery = "DELETE FROM QuestionSets WHERE id = @set_Id";
                     using (var cmd = new SQLiteCommand(deleteSetQuery, DatabaseConnection.Connection, transaction))
                     {
@@ -246,6 +252,7 @@ namespace AZ_Kviz
                     }
 
                     transaction.Commit();
+                    Log.Information($"Sada otázek {setId} byla úspěšně smazána");
                 }
                 catch (Exception ex)
                 {

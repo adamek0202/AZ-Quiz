@@ -36,7 +36,7 @@
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.edittToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitButton = new System.Windows.Forms.Button();
             this.createButton = new System.Windows.Forms.Button();
@@ -83,39 +83,40 @@
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.playToolStripMenuItem,
             this.toolStripSeparator1,
-            this.edittToolStripMenuItem,
+            this.editToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
             this.contextMenuStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.contextMenuStrip.ShowImageMargin = false;
-            this.contextMenuStrip.Size = new System.Drawing.Size(117, 76);
+            this.contextMenuStrip.Size = new System.Drawing.Size(123, 76);
             // 
             // playToolStripMenuItem
             // 
             this.playToolStripMenuItem.Name = "playToolStripMenuItem";
             this.playToolStripMenuItem.ShortcutKeyDisplayString = "Enter";
-            this.playToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.playToolStripMenuItem.Text = "Hrát";
             this.playToolStripMenuItem.Click += new System.EventHandler(this.PlayToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(113, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(119, 6);
             // 
-            // edittToolStripMenuItem
+            // editToolStripMenuItem
             // 
-            this.edittToolStripMenuItem.Name = "edittToolStripMenuItem";
-            this.edittToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.edittToolStripMenuItem.Text = "Upravit";
-            this.edittToolStripMenuItem.Click += new System.EventHandler(this.EditSetButton_Click);
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.editToolStripMenuItem.Text = "Upravit";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.EditSetButton_Click);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
             this.removeToolStripMenuItem.ShortcutKeyDisplayString = "Del";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.removeToolStripMenuItem.Text = "Odstranit";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.RemoveToolStripMenuItem_Click);
             // 
             // exitButton
             // 
@@ -153,6 +154,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Výběr sady otázek";
+            this.TopMost = true;
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -167,7 +169,7 @@
         private System.Windows.Forms.Button exitButton;
         private System.Windows.Forms.Button createButton;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem edittToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;

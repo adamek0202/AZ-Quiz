@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using AZ_Kviz.Utils;
+using Serilog;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -35,8 +36,7 @@ namespace AZ_Kviz
             catch (Exception ex)
             {
                 Log.Fatal(ex, "Aplikace neočekávaně spadla při startu nebo během běhu.");
-                MessageBox.Show("Nastala kritická chyba aplikace. Podrobnosti naleznete v logu.",
-                                "Kritická chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MsgBoxes.FatalBox("Nastala kritická chyba aplikace. Podrobnosti naleznete v logu.");
             }
             finally
             {

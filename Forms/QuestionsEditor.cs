@@ -230,7 +230,7 @@ namespace AZ_Kviz.Forms
                     {
                         using (SqlCursorManager.Show())
                         {
-                            DatabaseFunctions.DeleteQuestionSet(_currentSetId);
+                            DatabaseFunctions.DeleteQuestionsSet(_currentSetId);
                         }
                     }
                     catch (Exception ex)
