@@ -7,8 +7,7 @@ namespace AZ_Kviz
     {
         private static Timer TimerDown;
 
-        public const int MaxTime = 10;
-        public static int Remaining { get; private set; } = MaxTime;
+        public static int Remaining { get; private set; } = AppServices.Config.TimeoutSeconds;
 
         public static event Action<int>? TimerTicked;
         public static event Action? Start;
@@ -27,7 +26,7 @@ namespace AZ_Kviz
 
         public static void StartTimer()
         {
-            Remaining = MaxTime;
+            Remaining = AppServices.Config.TimeoutSeconds;
             Start?.Invoke(); // Bezpečné vyvolání
             TimerDown.Start();
         }

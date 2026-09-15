@@ -89,9 +89,9 @@ namespace AZ_Kviz
                 {
                     timeIndicator.Visible = true;
                     timeIndicator.AnimationSpeed = 0;
-                    timeIndicator.Value = Countdown.MaxTime;
-                    timeIndicator.Maximum = Countdown.MaxTime;
-                    timeIndicator.Text = Countdown.MaxTime.ToString();
+                    timeIndicator.Value = AppServices.Config.TimeoutSeconds;
+                    timeIndicator.Maximum = AppServices.Config.TimeoutSeconds;
+                    timeIndicator.Text = AppServices.Config.TimeoutSeconds.ToString();
                     timeIndicator.AnimationSpeed = 1000;
                 }));
             }

@@ -1,5 +1,6 @@
 ﻿using AZ_Kviz.Utils;
 using Serilog;
+using Serilog.Events;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -14,16 +15,8 @@ namespace AZ_Kviz
         [STAThread]
         static void Main()
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Debug()
-                .WriteTo.File(
-                path: Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "log-.log"),
-                rollingInterval: RollingInterval.Day,
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
-                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error
-                ).CreateLogger();
-
+            AppServices.Initialize();
+            InitLogger();
             try
             {
                 Log.Information("Aplikace AZ-Kvíz se spouští...");
@@ -42,6 +35,22 @@ namespace AZ_Kviz
             {
                 Log.CloseAndFlush();
             }
+        }
+
+        private static void InitLogger()
+        {
+            var cfg = AppServices.Config.Serilog;
+            Enum.TryParse(cfg.MinimumLevel, true, out LogEventLevel minLevel);
+            Enum.TryParse(cfg.RollingInterval, true, out RollingInterval interval);
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Is(LogEventLevel.Debug)
+                .WriteTo.File(
+                path: cfg.LogFilePath,
+                rollingInterval: interval,
+                restrictedToMinimumLevel: LogEventLevel.Error,
+                retainedFileCountLimit: cfg.RetainDays).WriteTo.Debug()
+                .CreateLogger();
         }
     }
 }
