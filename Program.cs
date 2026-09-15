@@ -10,7 +10,7 @@ namespace AZ_Kviz
         /// <summary>
         /// Hlavní vstupní bod aplikace.
         /// </summary>
-        [MTAThread]
+        [STAThread]
         static void Main()
         {
             Log.Logger = new LoggerConfiguration()
