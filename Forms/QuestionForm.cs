@@ -1,4 +1,5 @@
 ﻿using AZ_Kviz.Models;
+using AZ_Kviz.Utils;
 using System;
 using System.Windows.Forms;
 
@@ -68,7 +69,7 @@ namespace AZ_Kviz.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Chyba při načítání otázky: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MsgBoxes.ErrorBox($"Chyba při načítání otázky: {ex.Message}");
                 // Pokud selže načtení otázky z DB, zavřeme form s Cancel, ať se hra nekousne
                 DialogResult = DialogResult.Cancel;
                 Close();
@@ -86,7 +87,7 @@ namespace AZ_Kviz.Forms
             }
             else
             {
-                MessageBox.Show("Nejdříve musíte spustit odpočet času!", "Upozornění", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MsgBoxes.WarningBox("Nejdříve musíte spustit odpočet času!", "Upozornění");
             }
         }
 

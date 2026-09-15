@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AZ_Kviz.Utils;
+using System;
 using System.Windows.Forms;
 
 namespace AZ_Kviz.Forms
@@ -34,7 +35,7 @@ namespace AZ_Kviz.Forms
             }
             else
             {
-                MessageBox.Show("Musí být vyplněna všechna pole", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MsgBoxes.ErrorBox("Musí být vyplněna všechna pole");
             }
         }
     }

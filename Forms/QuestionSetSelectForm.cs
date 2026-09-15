@@ -1,5 +1,6 @@
 ﻿using AZ_Kviz.Models;
 using AZ_Kviz.Utils;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -42,7 +43,8 @@ namespace AZ_Kviz.Forms
                 }
             } catch(Exception ex)
             {
-                MessageBox.Show(ex.Message, "Chyba databáze", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Error($"Chyba načítání sad otázek: {ex.Message}");
+                MsgBoxes.ErrorBox("Při načítání sad otázek došlo k chybě", "Chyba databáze");
             }
         }
 
@@ -94,7 +96,8 @@ namespace AZ_Kviz.Forms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Log.Error($"Chyba při vytváření sady otázek {ex.Message}");
+                    MsgBoxes.ErrorBox("Při vytváření sady otázek došlo k chybě");
                 }
             }
         }

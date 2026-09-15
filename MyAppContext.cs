@@ -1,4 +1,5 @@
 ﻿using AZ_Kviz.Forms;
+using AZ_Kviz.Utils;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Windows.Forms;
@@ -50,7 +51,7 @@ namespace AZ_Kviz
                 catch (Exception ex)
                 {
                     Serilog.Log.Error(ex, "Chyba během hry.");
-                    MessageBox.Show($"Během hry došlo k chybě: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MsgBoxes.ErrorBox($"Během hry došlo k chybě: {ex.Message}");
                 }
             }
         }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AZ_Kviz.Utils;
+using Serilog;
+using System;
 using System.Data;
 using System.Windows.Forms;
 
@@ -51,6 +53,7 @@ namespace AZ_Kviz.Forms
                 dgvReplacement.AutoGenerateColumns = false;
 
                 // Načteme každou skupinu do vlastní tabulky v paměti
+                Log.Information("Načítání otázek do editoru...");
                 _normalTable = DatabaseFunctions.GetTable(_sqlNormal);
                 _replacementTable = DatabaseFunctions.GetTable(_sqlReplacement);
 
@@ -67,10 +70,12 @@ namespace AZ_Kviz.Forms
                 dgvReplacement.DataSource = _replacementQuestionsBinding;
 
                 ConfigureGrids();
+                Log.Information("Otázky byly načteny do editoru");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Chyba při načítání", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MsgBoxes.ErrorBox("Chyba načítání otázek");
+                Log.Error($"Chyba načítání otázek do editoru: {ex.Message}");
             }
         }
 
@@ -147,13 +152,14 @@ namespace AZ_Kviz.Forms
                 _isSaved = true;
                 Cursor.Current = Cursors.Default;
 
-                MessageBox.Show("Všechny otázky byly úspěšně uloženy.", "Uloženo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Log.Information("Otázky byly úspěšně uloženy");
                 DialogResult = DialogResult.OK;
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ukládání selhalo: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MsgBoxes.ErrorBox("Chyba při ukládání otázek");
+                Log.Error($"Ukládání otázek selhalo: {ex.Message}");
             }
         }
 
@@ -170,14 +176,16 @@ namespace AZ_Kviz.Forms
 
                 if (string.IsNullOrWhiteSpace(text))
                 {
-                    MessageBox.Show($"U normální otázky číslo {order} chybí text otázky!", "Chyba validace", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    tabControl.SelectedTab = normalQuestionsPage; // Přepne na tab/záložku s normálními otázkami (případně uprav název tvého TabControlu/TabPage)
+                    MsgBoxes.WarningBox($"U normální otázky číslo {order} chybí text otázky!", "Chyba validace");
+                    Log.Information($"Chyba při validaci otázek: Normální otázce {order} chybí text");
+                    tabControl.SelectedTab = normalQuestionsPage;
                     return false;
                 }
 
                 if (string.IsNullOrWhiteSpace(answer))
                 {
-                    MessageBox.Show($"U normální otázky číslo {order} chybí odpověď!", "Chyba validace", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MsgBoxes.WarningBox($"U normální otázky číslo {order} chybí odpověď!", "Chyba validace");
+                    Log.Information($"Chyba při validaci otázek: Normální otázce {order} chybí odpověď");
                     tabControl.SelectedTab = normalQuestionsPage;
                     return false;
                 }
@@ -193,14 +201,16 @@ namespace AZ_Kviz.Forms
 
                 if (string.IsNullOrWhiteSpace(text))
                 {
-                    MessageBox.Show($"U náhradní otázky číslo {order} chybí text otázky!", "Chyba validace", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MsgBoxes.WarningBox($"U náhradní otázky číslo {order} chybí text otázky!", "Chyba validace");
+                    Log.Information($"Chyba při validaci otázek: Náhradní otázce {order} chybí text");
                     tabControl.SelectedTab = replacementQuestionsPage; // Přepne na záložku s náhradními
                     return false;
                 }
 
                 if (string.IsNullOrWhiteSpace(answer))
                 {
-                    MessageBox.Show($"U náhradní otázky číslo {order} chybí odpověď!", "Chyba validace", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MsgBoxes.WarningBox($"U náhradní otázky číslo {order} chybí odpověď!", "Chyba validace");
+                    Log.Information($"Chyba při validaci otázek: Náhradní otázce {order} chybí odpověď");
                     tabControl.SelectedTab = replacementQuestionsPage;
                     return false;
                 }
@@ -235,18 +245,18 @@ namespace AZ_Kviz.Forms
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Chyba při mazání stornované sady: {ex.Message}", "Chyba systému", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Log.Error($"Chyba při mazání stornované sady: {ex.Message}");
+                        MsgBoxes.WarningBox("V aplikaci došlo k chybě");
                     }
                 }
                 else
                 {
                     // U STARÉ sady se jen zeptáme, zda chce odejít a ztratit změny
-                    var result = MessageBox.Show("Máte neuložené změny v textu otázek. Opravdu chcete odejít bez uložení?",
-                                                 "Upozornění", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    var result = MsgBoxes.QuestionBox("Máte neuložené změny v textu otázek. Opravdu chcete odejít bez uložení?","Upozornění");
 
-                    if (result == DialogResult.No)
+                    if (!result)
                     {
-                        e.Cancel = true; // Zruší zavření okna, uživatel zůstává v editoru
+                        e.Cancel = true;
                     }
                 }
             }
@@ -254,77 +264,71 @@ namespace AZ_Kviz.Forms
 
         private void ImportData()
         {
-            Cursor.Current = Cursors.WaitCursor;
             bool isNormalSelected = (tabControl.SelectedTab == normalQuestionsPage);
             DataTable targetTable = isNormalSelected ? _normalTable : _replacementTable;
+            BindingSource targetBinding = isNormalSelected ? _normalQuestionsBinding : _replacementQuestionsBinding;
             string tabName = isNormalSelected ? "NORMÁLNÍCH" : "NÁHRADNÍCH";
-            Cursor.Current = Cursors.Default;
 
-            var confirmResult = MessageBox.Show(
-                $"Opravdu chcete přepsat všech 28 záznamů v tabulce {tabName} otázek daty z CSV souboru?",
-                "Potvrdit import", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            bool confirmResult = MsgBoxes.QuestionBox($"Opravdu chcete přepsat všech 28 záznamů v tabulce {tabName} otázek daty z CSV souboru?", "Potvrdit import");
 
-            if (confirmResult == DialogResult.No) return;
+            if (!confirmResult) return;
 
-            Cursor.Current = Cursors.WaitCursor;
-
-            using(OpenFileDialog openFileDialog = new OpenFileDialog())
+            string selectedFilePath;
+            using (var openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Filter = "CSV soubory (*.csv)|*.csv";
                 openFileDialog.Title = $"Import {tabName.ToLower()} otázek z CSV";
                 openFileDialog.Multiselect = false;
 
-                Cursor.Current = Cursors.Default;
+                if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+                selectedFilePath = openFileDialog.FileName;
+            }
+            ImportResult result;
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    Cursor.Current = Cursors.WaitCursor;
-                    ImportResult result = CSVImporter.ImportToDataTable(openFileDialog.FileName, targetTable);
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                result = CSVImporter.ImportToDataTable(selectedFilePath, targetTable);
+                targetBinding.ResetBindings(false);
+            }
+            finally
+            {
+                Cursor.Current = Cursor.Current;
+            }
+            ShowImportSummary(result, tabName);
+        }
 
-                    string errorReport = result.Errors.Count > 0
-                        ? "\n\nNalezené problémy:\n• " + string.Join("\n• ", result.Errors)
-                        : string.Empty;
+        private void ShowImportSummary(ImportResult result, string tabName)
+        {
+            string errorReport = result.Errors.Count > 0
+                ? "\n\nNalezené problémy:\n• " + string.Join("\n• ", result.Errors)
+                : string.Empty;
 
-                    if(!result.Success || result.LoadedRowsCount == 0)
-                    {
-                        MessageBox.Show($"Import zcela selhal! Žádná data nebyla nahrána.{errorReport}",
-                                "Chyba importu", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+            if (!result.Success || result.LoadedRowsCount == 0)
+            {
+                MsgBoxes.ErrorBox($"Import zcela selhal! Žádná data nebyla nahrána.{errorReport}", "Chyba importu");
+                return;
+            }
 
-                    if (isNormalSelected)
-                    {
-                        _normalQuestionsBinding.ResetBindings(false);
-                    }
-                    else
-                    {
-                        _replacementQuestionsBinding.ResetBindings(false);
-                    }
-
-                    Cursor.Current = Cursors.Default;
-
-                    if (result.LoadedRowsCount < 28)
-                    {
-                        MessageBox.Show(
-                            $"Import dokončen pouze částečně.\n\n" +
-                            $"Úspěšně se načetlo {result.LoadedRowsCount} řádků z 28 očekávaných.{errorReport}\n\n" +
-                            $"Zbývajících {28 - result.LoadedRowsCount} otázek musíte vyplnit ručně!",
-                            "Neúplný import", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    else
-                    {
-                        if (result.Errors.Count > 0)
-                        {
-                            MessageBox.Show($"Všech 28 otázek bylo načteno, ale některé řádky v souboru byly přeskočeny kvůli chybám.{errorReport}",
-                                "Import s varováním", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                        else
-                        {
-                            MessageBox.Show($"Všech 28 {tabName.ToLower()} otázek bylo úspěšně naimportováno.",
-                                "Import dokončen", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                    }
-                }
+            if (result.LoadedRowsCount < 28)
+            {
+                MsgBoxes.WarningBox(
+                    $"Import dokončen pouze částečně.\n\n" +
+                    $"Úspěšně se načetlo {result.LoadedRowsCount} řádků z 28 očekávaných.{errorReport}\n\n" +
+                    $"Zbývajících {28 - result.LoadedRowsCount} otázek musíte vyplnit ručně!",
+                    "Neúplný import");
+            }
+            else if (result.Errors.Count > 0)
+            {
+                MsgBoxes.InfoBox(
+                    $"Všech 28 otázek bylo načteno, ale některé řádky v souboru byly přeskočeny kvůli chybám.{errorReport}",
+                    "Import s varováním");
+            }
+            else
+            {
+                MsgBoxes.InfoBox(
+                    $"Všech 28 {tabName.ToLower()} otázek bylo úspěšně naimportováno.",
+                    "Import dokončen");
             }
         }
 
@@ -356,13 +360,14 @@ namespace AZ_Kviz.Forms
 
                     if (success)
                     {
-                        MessageBox.Show($"Všech {sourceTable.Rows.Count} otázek z karty '{tabName.ToLower()}' bylo úspěšně uloženo do CSV.",
-                                        "Export dokončen", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MsgBoxes.InfoBox($"Všech {sourceTable.Rows.Count} otázek z karty '{tabName.ToLower()}' bylo úspěšně uloženo do CSV.",
+                                        "Export dokončen");
                     }
                     else
                     {
-                        MessageBox.Show($"Export selhal!\n\n{errorMsg}",
-                                        "Chyba exportu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Log.Error($"Export selhal!\n\n{errorMsg}");
+                        MsgBoxes.ErrorBox("Export selhal!",
+                                        "Chyba exportu");
                     }
                     Cursor.Current = Cursors.Default;
                 }

@@ -21,7 +21,7 @@ namespace AZ_Kviz
                 path: Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "log-.log"),
                 rollingInterval: RollingInterval.Day,
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
-                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning
+                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error
                 ).CreateLogger();
 
             try

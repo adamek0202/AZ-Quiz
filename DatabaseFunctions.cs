@@ -83,7 +83,7 @@ namespace AZ_Kviz
 
         public static void CreateDatabase()
         {
-            MessageBox.Show("Databáze nebyla nalezena, bude vytvořena nová...", "Chybí databáze", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MsgBoxes.ErrorBox("Databáze nebyla nalezena, bude vytvořena nová...", "Chybí databáze");
             Log.Information("Vytváření nové databáze...");
 
             // Nejdřív vytvoříme strukturu tabulek včetně chybějící QuestionSets a sloupce used
