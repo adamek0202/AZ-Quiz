@@ -2,6 +2,7 @@
 
 namespace AZ_Kviz
 {
+    [Serializable]
     internal class EmptyDatasetException : Exception
     {
         public EmptyDatasetException() {}

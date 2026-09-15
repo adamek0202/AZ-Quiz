@@ -39,21 +39,25 @@ namespace AZ_Kviz.Forms
         {
             bool isAlternativeQuestion = tile.State == TileManager.TileStates.Incorrect;
 
-            // Kontrola bodů upravena na nový model (Game.CurrentPlayer.Correct)
             if (tile.State == TileManager.TileStates.Clear || (isAlternativeQuestion && Game.CurrentPlayer.Correct >= 3))
             {
                 using (var qf = new QuestionForm(index + 1, currentSetId, isAlternativeQuestion))
                 {
                     if (qf.ShowDialog() == DialogResult.OK)
                     {
+                        DatabaseFunctions.MarkQuestionUsed(qf.QuestionId);
                         ProcessScoring(index, qf.Answer);
                         Game.NextPlayer();
                     }
                 }
             }
-            else
+            else if (isAlternativeQuestion)
             {
                 MessageBox.Show("Hráč nemá dost bodů (alespoň 3 správné odpovědi) k tomu, aby si vzal náhradní otázku.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                MessageBox.Show("Toto políčko již je obsazené.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -88,7 +92,7 @@ namespace AZ_Kviz.Forms
             switch (answer)
             {
                 case Answers.Correct:
-                    UpdateBoards(id, current == Game.PlayerOne ? TileManager.TileStates.FirtstPlayer_Used : TileManager.TileStates.SecondPlayer_Used);
+                    UpdateBoards(id, current == Game.PlayerOne ? TileManager.TileStates.FirstPlayer_Used : TileManager.TileStates.SecondPlayer_Used);
                     current.Correct += 1;
                     break;
 
@@ -99,7 +103,7 @@ namespace AZ_Kviz.Forms
 
                 case Answers.SecondCorrect:
                     // Pole získává ten druhý hráč (other)
-                    UpdateBoards(id, other == Game.PlayerOne ? TileManager.TileStates.FirtstPlayer_Used : TileManager.TileStates.SecondPlayer_Used);
+                    UpdateBoards(id, other == Game.PlayerOne ? TileManager.TileStates.FirstPlayer_Used : TileManager.TileStates.SecondPlayer_Used);
                     // OPRAVA LOGIKY: Bod dostává pouze ten, kdo odpověděl správně. Current hráč body nemění.
                     other.Correct += 1;
                     break;
@@ -119,7 +123,10 @@ namespace AZ_Kviz.Forms
             bool isWinner = gameBoard.UpdateTile(id, state);
             if (isWinner)
             {
-
+                string winnerName = state == TileManager.TileStates.FirstPlayer_Used
+                    ? Game.PlayerOne.Name
+                    : Game.PlayerTwo.Name;
+                MessageBox.Show($"{winnerName} spojil všechny tři strany a vítězí!", "Konec hry", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             pd.UpdateTile(id, state);
         }
@@ -133,13 +140,14 @@ namespace AZ_Kviz.Forms
                 Game.ResetScore();
                 gameBoard.Reset();
                 pd.Reset();
+                concludeButton.Enabled = true;
                 Cursor.Current = Cursors.Default;
             }
         }
 
         private void ExitButton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Opravdu chcete ukončit aktuální?", "Dotaz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Opravdu chcete ukončit aktuální hru?", "Dotaz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 DatabaseFunctions.ResetQuestionUsage(currentSetId);
                 pd.Close();
@@ -157,11 +165,20 @@ namespace AZ_Kviz.Forms
             if (Game.PlayerOne.Points != 0 && Game.PlayerTwo.Points != 0)
             {
                 pd.Conclude();
+                concludeButton.Enabled = false;
             }
             else
             {
                 MessageBox.Show("Pro vyhodnocení musí mít každý tým\nzodpovězenou alespoň jednu otázku.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            // Odhlášení statických událostí, aby zavřený formulář nezůstal viset v paměti
+            Game.StatsChanged -= Game_StatsChanged;
+            Game.PlayerChanged -= Game_PlayerChanged;
         }
     }
 }

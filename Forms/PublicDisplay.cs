@@ -6,6 +6,9 @@ namespace AZ_Kviz
 {
     internal partial class PublicDisplay : Form
     {
+        private readonly Font activeFont = new Font("Segoe UI", 12, FontStyle.Underline);
+        private readonly Font inactiveFont = new Font("Segoe UI", 12, FontStyle.Regular);
+
         public PublicDisplay()
         {
             InitializeComponent();
@@ -30,6 +33,7 @@ namespace AZ_Kviz
 
         public void Conclude()
         {
+            if (conclusionPanel.Visible) return;
             conclusionPanel.Visible = true;
 
             // Statistiky na konci hry taháme přímo z instancí hráčů
@@ -51,13 +55,13 @@ namespace AZ_Kviz
             // Zvýraznění podtržením podle toho, kdo je aktuálně na řadě
             if (Game.CurrentPlayer == Game.PlayerOne)
             {
-                playerOneLabel.Font = new Font(playerOneLabel.Font, FontStyle.Underline);
-                playerTwoLabel.Font = new Font(playerTwoLabel.Font, FontStyle.Regular);
+                playerOneLabel.Font = activeFont;
+                playerTwoLabel.Font = inactiveFont;
             }
             else
             {
-                playerOneLabel.Font = new Font(playerOneLabel.Font, FontStyle.Regular);
-                playerTwoLabel.Font = new Font(playerTwoLabel.Font, FontStyle.Underline);
+                playerOneLabel.Font = inactiveFont;
+                playerTwoLabel.Font = activeFont;
             }
         }
 

@@ -4,13 +4,13 @@
     {
         public string Text { get; }
         public string Answer { get; }
-        public uint SetID { get; }
+        public uint Id { get; }
 
-        public Question(string text, string answer, uint setID)
+        public Question(string text, string answer, uint id)
         {
             Text = text;
             Answer = answer;
-            SetID = setID;
+            Id = id;
         }
     }
 }

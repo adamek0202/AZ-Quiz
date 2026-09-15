@@ -285,7 +285,7 @@ namespace AZ_Kviz.Forms
                         ? "\n\nNalezené problémy:\n• " + string.Join("\n• ", result.Errors)
                         : string.Empty;
 
-                    if(!result.Sucess || result.LoadedRowsCount == 0)
+                    if(!result.Success || result.LoadedRowsCount == 0)
                     {
                         MessageBox.Show($"Import zcela selhal! Žádná data nebyla nahrána.{errorReport}",
                                 "Chyba importu", MessageBoxButtons.OK, MessageBoxIcon.Error);

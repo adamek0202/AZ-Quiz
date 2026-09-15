@@ -87,6 +87,8 @@ namespace AZ_Kviz
                 CREATE TABLE ""QuestionSets"" (
                     ""id"" INTEGER NOT NULL UNIQUE,
                     ""name"" TEXT NOT NULL DEFAULT """",
+                    ""scope"" TEXT NOT NULL DEFAULT """",
+                    ""difficulty"" INTEGER NOT NULL DEFAULT 1,
                     PRIMARY KEY(""id"" AUTOINCREMENT)
                 );
 
@@ -97,8 +99,9 @@ namespace AZ_Kviz
                     ""set_id""  INTEGER NOT NULL DEFAULT 0,
                     ""setpos"" INTEGER NOT NULL DEFAULT 0,
                     ""used""   INTEGER NOT NULL DEFAULT 0,
+                    ""is_replacement"" INTEGER NOT NULL DEFAULT 0,
                     PRIMARY KEY(""id"" AUTOINCREMENT),
-                    FOREIGN KEY(""setid"") REFERENCES ""QuestionSets""(""id"")
+                    FOREIGN KEY(""set_id"") REFERENCES ""QuestionSets""(""id"")
                 );
                CREATE INDEX ""QuestionSetID"" ON ""Questions"" (""set_id"" ASC);";
 
@@ -261,11 +264,14 @@ namespace AZ_Kviz
 
             // Vybere JEDNU náhodnou otázku z dané sady, která ještě nebyla použitá
             // ORDER BY RANDOM() je pro SQLite ideální způsob
-            string query = "SELECT id, text, answer FROM Questions WHERE set_id = @set_id AND used = 0 ORDER BY RANDOM() LIMIT 1";
+            string query = @"SELECT id, text, answer FROM Questions 
+                             WHERE set_id = @set_id AND used = 0 AND is_replacement = @replacement 
+                             ORDER BY RANDOM() LIMIT 1";
 
             using (var cmd = new SQLiteCommand(query, DatabaseConnection.Connection))
             {
                 cmd.Parameters.AddWithValue("@set_id", setid);
+                cmd.Parameters.AddWithValue("@replacement", replacement ? 1 : 0);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -279,7 +285,7 @@ namespace AZ_Kviz
                 }
             }
 
-            throw new Exception($"V sadě {setid} již nejsou žádné nepoužité otázky!");
+            throw new EmptyDatasetException($"V sadě {setid} již nejsou žádné nepoužité otázky!");
         }
 
         public static void MarkQuestionUsed(uint id)

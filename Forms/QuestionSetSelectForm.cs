@@ -24,6 +24,7 @@ namespace AZ_Kviz.Forms
         {
             try
             {
+                listView.Items.Clear();
                 List<QuestionSet> questionSets;
                 using (SqlCursorManager.Show())
                 {

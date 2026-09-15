@@ -1,23 +1,21 @@
 ﻿using AZ_Kviz.Models;
 using System;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace AZ_Kviz.Forms
 {
     internal partial class QuestionForm : BaseForm
     {
-        private int id;
         private bool isReplacement;
         private bool timerStarted = false;
 
         internal Answers Answer;
+        internal uint QuestionId { get; private set; }
 
         public QuestionForm(int id, uint setId, bool isReplacement = false)
         {
             InitializeComponent();
 
-            this.id = id;
             this.isReplacement = isReplacement;
             this.Text = $"Otázka číslo {id}";
 
@@ -29,18 +27,24 @@ namespace AZ_Kviz.Forms
 
         private void Countdown_Finished()
         {
-            Invoke(new Action(() =>
+            if (IsHandleCreated && !IsDisposed)
             {
-                timeTextBox.Text = "0";
-            }));
+                Invoke(new Action(() =>
+                {
+                    timeTextBox.Text = "0";
+                }));
+            }
         }
 
         private void Countdown_TimerTicked(int obj)
         {
-            Invoke(new Action(() =>
+            if (IsHandleCreated && !IsDisposed)
             {
-                timeTextBox.Text = obj.ToString();
-            }));
+                Invoke(new Action(() =>
+                {
+                    timeTextBox.Text = obj.ToString();
+                }));
+            }
         }
 
         private void LoadData(uint setId)
@@ -56,6 +60,7 @@ namespace AZ_Kviz.Forms
                 {
                     throw new Exception("Obecná chyba aplikace.");
                 }
+                QuestionId = question.Id;
                 questionTextBox.Text = question.Text;
                 answerTextBox.Text = question.Answer;
                 playerTextBox.Text = Game.CurrentPlayer.ToString();

@@ -22,6 +22,10 @@ namespace AZ_Kviz
             PlayerTwo = new Player(p2Name, p2Color);
             CurrentPlayer = PlayerOne;
 
+            // Propojení barev hráčů s vykreslováním políček
+            TileManager.Colors.PlayerOneColor = p1Color;
+            TileManager.Colors.PlayerTwoColor = p2Color;
+
             PlayerChanged?.Invoke();
             StatsChanged?.Invoke();
         }

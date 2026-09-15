@@ -17,7 +17,7 @@ namespace AZ_Kviz
                 .MinimumLevel.Debug()
                 .WriteTo.Debug()
                 .WriteTo.File(
-                path: Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "log -.log"),
+                path: Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "log-.log"),
                 rollingInterval: RollingInterval.Day,
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
                 restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning

@@ -8,7 +8,7 @@ namespace AZ_Kviz
         private static Timer TimerDown;
 
         public const int MaxTime = 10;
-        public static int Remaining { get; set; } = MaxTime;
+        public static int Remaining { get; private set; } = MaxTime;
 
         public static event Action<int>? TimerTicked;
         public static event Action? Start;

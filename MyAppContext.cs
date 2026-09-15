@@ -39,9 +39,17 @@ namespace AZ_Kviz
                 }
                 DatabaseFunctions.ResetQuestionUsage(selectedSetId);
 
-                using (var mainForm = new MainForm(selectedSetId))
+                try
                 {
-                    mainForm.ShowDialog();
+                    using (var mainForm = new MainForm(selectedSetId))
+                    {
+                        mainForm.ShowDialog();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Serilog.Log.Error(ex, "Chyba během hry.");
+                    MessageBox.Show($"Během hry došlo k chybě: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

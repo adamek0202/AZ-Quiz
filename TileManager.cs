@@ -8,7 +8,7 @@ namespace AZ_Kviz
         internal enum TileStates
         {
             Clear,
-            FirtstPlayer_Used,
+            FirstPlayer_Used,
             SecondPlayer_Used,
             Incorrect,
             Blocked
@@ -21,19 +21,19 @@ namespace AZ_Kviz
         }
     }
 
-        internal static class TileStatesExtensions
+    internal static class TileStatesExtensions
+    {
+        public static Color TileColor( this TileManager.TileStates s)
         {
-            public static Color TileColor( this TileManager.TileStates s)
+            return s switch
             {
-                return s switch
-                {
-                    TileManager.TileStates.Clear => Color.WhiteSmoke,
-                    TileManager.TileStates.FirtstPlayer_Used => TileManager.Colors.PlayerOneColor,
-                    TileManager.TileStates.SecondPlayer_Used => TileManager.Colors.PlayerTwoColor,
-                    TileManager.TileStates.Incorrect => Color.Gray,
-                    TileManager.TileStates.Blocked => Color.Black,
-                    _ => Color.WhiteSmoke
-                };
-            }
+                TileManager.TileStates.Clear => Color.WhiteSmoke,
+                TileManager.TileStates.FirstPlayer_Used => TileManager.Colors.PlayerOneColor,
+                TileManager.TileStates.SecondPlayer_Used => TileManager.Colors.PlayerTwoColor,
+                TileManager.TileStates.Incorrect => Color.Gray,
+                TileManager.TileStates.Blocked => Color.Black,
+                _ => Color.WhiteSmoke
+            };
         }
+    }
 }

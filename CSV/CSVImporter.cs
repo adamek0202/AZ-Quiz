@@ -10,7 +10,7 @@ using System.Text;
 namespace AZ_Kviz
 {
     internal class ImportResult{
-        public bool Sucess { get; set; }
+        public bool Success { get; set; }
         public int LoadedRowsCount { get; set; }
         public List<string> Errors { get; set; } = new List<string>();
     }
@@ -100,7 +100,7 @@ namespace AZ_Kviz
                     }
 
                     result.LoadedRowsCount = rowIndex;
-                    result.Sucess = true;
+                    result.Success = true;
                 }
             }
             catch (IOException ex)

@@ -5,12 +5,13 @@ namespace AZ_Kviz
 {
     internal class HexTile
     {
-        public PointF[] Points;
+        public PointF[] Points { get; set; }
         public Color FillColor = Color.WhiteSmoke;
         public string Label = "";
         public TileManager.TileStates State;
 
         public bool HitTest(PointF p) {
+            if (Points == null || Points.Length == 0) return false;
             using (var path = new GraphicsPath())
             {
                 path.AddPolygon(Points);
@@ -20,6 +21,7 @@ namespace AZ_Kviz
 
         public PointF GetCenter()
         {
+            if (Points == null || Points.Length == 0) return PointF.Empty;
             float x = 0, y = 0;
             foreach (var pt in Points)
             {

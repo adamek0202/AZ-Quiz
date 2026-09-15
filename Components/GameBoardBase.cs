@@ -23,20 +23,23 @@ namespace AZ_Kviz.Components
 
         public bool UpdateTile(int id, TileManager.TileStates state)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            if(id >= 0 && id < tiles.Count)
+            if (id < 0 || id >= tiles.Count)
             {
-                tiles[id].FillColor = state.TileColor();
-                tiles[id].State = state;
-                Invalidate();
+                Serilog.Log.Warning($"UpdateTile: index {id} je mimo rozsah (počet políček: {tiles.Count}).");
+                return false;
+            }
 
-                if(state == TileManager.TileStates.FirtstPlayer_Used || state == TileManager.TileStates.SecondPlayer_Used)
+            Cursor.Current = Cursors.WaitCursor;
+            tiles[id].FillColor = state.TileColor();
+            tiles[id].State = state;
+            Invalidate();
+
+            if(state == TileManager.TileStates.FirstPlayer_Used || state == TileManager.TileStates.SecondPlayer_Used)
+            {
+                if(WinChecker.CheckWin(tiles, state))
                 {
-                    if(WinChecker.CheckWin(tiles, state))
-                    {
-                        Cursor.Current = Cursors.Default;
-                        return true;
-                    }
+                    Cursor.Current = Cursors.Default;
+                    return true;
                 }
             }
             Cursor.Current = Cursors.Default;
@@ -88,6 +91,7 @@ namespace AZ_Kviz.Components
                         Points = points,
                         Label = index.ToString()
                     });
+                    index++;
                 }
             }
         }

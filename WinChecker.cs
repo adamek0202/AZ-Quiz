@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AZ_Kviz
 {
@@ -50,7 +49,7 @@ namespace AZ_Kviz
         public static bool CheckWin(List<HexTile> tiles, TileManager.TileStates playerState)
         {
             // Validace, zda kontrolujeme hráče 1 nebo hráče 2
-            if (playerState != TileManager.TileStates.FirtstPlayer_Used &&
+            if (playerState != TileManager.TileStates.FirstPlayer_Used &&
                 playerState != TileManager.TileStates.SecondPlayer_Used)
                 return false;
 
