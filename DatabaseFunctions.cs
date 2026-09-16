@@ -20,7 +20,7 @@ namespace AZ_Kviz
             {
                 if (_connection == null)
                 {
-                    _connection = new SQLiteConnection($"Data Source={AppServices.Config.DatabaseFileName};Version=3");
+                    _connection = new SQLiteConnection($"Data Source={AppServices.Config.Database.DatabaseFileName};Version=3");
                     _connection.Open();
                 }
                 return _connection;
@@ -38,7 +38,7 @@ namespace AZ_Kviz
     {
         public static bool InitDatabase()
         {
-            if (!File.Exists(AppServices.Config.DatabaseFileName))
+            if (!File.Exists(AppServices.Config.Database.DatabaseFileName))
             {
                 Log.Warning("Databáze neexistuje. Pokus o vytvoření nové...");
                 CreateDatabase();
@@ -61,7 +61,7 @@ namespace AZ_Kviz
                 if (MsgBoxes.QuestionBox("Chcete vytvořit novou (prázdnou) databázi?"))
                 {
                     DatabaseConnection.CloseConnection(); // Musíme uvolnit zámek souboru
-                    File.Delete(AppServices.Config.DatabaseFileName);
+                    File.Delete(AppServices.Config.Database.DatabaseFileName);
                     CreateDatabase();
                     return true;
                 }

@@ -13,7 +13,7 @@ namespace AZ_Kviz.Configuration
         {
             return new EditableSettings
             {
-                TimeoutSeconds = AppServices.Config.TimeoutSeconds
+                TimeoutSeconds = AppServices.Config.Gameplay.AnswerTimeoutSeconds
             };
         }
 
@@ -27,7 +27,7 @@ namespace AZ_Kviz.Configuration
                 return false;
             }
 
-                AppServices.Config.TimeoutSeconds = newSettings.TimeoutSeconds;
+                AppServices.Config.Gameplay.AnswerTimeoutSeconds = newSettings.TimeoutSeconds;
                 AppServices.SaveConfig();
 
                 Log.Information("Uživatel upravil a uložil konfiguraci. Nový timeout: {Timeout}s", newSettings.TimeoutSeconds);
