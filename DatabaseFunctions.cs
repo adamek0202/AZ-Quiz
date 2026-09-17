@@ -195,7 +195,7 @@ namespace AZ_Kviz
                     }
 
                     // 2. Vygenerujeme 28 normálních a 28 náhradních otázek
-                    string insertQuestionQuery = "INSERT INTO Questions (set_id, text, answer, is_replacement) VALUES (@set_id, @text, @answer, @isReplacement)";
+                    string insertQuestionQuery = "INSERT INTO Questions (set_id, text, answer, is_replacement, question_order) VALUES (@set_id, @text, @answer, @isReplacement, , @questionOrder)";
                     using (var cmd = new SQLiteCommand(insertQuestionQuery, DatabaseConnection.Connection, transaction))
                     {
                         // Parametry stačí založit jednou před cykly
@@ -203,12 +203,14 @@ namespace AZ_Kviz
                         var textParam = cmd.Parameters.AddWithValue("@text", string.Empty);
                         cmd.Parameters.AddWithValue("@answer", string.Empty);
                         var replacementParam = cmd.Parameters.AddWithValue("@isReplacement", 0);
+                        var orderParam = cmd.Parameters.AddWithValue("@questionOrder", 1);
 
                         // Normální otázky 1-28
                         replacementParam.Value = 0;
                         for (int i = 1; i <= 28; i++)
                         {
                             textParam.Value = $"Otázka {i}";
+                            orderParam.Value = i;
                             cmd.ExecuteNonQuery();
                         }
 
@@ -217,6 +219,7 @@ namespace AZ_Kviz
                         for (int i = 1; i <= 28; i++)
                         {
                             textParam.Value = $"Náhradní otázka {i}";
+                            orderParam.Value = i;
                             cmd.ExecuteNonQuery();
                         }
                     }
