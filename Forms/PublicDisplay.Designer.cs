@@ -303,7 +303,7 @@
             this.MinimizeBox = false;
             this.Name = "PublicDisplay";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "Herní plán";
+            this.Text = "AZ-Kvíz - Herní plán";
             this.conclusionPanel.ResumeLayout(false);
             this.conclusionPanel.PerformLayout();
             this.ResumeLayout(false);

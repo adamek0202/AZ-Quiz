@@ -214,7 +214,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(563, 233);
+            this.ClientSize = new System.Drawing.Size(564, 231);
             this.ControlBox = false;
             this.Controls.Add(this.label4);
             this.Controls.Add(this.timeTextBox);
@@ -236,6 +236,7 @@
             this.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(570, 260);
             this.Name = "QuestionForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

@@ -25,8 +25,11 @@ namespace AZ_Kviz.Forms
             Game.StatsChanged += Game_StatsChanged;
             Game.PlayerChanged += Game_PlayerChanged;
 
-            pd = new PublicDisplay();
-            pd.Show();
+            if (!AppServices.Config.AudioVisual.DisablePlayerFacingDisplay)
+            {
+                pd = new PublicDisplay();
+                pd.Show(); 
+            }
 
             // Nastavení jmen do Labelů z dat, která přišla ze SetupFormu
             playerOneLabel.Text = Game.PlayerOne.Name;
@@ -37,12 +40,35 @@ namespace AZ_Kviz.Forms
             Game_StatsChanged();
         }
 
-        private void OnGameBoardTileClicked(int index, HexTile tile)
+        private void OnGameBoardTileClicked(uint index, HexTile tile)
         {
-            bool isAlternativeQuestion = tile.State == TileManager.TileStates.Incorrect;
-
-            if (tile.State == TileManager.TileStates.Clear || (isAlternativeQuestion && Game.CurrentPlayer.Correct >= 3))
+            if(tile.State == TileManager.TileStates.Clear)
             {
+                OpenQuestionForm(index, false);
+                return;
+            }
+
+            if(tile.State == TileManager.TileStates.Incorrect)
+            {
+                if (!AppServices.Config.Gameplay.EnableReplacementQuestions)
+                {
+                    MsgBoxes.InfoBox("Náhradní otázky nejsou v této hře povoleny.");
+                }
+                else if(Game.CurrentPlayer.Correct < 3)
+                {
+                    MsgBoxes.InfoBox($"Hráč {Game.CurrentPlayer.Name} nemá dost bodů (alespoň 3 správné odpovědi) k tomu, aby si vzal náhradní otázku.");
+                }
+                else
+                {
+                    OpenQuestionForm(index, true);
+                }
+                return;
+            }
+            MsgBoxes.InfoBox("Toto políčko již je obsazené.");
+        }
+
+        private void OpenQuestionForm(uint index, bool isAlternativeQuestion)
+        {
                 using (var qf = new QuestionForm(index + 1, currentSetId, isAlternativeQuestion))
                 {
                     if (qf.ShowDialog() == DialogResult.OK)
@@ -52,15 +78,6 @@ namespace AZ_Kviz.Forms
                         Game.NextPlayer();
                     }
                 }
-            }
-            else if (isAlternativeQuestion)
-            {
-                MsgBoxes.InfoBox("Hráč nemá dost bodů (alespoň 3 správné odpovědi) k tomu, aby si vzal náhradní otázku.");
-            }
-            else
-            {
-                MsgBoxes.InfoBox("Toto políčko již je obsazené.");
-            }
         }
 
         private void Game_PlayerChanged()
@@ -86,7 +103,7 @@ namespace AZ_Kviz.Forms
             playerTwoIncorrectBox.Text = Game.PlayerTwo.Incorrect.ToString();
         }
 
-        private void ProcessScoring(int id, Answers answer)
+        private void ProcessScoring(uint id, Answers answer)
         {
             var current = Game.CurrentPlayer;
             var other = Game.OtherPlayer;
@@ -120,7 +137,7 @@ namespace AZ_Kviz.Forms
             Game.UpdateStats();
         }
 
-        private void UpdateBoards(int id, TileManager.TileStates state)
+        private void UpdateBoards(uint id, TileManager.TileStates state)
         {
             bool isWinner = gameBoard.UpdateTile(id, state);
             if (isWinner)
@@ -128,18 +145,31 @@ namespace AZ_Kviz.Forms
                 string winnerName = state == TileManager.TileStates.FirstPlayer_Used
                     ? Game.PlayerOne.Name
                     : Game.PlayerTwo.Name;
-                if (GameWinner.GameWinAnounce(Game.CurrentPlayer.Name))
+                if (AppServices.Config.Gameplay.EndGameAfterWin && GameWinner.GameWinAnounce(Game.CurrentPlayer.Name))
                 {
+                    if(pd != null && AppServices.Config.AudioVisual.ShowPlayerDisplayConclusion)
+                    {
+                        pd.Conclude();
+                    }
                     var cf = new ConclusionForm();
-                    cf.ShowDialog();
+                    if(cf.ShowDialog() == DialogResult.OK)
+                    {
+                        Close();
+                    }
                 }
             }
-            pd.UpdateTile(id, state);
+            if (pd != null)
+            {
+                pd.UpdateTile(id, state); 
+            }
         }
 
-        
-
         private void ResetButton_Click(object sender, EventArgs e)
+        {
+            ResetGame();
+        }
+
+        private void ResetGame()
         {
             if (MsgBoxes.QuestionBox("Opravdu chcete resetovat hru?"))
             {
@@ -147,7 +177,10 @@ namespace AZ_Kviz.Forms
                 Cursor.Current = Cursors.WaitCursor;
                 Game.ResetScore();
                 gameBoard.Reset();
-                pd.Reset();
+                if (pd != null)
+                {
+                    pd.Reset(); 
+                }
                 concludeButton.Enabled = true;
                 Cursor.Current = Cursors.Default;
             }
@@ -155,12 +188,7 @@ namespace AZ_Kviz.Forms
 
         private void ExitButton_Click(object sender, EventArgs e)
         {
-            if (MsgBoxes.QuestionBox("Opravdu chcete ukončit aktuální hru?"))
-            {
-                DatabaseFunctions.ResetQuestionUsage(currentSetId);
-                pd.Close();
-                Close();
-            }
+            Close();
         }
 
         private void SkipPlayerButton_Click(object sender, EventArgs e)
@@ -172,26 +200,41 @@ namespace AZ_Kviz.Forms
         {
             if ((Game.PlayerOne.Points != 0 && Game.PlayerTwo.Points != 0) && MsgBoxes.QuestionBox("Opravdu chcete hru vyhodnotit a ukončit?"))
             {
-                pd.Conclude();
+                if (pd != null && AppServices.Config.AudioVisual.ShowPlayerDisplayConclusion)
+                {
+                    pd.Conclude(); 
+                }
                 var cf = new ConclusionForm();
                 cf.ShowDialog();
-                if (!cf.RepeatGame)
+                if (cf.RepeatGame)
+                {
+                    ResetGame();
+                }
+                else
                 {
                     Close();
                 }
             }
             else
             {
-                MsgBoxes.ErrorBox("Pro vyhodnocení musí mít každý tým\nzodpovězenou alespoň jednu otázku.");
+                MsgBoxes.ErrorBox("Pro vyhodnocení musí mít každý hráč\nzodpovězenou alespoň jednu otázku.");
             }
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            base.OnFormClosing(e);
-            // Odhlášení statických událostí, aby zavřený formulář nezůstal viset v paměti
-            Game.StatsChanged -= Game_StatsChanged;
-            Game.PlayerChanged -= Game_PlayerChanged;
+            if (MsgBoxes.QuestionBox("Opravdu chcete ukončit aktuální hru?"))
+            {
+                DatabaseFunctions.ResetQuestionUsage(currentSetId);
+                if (pd != null)
+                {
+                    pd.Close();
+                }
+                gameBoard.TileClicked -= OnGameBoardTileClicked;
+                Game.StatsChanged -= Game_StatsChanged;
+                Game.PlayerChanged -= Game_PlayerChanged;
+                base.OnFormClosing(e);
+            }
         }
     }
 }

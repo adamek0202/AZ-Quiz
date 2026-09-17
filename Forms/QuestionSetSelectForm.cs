@@ -172,5 +172,10 @@ namespace AZ_Kviz.Forms
                 }
             }
         }
+
+        private void settingsButton_Click(object sender, EventArgs e)
+        {
+            new SettingsForm().ShowDialog();
+        }
     }
 }

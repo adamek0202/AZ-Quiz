@@ -175,10 +175,10 @@
             this.panel2.Size = new System.Drawing.Size(18, 17);
             this.panel2.TabIndex = 6;
             // 
-            // gameBoard1
+            // gameBoard
             // 
             this.gameBoard.Location = new System.Drawing.Point(16, 52);
-            this.gameBoard.Name = "gameBoard1";
+            this.gameBoard.Name = "gameBoard";
             this.gameBoard.Size = new System.Drawing.Size(474, 430);
             this.gameBoard.TabIndex = 0;
             this.gameBoard.Text = "gameBoard";
@@ -187,7 +187,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(503, 541);
+            this.ClientSize = new System.Drawing.Size(504, 541);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.playerTwoCorrectBox);
@@ -204,6 +204,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(510, 570);
             this.Name = "MainForm";
             this.Text = "AZ Kvíz";
             this.ResumeLayout(false);

@@ -178,7 +178,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 145);
+            this.ClientSize = new System.Drawing.Size(329, 146);
             this.ControlBox = false;
             this.Controls.Add(this.repeatButton);
             this.Controls.Add(this.endButton);
@@ -188,7 +188,9 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(335, 175);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(335, 175);
             this.Name = "ConclusionForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

@@ -110,14 +110,14 @@
             // importButton
             // 
             this.importButton.Name = "importButton";
-            this.importButton.Size = new System.Drawing.Size(180, 26);
+            this.importButton.Size = new System.Drawing.Size(135, 26);
             this.importButton.Text = "Import";
             this.importButton.Click += new System.EventHandler(this.ImportButton_Click);
             // 
             // exportButton
             // 
             this.exportButton.Name = "exportButton";
-            this.exportButton.Size = new System.Drawing.Size(180, 26);
+            this.exportButton.Size = new System.Drawing.Size(135, 26);
             this.exportButton.Text = "Export";
             this.exportButton.Click += new System.EventHandler(this.ExportButton_Click);
             // 
@@ -243,10 +243,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1169, 613);
-            this.ControlBox = false;
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.toolStrip);
             this.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -254,6 +254,7 @@
             this.Text = "Editor otázek";
             this.TopMost = true;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.QuestionsEditorForm_FormClosing);
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
             this.tabControl.ResumeLayout(false);

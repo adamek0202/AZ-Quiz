@@ -1,66 +1,91 @@
 ﻿using AZ_Kviz.Forms;
 using AZ_Kviz.Utils;
-using Microsoft.WindowsAPICodePack.Dialogs;
+using Serilog;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
 {
     internal class MyAppContext : ApplicationContext
     {
+        private uint _selectedSetId;
+        private string _playerOneName, _playerTwoName;
+        private Color _playerOneColor, _playerTwoColor;
         public MyAppContext()
         {
-            RunGameFlow();
+            ShowQuestionSetSelect();
         }
 
-        private void RunGameFlow()
+        private void ShowQuestionSetSelect()
         {
-            while (true)
+            var selectForm = new QuestionSetSelectForm();
+
+            this.MainForm = selectForm;
+
+            selectForm.FormClosed += (s, e) =>
             {
-                uint selectedSetId = 0;
-                using (var selectForm = new QuestionSetSelectForm())
+                if(selectForm.DialogResult == DialogResult.OK)
                 {
-                    if (selectForm.ShowDialog() != DialogResult.OK)
-                    {
-                        Shutdown();
-                        return;
-                    }
-                    selectedSetId = selectForm.SelectedSetId;
+                    _selectedSetId = selectForm.SelectedSetId;
+                    ShowPlayersSetup();
                 }
+                else
+                {
+                    ExitThread();
+                }
+            };
 
-                using (var setupForm = new PlayersSetupForm())
-                {
-                    if (setupForm.ShowDialog() != DialogResult.OK)
-                    {
-                        continue;
-                    }
-
-                    Game.Init(
-                        setupForm.PlayerOneName, setupForm.PlayerOneColor,
-                        setupForm.PlayerTwoName, setupForm.PlayerTwoColor);
-                }
-                DatabaseFunctions.ResetQuestionUsage(selectedSetId);
-
-                try
-                {
-                    using (var mainForm = new MainForm(selectedSetId))
-                    {
-                        mainForm.ShowDialog();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Serilog.Log.Error(ex, "Chyba během hry.");
-                    MsgBoxes.ErrorBox($"Během hry došlo k chybě: {ex.Message}");
-                }
-            }
+            selectForm.Show();
         }
 
-        private void Shutdown()
+        private void ShowPlayersSetup()
         {
-            ExitThread();
-            Application.Exit();
-            Environment.Exit(0);
+            var setupForm = new PlayersSetupForm();
+            this.MainForm = setupForm;
+
+            setupForm.FormClosed += (s, e) =>
+            {
+                if (setupForm.DialogResult == DialogResult.OK)
+                {
+                    _playerOneName = setupForm.PlayerOneName;
+                    _playerOneColor = setupForm.PlayerOneColor;
+                    _playerTwoName = setupForm.PlayerTwoName;
+                    _playerTwoColor = setupForm.PlayerTwoColor;
+
+                    StartGame();
+                }
+            };
+
+            setupForm.Show();
+        }
+
+        private void StartGame()
+        {
+            Game.Init(_playerOneName, _playerOneColor, _playerTwoName, _playerTwoColor);
+            DatabaseFunctions.ResetQuestionUsage(_selectedSetId);
+
+            MainForm mainGameForm;
+            try
+            {
+                mainGameForm = new MainForm(_selectedSetId);
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Chyba při inicializaci hry.");
+                MsgBoxes.ErrorBox($"Během přípravy hry došlo k chybě");
+                ShowQuestionSetSelect();
+                return;
+            }
+
+            this.MainForm = mainGameForm;
+
+            mainGameForm.FormClosed += (s, e) =>
+            {
+                ShowQuestionSetSelect();
+            };
+
+            mainGameForm.Show();
         }
     }
 }

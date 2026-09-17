@@ -7,7 +7,7 @@ namespace AZ_Kviz
     {
         private static Timer TimerDown;
 
-        public static int Remaining { get; private set; } = AppServices.Config.Gameplay.AnswerTimeoutSeconds;
+        public static int Remaining { get; private set; } = AppServices.Config.Gameplay.Timeouts.AnswerTimeoutSeconds;
 
         public static event Action<int>? TimerTicked;
         public static event Action? Start;
@@ -26,7 +26,7 @@ namespace AZ_Kviz
 
         public static void StartTimer()
         {
-            Remaining = AppServices.Config.Gameplay.AnswerTimeoutSeconds;
+            Remaining = AppServices.Config.Gameplay.Timeouts.AnswerTimeoutSeconds;
             Start?.Invoke(); // Bezpečné vyvolání
             TimerDown.Start();
         }

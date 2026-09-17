@@ -89,15 +89,15 @@ namespace AZ_Kviz
                 {
                     timeIndicator.Visible = true;
                     timeIndicator.AnimationSpeed = 0;
-                    timeIndicator.Value = AppServices.Config.Gameplay.AnswerTimeoutSeconds;
-                    timeIndicator.Maximum = AppServices.Config.Gameplay.AnswerTimeoutSeconds;
-                    timeIndicator.Text = AppServices.Config.Gameplay.AnswerTimeoutSeconds.ToString();
+                    timeIndicator.Value = AppServices.Config.Gameplay.Timeouts.AnswerTimeoutSeconds;
+                    timeIndicator.Maximum = AppServices.Config.Gameplay.Timeouts.AnswerTimeoutSeconds;
+                    timeIndicator.Text = AppServices.Config.Gameplay.Timeouts.AnswerTimeoutSeconds.ToString();
                     timeIndicator.AnimationSpeed = 1000;
                 }));
             }
         }
 
-        public void UpdateTile(int ind, TileManager.TileStates state)
+        public void UpdateTile(uint ind, TileManager.TileStates state)
         {
             gameBoard.UpdateTile(ind, state);
         }

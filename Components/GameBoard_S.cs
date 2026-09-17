@@ -12,7 +12,7 @@ namespace AZ_Kviz.Components
 {
     internal partial class GameBoard_S : GameBoardBase
     {
-        internal event Action<int, HexTile>? TileClicked;
+        internal event Action<uint, HexTile>? TileClicked;
         public GameBoard_S() : base(Properties.Resources.map_s, new Font("Segoe UI", 10, FontStyle.Bold))
         {
             MouseClick += OnMouseClick;
@@ -25,7 +25,7 @@ namespace AZ_Kviz.Components
                 // K 'tiles' máme přístup, protože je v bázové třídě označená jako protected
                 if (tiles[i].HitTest(e.Location) && tiles[i].State != TileManager.TileStates.Blocked)
                 {
-                    TileClicked?.Invoke(i, tiles[i]);
+                    TileClicked?.Invoke((uint)i, tiles[i]);
                     break;
                 }
             }

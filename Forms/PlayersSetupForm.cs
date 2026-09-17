@@ -16,8 +16,8 @@ namespace AZ_Kviz.Forms
         {
             InitializeComponent();
 
-            firstPlayerColorPanel.BackColor = Color.Orange;
-            secondPlayerColorPanel.BackColor = Color.DeepSkyBlue;
+            firstPlayerColorPanel.BackColor = ColorTranslator.FromHtml(AppServices.Config.AudioVisual.Colors.Player1DefaultColorHex);
+            secondPlayerColorPanel.BackColor = ColorTranslator.FromHtml(AppServices.Config.AudioVisual.Colors.Player2DefaultColorHex);
         }
 
         private void StartButton_Click(object sender, EventArgs e)

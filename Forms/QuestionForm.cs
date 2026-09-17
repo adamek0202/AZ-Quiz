@@ -13,7 +13,7 @@ namespace AZ_Kviz.Forms
         internal Answers Answer;
         internal uint QuestionId { get; private set; }
 
-        public QuestionForm(int id, uint setId, bool isReplacement = false)
+        public QuestionForm(uint id, uint setId, bool isReplacement = false)
         {
             InitializeComponent();
 
@@ -23,7 +23,7 @@ namespace AZ_Kviz.Forms
             Countdown.TimerTicked += Countdown_TimerTicked;
             Countdown.Finished += Countdown_Finished;
 
-            LoadData(setId);
+            LoadData(setId, id);
         }
 
         private void Countdown_Finished()
@@ -48,14 +48,14 @@ namespace AZ_Kviz.Forms
             }
         }
 
-        private void LoadData(uint setId)
+        private void LoadData(uint setId, uint id)
         {
             try
             {
                 Question question;
                 using(SqlCursorManager.Show())
                 { 
-                    question = DatabaseFunctions.GetQuestion(setId, isReplacement);
+                    question = DatabaseFunctions.GetQuestion(setId, id, isReplacement);
                 }
                 if(question == null)
                 {

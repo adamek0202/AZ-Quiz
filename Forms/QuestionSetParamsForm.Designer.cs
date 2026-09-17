@@ -42,47 +42,53 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(18, 9);
+            this.label1.Location = new System.Drawing.Point(21, 10);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 13);
+            this.label1.Size = new System.Drawing.Size(39, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Název";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(26, 35);
+            this.label2.Location = new System.Drawing.Point(30, 40);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(30, 13);
+            this.label2.Size = new System.Drawing.Size(34, 15);
             this.label2.TabIndex = 0;
             this.label2.Text = "Obor";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 60);
+            this.label3.Location = new System.Drawing.Point(4, 69);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.Size = new System.Drawing.Size(58, 15);
             this.label3.TabIndex = 0;
             this.label3.Text = "Obtížnost";
             // 
             // nameTextBox
             // 
-            this.nameTextBox.Location = new System.Drawing.Point(62, 6);
+            this.nameTextBox.Location = new System.Drawing.Point(72, 7);
+            this.nameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.nameTextBox.Name = "nameTextBox";
-            this.nameTextBox.Size = new System.Drawing.Size(207, 20);
+            this.nameTextBox.Size = new System.Drawing.Size(241, 23);
             this.nameTextBox.TabIndex = 1;
             // 
             // scopeTextBox
             // 
-            this.scopeTextBox.Location = new System.Drawing.Point(62, 32);
+            this.scopeTextBox.Location = new System.Drawing.Point(72, 37);
+            this.scopeTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.scopeTextBox.Name = "scopeTextBox";
-            this.scopeTextBox.Size = new System.Drawing.Size(207, 20);
+            this.scopeTextBox.Size = new System.Drawing.Size(241, 23);
             this.scopeTextBox.TabIndex = 2;
             // 
             // difficultyNumeric
             // 
-            this.difficultyNumeric.Location = new System.Drawing.Point(62, 58);
+            this.difficultyNumeric.Location = new System.Drawing.Point(72, 67);
+            this.difficultyNumeric.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.difficultyNumeric.Maximum = new decimal(new int[] {
             10,
             0,
@@ -94,7 +100,7 @@
             0,
             0});
             this.difficultyNumeric.Name = "difficultyNumeric";
-            this.difficultyNumeric.Size = new System.Drawing.Size(52, 20);
+            this.difficultyNumeric.Size = new System.Drawing.Size(61, 23);
             this.difficultyNumeric.TabIndex = 3;
             this.difficultyNumeric.Value = new decimal(new int[] {
             1,
@@ -104,9 +110,10 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(120, 58);
+            this.okButton.Location = new System.Drawing.Point(234, 66);
+            this.okButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(68, 23);
+            this.okButton.Size = new System.Drawing.Size(79, 27);
             this.okButton.TabIndex = 4;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
@@ -115,9 +122,10 @@
             // cancelButton
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(194, 58);
+            this.cancelButton.Location = new System.Drawing.Point(141, 66);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.Size = new System.Drawing.Size(88, 27);
             this.cancelButton.TabIndex = 5;
             this.cancelButton.Text = "Storno";
             this.cancelButton.UseVisualStyleBackColor = true;
@@ -126,10 +134,10 @@
             // QuestionSetParamsForm
             // 
             this.AcceptButton = this.okButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(281, 92);
+            this.ClientSize = new System.Drawing.Size(323, 102);
             this.ControlBox = false;
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
@@ -139,7 +147,9 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "QuestionSetParamsForm";

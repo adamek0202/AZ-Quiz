@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AZ_Kviz.Utils;
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -12,6 +13,7 @@ namespace AZ_Kviz.Configuration
         {
             if (!File.Exists(filePath))
             {
+                MsgBoxes.ErrorBox("Konfigurační soubor nebyl nalezen. Bude vytvořen nový s výchozími paprametry");
                 T newConfig = new T();
                 Save(filePath, newConfig);
                 return newConfig;

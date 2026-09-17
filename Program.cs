@@ -39,7 +39,7 @@ namespace AZ_Kviz
 
         private static void InitLogger()
         {
-            var cfg = AppServices.Config.Serilog;
+            var cfg = AppServices.Config.System.Serilog;
             Enum.TryParse(cfg.MinimumLevel, true, out LogEventLevel minLevel);
             Enum.TryParse(cfg.RollingInterval, true, out RollingInterval interval);
 

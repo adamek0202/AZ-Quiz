@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.listView = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -40,6 +40,7 @@
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitButton = new System.Windows.Forms.Button();
             this.createButton = new System.Windows.Forms.Button();
+            this.settingsButton = new System.Windows.Forms.Button();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,7 +56,7 @@
             this.listView.HideSelection = false;
             this.listView.Location = new System.Drawing.Point(0, 0);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(413, 372);
+            this.listView.Size = new System.Drawing.Size(409, 372);
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
@@ -120,36 +121,54 @@
             // 
             // exitButton
             // 
-            this.exitButton.Location = new System.Drawing.Point(326, 378);
+            this.exitButton.BackColor = System.Drawing.Color.Red;
+            this.exitButton.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.exitButton.ForeColor = System.Drawing.Color.White;
+            this.exitButton.Location = new System.Drawing.Point(309, 378);
             this.exitButton.Name = "exitButton";
-            this.exitButton.Size = new System.Drawing.Size(75, 23);
+            this.exitButton.Size = new System.Drawing.Size(91, 32);
             this.exitButton.TabIndex = 1;
             this.exitButton.Text = "Konec";
-            this.exitButton.UseVisualStyleBackColor = true;
+            this.exitButton.UseVisualStyleBackColor = false;
             this.exitButton.Click += new System.EventHandler(this.ExitButton_Click);
             // 
             // createButton
             // 
-            this.createButton.Location = new System.Drawing.Point(12, 378);
+            this.createButton.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.createButton.Location = new System.Drawing.Point(10, 378);
             this.createButton.Name = "createButton";
-            this.createButton.Size = new System.Drawing.Size(75, 23);
+            this.createButton.Size = new System.Drawing.Size(88, 32);
             this.createButton.TabIndex = 1;
             this.createButton.Text = "Vytvořit...";
             this.createButton.UseVisualStyleBackColor = true;
             this.createButton.Click += new System.EventHandler(this.CreateNewSetButton_Click);
             // 
+            // settingsButton
+            // 
+            this.settingsButton.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.settingsButton.Location = new System.Drawing.Point(212, 378);
+            this.settingsButton.Name = "settingsButton";
+            this.settingsButton.Size = new System.Drawing.Size(91, 32);
+            this.settingsButton.TabIndex = 1;
+            this.settingsButton.Text = "Nastavení";
+            this.settingsButton.UseVisualStyleBackColor = true;
+            this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
+            // 
             // QuestionSetSelectForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(413, 406);
+            this.ClientSize = new System.Drawing.Size(409, 416);
             this.ControlBox = false;
             this.Controls.Add(this.createButton);
+            this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.listView);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(415, 445);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(415, 445);
             this.Name = "QuestionSetSelectForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -173,5 +192,6 @@
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.Button settingsButton;
     }
 }

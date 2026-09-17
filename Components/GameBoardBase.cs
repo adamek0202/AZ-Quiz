@@ -21,7 +21,7 @@ namespace AZ_Kviz.Components
             LoadSvg(svgResource);
         }
 
-        public bool UpdateTile(int id, TileManager.TileStates state)
+        public bool UpdateTile(uint id, TileManager.TileStates state)
         {
             if (id < 0 || id >= tiles.Count)
             {
@@ -30,8 +30,8 @@ namespace AZ_Kviz.Components
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            tiles[id].FillColor = state.TileColor();
-            tiles[id].State = state;
+            tiles[(int)id].FillColor = state.TileColor();
+            tiles[(int)id].State = state;
             Invalidate();
 
             if(state == TileManager.TileStates.FirstPlayer_Used || state == TileManager.TileStates.SecondPlayer_Used)

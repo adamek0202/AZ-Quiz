@@ -34,6 +34,13 @@ namespace AZ_Kviz
             }
     }
 
+    public enum QuestionSelectionMode
+    {
+        Random,
+        RandomWithSeed,
+        Sequential
+    }
+
     internal static class DatabaseFunctions
     {
         public static bool InitDatabase()
@@ -261,25 +268,87 @@ namespace AZ_Kviz
             }
         }
 
-        public static Question GetQuestion(uint setid, bool replacement = false)
+        public static Question GetQuestion(uint setId, uint fieldId, bool replacement = false)
         {
             if (!TableNotEmpty("Questions"))
             {
                 throw new Exception("Tabulka neobsahuje žádná data.");
             }
 
-            // Vybere JEDNU náhodnou otázku z dané sady, která ještě nebyla použitá
-            // ORDER BY RANDOM() je pro SQLite ideální způsob
-            string query = @"SELECT id, text, answer FROM Questions 
-                             WHERE set_id = @set_id AND used = 0 AND is_replacement = @replacement 
-                             ORDER BY RANDOM() LIMIT 1";
-
-            using (var cmd = new SQLiteCommand(query, DatabaseConnection.Connection))
+            QuestionSelectionMode mode;
+            if (AppServices.Config.Database.ShuffleQuestions)
             {
-                cmd.Parameters.AddWithValue("@set_id", setid);
+                mode = AppServices.Config.System.RandomGeneratorSeed == 0 ? QuestionSelectionMode.Random : QuestionSelectionMode.RandomWithSeed;
+            } else
+            {
+                mode = QuestionSelectionMode.Sequential;
+            }
+
+            int seed = AppServices.Config.System.RandomGeneratorSeed ?? default(int);
+            List<uint> availableIds = new List<uint>();
+
+
+            string idQuerry = mode switch
+            {
+                QuestionSelectionMode.Sequential => @"SELECT id FROM Questions 
+                                             WHERE set_id = @set_id AND used = 0 AND is_replacement = @replacement 
+                                             ORDER BY question_order ASC",
+                _ => @"SELECT id FROM Questions 
+               WHERE set_id = @set_id AND used = 0 AND is_replacement = @replacement"
+            };
+
+            using(var cmd = new SQLiteCommand(idQuerry, DatabaseConnection.Connection))
+            {
+                cmd.Parameters.AddWithValue("@set_id", setId);
                 cmd.Parameters.AddWithValue("@replacement", replacement ? 1 : 0);
 
-                using (var reader = cmd.ExecuteReader())
+                using(var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        availableIds.Add(Convert.ToUInt32(reader["id"]));
+                    }
+                }
+            }
+            if(availableIds.Count == 0)
+            {
+                throw new EmptyDatasetException($"V sadě {setId} již nejsou žádné nepoužité otázky!");
+            }
+
+            uint selectedId;
+            switch (mode)
+            {
+                case QuestionSelectionMode.Sequential:
+                    selectedId = availableIds[0];
+                    break;
+
+                case QuestionSelectionMode.RandomWithSeed:
+                    availableIds.Sort();
+                    Random rng = new Random(seed);
+
+                    for(int i = availableIds.Count - 1; i > 0; i--)
+                    {
+                        int k = rng.Next(i + 1);
+                        uint temp = availableIds[i];
+                        availableIds[i] = availableIds[k];
+                        availableIds[k] = temp;
+                    }
+
+                    selectedId = availableIds[0];
+                    break;
+
+                case QuestionSelectionMode.Random:
+                default:
+                    Random defaultRng = new Random();
+                    selectedId = availableIds[defaultRng.Next(availableIds.Count)];
+                    break;
+            }
+
+            string questionQuerry = @"SELECT id, text, answer FROM Questions WHERE id = @id"; ;
+            using(var cmd = new SQLiteCommand(questionQuerry, DatabaseConnection.Connection))
+            {
+                cmd.Parameters.AddWithValue("@id", selectedId);
+                using(var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
@@ -291,7 +360,7 @@ namespace AZ_Kviz
                 }
             }
 
-            throw new EmptyDatasetException($"V sadě {setid} již nejsou žádné nepoužité otázky!");
+            throw new Exception("Chyba při načítání vybrané otázky.");
         }
 
         public static void MarkQuestionUsed(uint id)

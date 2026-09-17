@@ -383,5 +383,10 @@ namespace AZ_Kviz.Forms
         {
             ExportData();
         }
+
+        private void QuestionsEditorForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(e.CloseReason == CloseReason.UserClosing) { }
+        }
     }
 }
