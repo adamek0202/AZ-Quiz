@@ -1,5 +1,5 @@
-﻿using AZ_Kviz.Models;
-using AZ_Kviz.Utils;
+﻿using AZ_Kviz.Utils;
+using Serilog;
 using System;
 using System.Windows.Forms;
 
@@ -52,14 +52,10 @@ namespace AZ_Kviz.Forms
         {
             try
             {
-                Question question;
-                using(SqlCursorManager.Show())
-                { 
-                    question = DatabaseFunctions.GetQuestion(setId, id, isReplacement);
-                }
-                if(question == null)
+                var question = DatabaseFunctions.GetQuestion(setId, id, isReplacement);
+                if (question == null)
                 {
-                    throw new Exception("Obecná chyba aplikace.");
+                    throw new Exception("DB Logika vrátila prázdný objekt");
                 }
                 QuestionId = question.Id;
                 questionTextBox.Text = question.Text;
@@ -69,7 +65,8 @@ namespace AZ_Kviz.Forms
             }
             catch (Exception ex)
             {
-                MsgBoxes.ErrorBox($"Chyba při načítání otázky: {ex.Message}");
+                MsgBoxes.ErrorBox("Při načítání otázky došlo k chybě");
+                Log.Error(ex, "Selhalo načtení otázky {@id}", id);
                 // Pokud selže načtení otázky z DB, zavřeme form s Cancel, ať se hra nekousne
                 DialogResult = DialogResult.Cancel;
                 Close();

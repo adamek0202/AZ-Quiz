@@ -15,7 +15,7 @@ namespace AZ_Kviz.Components
         public bool SelectionHighlightEnabled { get; set; }
         protected override void DefWndProc(ref Message m)
         {
-            if(m.Msg == WM_SETFOCUS && !SelectionHighlightEnabled)
+            if (m.Msg == WM_SETFOCUS && !SelectionHighlightEnabled)
             {
                 m.Msg = WM_KILLFOCUS;
             }

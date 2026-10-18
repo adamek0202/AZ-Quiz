@@ -28,7 +28,7 @@ namespace AZ_Kviz.Forms
                 return;
             }
 
-            if(playerOneNameBox.Text.Length > 12 || playerTwoNameBox.Text.Length > 12)
+            if (playerOneNameBox.Text.Length > 12 || playerTwoNameBox.Text.Length > 12)
             {
                 MsgBoxes.WarningBox("Jména hráčů nesmí být delší než 12 znaků");
             }
@@ -42,27 +42,19 @@ namespace AZ_Kviz.Forms
             DialogResult = DialogResult.OK;
             Close();
         }
-        
+
         private void CancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
 
-        private void FirstPlayerColorPanel_Click(object sender, EventArgs e)
+        private void PlayerColorPanel_Click(object sender, EventArgs e)
         {
+            var panel = sender as Panel;
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                firstPlayerColorPanel.BackColor = colorDialog.Color;
-            }
-        }
-
-        // OPRAVA: Změněno z Paint na Click!
-        private void SecondPlayerColorPanel_Click(object sender, EventArgs e)
-        {
-            if (colorDialog.ShowDialog() == DialogResult.OK)
-            {
-                secondPlayerColorPanel.BackColor = colorDialog.Color;
+                if (panel != null) panel.BackColor = colorDialog.Color;
             }
         }
     }

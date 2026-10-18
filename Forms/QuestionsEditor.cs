@@ -10,14 +10,14 @@ namespace AZ_Kviz.Forms
     {
         private readonly uint _currentSetId;
         private readonly bool _isNewSet; // Víme, zda sadu zrovna zakládáme
-        private bool _isSaved = false;   // Příznak, zda uživatel uložil změny
-        private string _sqlNormal;
-        private string _sqlReplacement;
+        private bool _isSaved;   // Příznak, zda uživatel uložil změny
+        private readonly string _sqlNormal;
+        private readonly string _sqlReplacement;
 
         private DataTable _normalTable;
         private DataTable _replacementTable;
-        private BindingSource _normalQuestionsBinding = new BindingSource();
-        private BindingSource _replacementQuestionsBinding = new BindingSource();
+        private readonly BindingSource _normalQuestionsBinding = new BindingSource();
+        private readonly BindingSource _replacementQuestionsBinding = new BindingSource();
 
         public QuestionsEditorForm(uint setId, string setName, bool isNewSet)
         {
@@ -33,14 +33,16 @@ namespace AZ_Kviz.Forms
         SELECT id, set_id, text, answer, is_replacement,
         ROW_NUMBER() OVER (ORDER BY id) as DisplayOrder 
         FROM Questions 
-        WHERE set_id = {setId} AND (is_replacement = 0 OR is_replacement IS NULL)";
+        WHERE set_id = {setId} AND (is_replacement = 0 OR is_replacement IS NULL)
+        ORDER BY id";
 
             // Dotaz pro náhradní otázky
             _sqlReplacement = $@"
         SELECT id, set_id, text, answer, is_replacement,
         ROW_NUMBER() OVER (ORDER BY id) as DisplayOrder 
         FROM Questions 
-        WHERE set_id = {setId} AND is_replacement = 1";
+        WHERE set_id = {setId} AND is_replacement = 1
+        ORDER BY id";
 
             LoadQuestions();
         }
@@ -161,12 +163,16 @@ namespace AZ_Kviz.Forms
                 MsgBoxes.ErrorBox("Chyba při ukládání otázek");
                 Log.Error($"Ukládání otázek selhalo: {ex.Message}");
             }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         private bool AreQuestionsValid()
         {
             Cursor.Current = Cursors.WaitCursor;
-            foreach(DataRow row in _normalTable.Rows)
+            foreach (DataRow row in _normalTable.Rows)
             {
                 if (row.RowState == DataRowState.Deleted) continue;
 
@@ -238,10 +244,7 @@ namespace AZ_Kviz.Forms
                     // Tvorba NOVÉ sady byla přerušena -> komplet to vyčistíme
                     try
                     {
-                        using (SqlCursorManager.Show())
-                        {
-                            DatabaseFunctions.DeleteQuestionsSet(_currentSetId);
-                        }
+                        DatabaseFunctions.DeleteQuestionsSet(_currentSetId);
                     }
                     catch (Exception ex)
                     {
@@ -252,7 +255,7 @@ namespace AZ_Kviz.Forms
                 else
                 {
                     // U STARÉ sady se jen zeptáme, zda chce odejít a ztratit změny
-                    var result = MsgBoxes.QuestionBox("Máte neuložené změny v textu otázek. Opravdu chcete odejít bez uložení?","Upozornění");
+                    var result = MsgBoxes.QuestionBox("Máte neuložené změny v textu otázek. Opravdu chcete odejít bez uložení?", "Upozornění");
 
                     if (!result)
                     {
@@ -283,19 +286,23 @@ namespace AZ_Kviz.Forms
                 if (openFileDialog.ShowDialog() != DialogResult.OK) return;
                 selectedFilePath = openFileDialog.FileName;
             }
-            ImportResult result;
 
             Cursor.Current = Cursors.WaitCursor;
             try
             {
-                result = CSVImporter.ImportToDataTable(selectedFilePath, targetTable);
+                var result = CSVImporter.ImportToDataTable(selectedFilePath, targetTable);
                 targetBinding.ResetBindings(false);
+                ShowImportSummary(result, tabName);
+            } catch(Exception ex)
+            {
+                Log.Error(ex, "Chyba importu CSV");
+                MsgBoxes.ErrorBox("Při importu dat z CSV došlo k chybě");
             }
             finally
             {
-                Cursor.Current = Cursor.Current;
+                Cursor.Current = Cursors.Default;
             }
-            ShowImportSummary(result, tabName);
+            
         }
 
         private void ShowImportSummary(ImportResult result, string tabName)
@@ -313,7 +320,7 @@ namespace AZ_Kviz.Forms
             if (result.LoadedRowsCount < 28)
             {
                 MsgBoxes.WarningBox(
-                    $"Import dokončen pouze částečně.\n\n" +
+                    "Import dokončen pouze částečně.\n\n" +
                     $"Úspěšně se načetlo {result.LoadedRowsCount} řádků z 28 očekávaných.{errorReport}\n\n" +
                     $"Zbývajících {28 - result.LoadedRowsCount} otázek musíte vyplnit ručně!",
                     "Neúplný import");
@@ -344,7 +351,7 @@ namespace AZ_Kviz.Forms
             _normalQuestionsBinding.EndEdit();
             _replacementQuestionsBinding.EndEdit();
 
-            using(SaveFileDialog saveFileDialog = new SaveFileDialog())
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Filter = "CSV soubory (*.csv)|*.csv";
                 saveFileDialog.Title = saveFileDialog.Title = $"Export {tabName.ToLower()} otázek do CSV";
@@ -353,7 +360,7 @@ namespace AZ_Kviz.Forms
                 saveFileDialog.FileName = $"otazky_{safeTabSuffix}.csv";
 
                 Cursor.Current = Cursors.Default;
-                if (saveFileDialog.ShowDialog() ==DialogResult.OK)
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     Cursor.Current = Cursors.WaitCursor;
                     bool success = CSVExporter.ExportFromDataTable(saveFileDialog.FileName, sourceTable, out string errorMsg);
@@ -386,7 +393,7 @@ namespace AZ_Kviz.Forms
 
         private void QuestionsEditorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(e.CloseReason == CloseReason.UserClosing) { }
+            if (e.CloseReason == CloseReason.UserClosing) { }
         }
     }
 }

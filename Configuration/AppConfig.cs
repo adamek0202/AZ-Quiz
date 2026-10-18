@@ -21,7 +21,7 @@ namespace AZ_Kviz.Configuration
     public class GameplayConfig
     {
         [XmlElement("EndGameAfterWin")]
-        public bool EndGameAfterWin { get; set; } = false;
+        public bool EndGameAfterWin { get; set; }
 
         [XmlElement("EnableReplacementQuestions")]
         public bool EnableReplacementQuestions { get; set; } = true;
@@ -30,7 +30,7 @@ namespace AZ_Kviz.Configuration
         public bool ShowAnswerBeforeTimeout { get; set; } = true;
 
         [XmlElement("PracticeMode")]
-        public bool PracticeMode { get; set; } = false;
+        public bool PracticeMode { get; set; }
 
         [XmlElement("ScoreMultiplier")]
         public double ScoreMultiplier { get; set; } = 1.0;
@@ -69,7 +69,7 @@ namespace AZ_Kviz.Configuration
         public bool EnableSound { get; set; } = true;
 
         [XmlElement("DisablePlayerFacingDisplay")]
-        public bool DisablePlayerFacingDisplay { get; set; } = false;
+        public bool DisablePlayerFacingDisplay { get; set; }
 
         [XmlElement("ShowPlayerDisplayConclusion")]
         public bool ShowPlayerDisplayConclusion { get; set; } = true;
@@ -105,7 +105,7 @@ namespace AZ_Kviz.Configuration
     public class SerilogConfig
     {
         [XmlElement("DisableLogging")]
-        public bool DisableLogging { get; set; } = false;
+        public bool DisableLogging { get; set; }
         [XmlElement("MinimumLevel")]
         public string MinimumLevel { get; set; } = "Error";
 

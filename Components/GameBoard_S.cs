@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace AZ_Kviz.Components
 {
-    internal partial class GameBoard_S : GameBoardBase
+    internal class GameBoard_S : GameBoardBase
     {
         internal event Action<uint, HexTile>? TileClicked;
         public GameBoard_S() : base(Properties.Resources.map_s, new Font("Segoe UI", 10, FontStyle.Bold))

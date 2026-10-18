@@ -1,13 +1,10 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AZ_Kviz
 {
@@ -17,7 +14,7 @@ namespace AZ_Kviz
         {
             errorMessage = string.Empty;
 
-            if(sourceTable == null || sourceTable.Rows.Count == 0)
+            if (sourceTable == null || sourceTable.Rows.Count == 0)
             {
                 errorMessage = "Zdrojová tabulka neobsahuje žádná data k exportu.";
                 return false;
@@ -32,10 +29,10 @@ namespace AZ_Kviz
                     Encoding = Encoding.UTF8,
                 };
 
-                using(var writer = new StreamWriter(filePath, false, Encoding.UTF8))
-                using(var csv = new CsvWriter(writer, config))
+                using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
+                using (var csv = new CsvWriter(writer, config))
                 {
-                    foreach(DataRow row in sourceTable.Rows)
+                    foreach (DataRow row in sourceTable.Rows)
                     {
                         if (row.RowState == DataRowState.Deleted) continue;
 
@@ -51,7 +48,7 @@ namespace AZ_Kviz
 
                 return true;
             }
-            catch(IOException ex)
+            catch (IOException ex)
             {
                 errorMessage = $"Soubor nelze přepsat. Pravděpodobně je otevřen v jiném programu (např. Excel). Zavřete jej a zkuste to znovu.\n\nDetail: {ex.Message}";
                 return false;

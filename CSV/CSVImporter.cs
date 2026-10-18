@@ -10,7 +10,8 @@ using System.Text;
 
 namespace AZ_Kviz
 {
-    internal class ImportResult{
+    internal class ImportResult
+    {
         public bool Success { get; set; }
         public int LoadedRowsCount { get; set; }
         public int ErrorCount => Errors.Count;
@@ -33,88 +34,111 @@ namespace AZ_Kviz
                 return result;
             }
 
-                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            if (targetTable.Rows.Count < MaxRows ||
+                !targetTable.Columns.Contains("text") ||
+                !targetTable.Columns.Contains("answer"))
+            {
+                result.Errors.Add("Cílová tabulka nemá očekávané řádky nebo sloupce.");
+                return result;
+            }
+
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";",
+                HasHeaderRecord = false,
+                Encoding = Encoding.UTF8,
+                MissingFieldFound = null,
+                BadDataFound = context =>
                 {
-                    Delimiter = ";",
-                    HasHeaderRecord = false,
-                    Encoding = Encoding.UTF8,
-                    MissingFieldFound = null,
-                    BadDataFound = context =>
-                    {
-                        int row = context.Context.Reader.Context.Parser.Row;
-                        Log.Warning("CSV Import: Chybný formát dat na řádku {RowNumber}", row);
-                        result.Errors.Add($"Chybný formát dat na řádku {context.Context.Reader.Context.Parser.Row}.");
-                    }
-                };
+                    int row = context.Context.Reader.Context.Parser.Row;
+                    Log.Warning("CSV Import: Chybný formát dat na řádku {RowNumber}", row);
+                    result.Errors.Add($"Chybný formát dat na řádku {context.Context.Reader.Context.Parser.Row}.");
+                }
+            };
 
-                try
+            try
+            {
+                using var reader = new StreamReader(filePath, Encoding.UTF8);
+                using var csv = new CsvReader(reader, config);
+
+                int loadedCount = 0;
+                var importedRows = new List<string[]>();
+
+                while (csv.Read() && loadedCount < MaxRows)
                 {
-                    using var reader = new StreamReader(filePath, Encoding.UTF8);
-                    using var csv = new CsvReader(reader, config);
+                    int currentRowNum = csv.Context.Parser.Row;
+                    var record = csv.Parser.Record;
 
-                    int loadedCount = 0;
-
-                    while (csv.Read() && loadedCount < MaxRows)
+                    // 1. Kontrola počtu sloupců
+                    if (record == null || record.Length < RequiredFieldCount)
                     {
-                        int currentRowNum = csv.Context.Parser.Row;
-                        var record = csv.Parser.Record;
+                        Log.Warning("CSV Import: Řádek {RowNumber} neobsahuje dostatečný počet sloupců (nalezeno: {Count}, očekáváno: {Required})",
+                            currentRowNum, record?.Length ?? 0, RequiredFieldCount);
 
-                        // 1. Kontrola počtu sloupců
-                        if (record == null || record.Length < RequiredFieldCount)
-                        {
-                            Log.Warning("CSV Import: Řádek {RowNumber} neobsahuje dostatečný počet sloupců (nalezeno: {Count}, očekáváno: {Required})",
-                                currentRowNum, record?.Length ?? 0, RequiredFieldCount);
-
-                            result.Errors.Add($"Řádek {currentRowNum}: Chybí sloupce.");
-                            continue;
-                        }
-
-                        string questionText = record[0]?.Trim();
-                        string answerText = record[1]?.Trim();
-
-                        // Ignorování prázdných řádků (bez zápisu chyby)
-                        if (string.IsNullOrWhiteSpace(questionText) && string.IsNullOrWhiteSpace(answerText))
-                        {
-                            continue;
-                        }
-
-                        // 2. Validace chybějících hodnot
-                        if (string.IsNullOrWhiteSpace(questionText) || string.IsNullOrWhiteSpace(answerText))
-                        {
-                            Log.Warning("CSV Import: Na řádku {RowNumber} chybí text otázky nebo odpovědi", currentRowNum);
-                            result.Errors.Add($"Řádek {currentRowNum}: Neúplná data.");
-                            continue;
-                        }
-
-                        // 3. Validace délky textu
-                        if (questionText.Length > MaxTextLength || answerText.Length > MaxTextLength)
-                        {
-                            Log.Warning("CSV Import: Řádek {RowNumber} přesahuje maximální délku {MaxLength} znaků", currentRowNum, MaxTextLength);
-                            result.Errors.Add($"Řádek {currentRowNum}: Příliš dlouhý text.");
-                            continue;
-                        }
-
-                        // Zápis do DataTable
-                        targetTable.Rows.Add(questionText, answerText);
-                        loadedCount++;
+                        result.Errors.Add($"Řádek {currentRowNum}: Chybí sloupce.");
+                        continue;
                     }
 
-                    result.LoadedRowsCount = loadedCount;
-                    result.Success = true;
+                    string questionText = record[0]?.Trim();
+                    string answerText = record[1]?.Trim();
 
-                    Log.Information("CSV import dokončen. Načteno řádků: {LoadedCount}, Počet chyb: {ErrorCount}",
-                        loadedCount, result.ErrorCount);
+                    // Ignorování prázdných řádků (bez zápisu chyby)
+                    if (string.IsNullOrWhiteSpace(questionText) && string.IsNullOrWhiteSpace(answerText))
+                    {
+                        continue;
+                    }
+
+                    // 2. Validace chybějících hodnot
+                    if (string.IsNullOrWhiteSpace(questionText) || string.IsNullOrWhiteSpace(answerText))
+                    {
+                        Log.Warning("CSV Import: Na řádku {RowNumber} chybí text otázky nebo odpovědi", currentRowNum);
+                        result.Errors.Add($"Řádek {currentRowNum}: Neúplná data.");
+                        continue;
+                    }
+
+                    // 3. Validace délky textu
+                    if (questionText.Length > MaxTextLength || answerText.Length > MaxTextLength)
+                    {
+                        Log.Warning("CSV Import: Řádek {RowNumber} přesahuje maximální délku {MaxLength} znaků", currentRowNum, MaxTextLength);
+                        result.Errors.Add($"Řádek {currentRowNum}: Příliš dlouhý text.");
+                        continue;
+                    }
+
+                    importedRows.Add(new[] { questionText, answerText });
+                    loadedCount++;
                 }
-                catch (IOException ex)
+
+                if (importedRows.Count > 0)
                 {
-                    Log.Error(ex, "CSV Import: Soubor {FilePath} nelze otevřít nebo přečíst", filePath);
-                    result.Errors.Add("Soubor nelze přečíst (může být otevřen v jiném programu).");
+                    foreach (DataRow row in targetTable.Rows)
+                    {
+                        row["text"] = string.Empty;
+                        row["answer"] = string.Empty;
+                    }
+
+                    for (int i = 0; i < importedRows.Count; i++)
+                    {
+                        targetTable.Rows[i]["text"] = importedRows[i][0];
+                        targetTable.Rows[i]["answer"] = importedRows[i][1];
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "CSV Import: Neočekávaná výjimka při zpracování souboru {FilePath}", filePath);
-                    result.Errors.Add($"Chyba importu: {ex.Message}");
-                }
+
+                result.LoadedRowsCount = loadedCount;
+                result.Success = true;
+
+                Log.Information("CSV import dokončen. Načteno řádků: {LoadedCount}, Počet chyb: {ErrorCount}",
+                    loadedCount, result.ErrorCount);
+            }
+            catch (IOException ex)
+            {
+                Log.Error(ex, "CSV Import: Soubor {FilePath} nelze otevřít nebo přečíst", filePath);
+                result.Errors.Add("Soubor nelze přečíst (může být otevřen v jiném programu).");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "CSV Import: Neočekávaná výjimka při zpracování souboru {FilePath}", filePath);
+                result.Errors.Add($"Chyba importu: {ex.Message}");
+            }
             return result;
         }
     }

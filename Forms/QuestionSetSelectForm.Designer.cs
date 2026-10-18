@@ -152,7 +152,7 @@
             this.settingsButton.TabIndex = 1;
             this.settingsButton.Text = "Nastavení";
             this.settingsButton.UseVisualStyleBackColor = true;
-            this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
+            this.settingsButton.Click += new System.EventHandler(this.SettingsButton_Click);
             // 
             // QuestionSetSelectForm
             // 

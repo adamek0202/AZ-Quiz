@@ -1,7 +1,6 @@
 ﻿using AZ_Kviz.Configuration;
 using AZ_Kviz.Utils;
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace AZ_Kviz.Forms
@@ -14,7 +13,8 @@ namespace AZ_Kviz.Forms
             LoadValues();
         }
 
-        private void LoadValues() {
+        private void LoadValues()
+        {
             var settings = SettingsManager.GetCurrentEditableSettings();
             endGameAfterWinCheck.Checked = settings.EndGameAfterWin;
             playSoundsCheck.Checked = settings.PlaySounds;
@@ -31,7 +31,8 @@ namespace AZ_Kviz.Forms
         }
 
 
-        private void SaveValues() {
+        private void SaveValues()
+        {
             var settings = new SettingsManager.EditableSettings
             {
                 EndGameAfterWin = endGameAfterWinCheck.Checked,
@@ -48,7 +49,7 @@ namespace AZ_Kviz.Forms
                 PlayerTwoDefaultColor = playerTwoColorPanel.BackColor
             };
             SettingsManager.SaveSettings(settings, out string error);
-            if(error != string.Empty)
+            if (error != string.Empty)
             {
                 MsgBoxes.ErrorBox(error);
             }
@@ -57,11 +58,6 @@ namespace AZ_Kviz.Forms
                 DialogResult = DialogResult.OK;
                 Close();
             }
-        }
-
-        private void RandomQuestionsCheck_CheckedChanged(object sender, System.EventArgs e)
-        {
-            bool currentVal = randomQuestionsCheck.Checked;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -111,7 +107,7 @@ namespace AZ_Kviz.Forms
         private void PlayerOneColorPanel_Click(object sender, EventArgs e)
         {
             var panel = sender as Panel;
-            if(colorDialog.ShowDialog() == DialogResult.OK)
+            if (colorDialog.ShowDialog() == DialogResult.OK)
             {
                 panel.BackColor = colorDialog.Color;
             }

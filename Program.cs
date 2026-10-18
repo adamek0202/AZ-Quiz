@@ -2,7 +2,6 @@
 using Serilog;
 using Serilog.Events;
 using System;
-using System.IO;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
@@ -22,7 +21,8 @@ namespace AZ_Kviz
                 Log.Information("Aplikace AZ-Kvíz se spouští...");
 
                 Application.SetCompatibleTextRenderingDefault(false);
-                if (DatabaseFunctions.InitDatabase()){
+                if (DatabaseFunctions.InitDatabase())
+                {
                     Application.Run(new MyAppContext());
                 }
             }
@@ -48,7 +48,7 @@ namespace AZ_Kviz
                 .WriteTo.File(
                 path: cfg.LogFilePath,
                 rollingInterval: interval,
-                restrictedToMinimumLevel: LogEventLevel.Error,
+                restrictedToMinimumLevel: minLevel,
                 retainedFileCountLimit: cfg.RetainDays).WriteTo.Debug()
                 .CreateLogger();
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace AZ_Kviz
 {
@@ -23,7 +22,7 @@ namespace AZ_Kviz
 
     internal static class TileStatesExtensions
     {
-        public static Color TileColor( this TileManager.TileStates s)
+        public static Color TileColor(this TileManager.TileStates s)
         {
             return s switch
             {

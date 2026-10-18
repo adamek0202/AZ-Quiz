@@ -9,8 +9,8 @@ namespace AZ_Kviz.Forms
     {
         private const int WM_SETCURSOR = 0x0020;
         private static SqlCursorManager _instance;
-        private static Cursor _sqlCursor;
-        private static int _lockCount = 0;
+        private static readonly Cursor _sqlCursor;
+        private static int _lockCount;
 
         // Statický konstruktor - načte kurzor z prostředků při prvním přístupu
         static SqlCursorManager()
@@ -22,15 +22,8 @@ namespace AZ_Kviz.Forms
 
                 using (Stream stream = assembly.GetManifestResourceStream(resourceName))
                 {
-                    if (stream != null)
-                    {
-                        _sqlCursor = new Cursor(stream);
-                    }
-                    else
-                    {
-                        // Fallback na klasické přesýpací hodiny, pokud se soubor nenajde
-                        _sqlCursor = Cursors.WaitCursor;
-                    }
+                    _sqlCursor = stream != null ? new Cursor(stream) :
+                    Cursors.WaitCursor;
                 }
             }
             catch

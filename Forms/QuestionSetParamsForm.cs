@@ -26,7 +26,8 @@ namespace AZ_Kviz.Forms
             string name = nameTextBox.Text;
             string scope = scopeTextBox.Text;
 
-            if (!(String.IsNullOrWhiteSpace(name) || String.IsNullOrWhiteSpace(scope))){
+            if (!(String.IsNullOrWhiteSpace(name) || String.IsNullOrWhiteSpace(scope)))
+            {
                 SetName = name;
                 SetScope = scope;
                 SetDifficulty = (uint)difficultyNumeric.Value;

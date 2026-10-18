@@ -10,7 +10,8 @@ namespace AZ_Kviz
         public string Label = "";
         public TileManager.TileStates State;
 
-        public bool HitTest(PointF p) {
+        public bool HitTest(PointF p)
+        {
             if (Points == null || Points.Length == 0) return false;
             using (var path = new GraphicsPath())
             {
@@ -43,7 +44,7 @@ namespace AZ_Kviz
             {
                 var center = GetCenter();
                 var textBrush = (FillColor == Color.Black) ? Brushes.White : Brushes.Black;
-                using(var sf = new StringFormat())
+                using (var sf = new StringFormat())
                 {
                     sf.Alignment = StringAlignment.Center;
                     sf.LineAlignment = StringAlignment.Center;
@@ -53,5 +54,5 @@ namespace AZ_Kviz
         }
     }
 
-    
+
 }

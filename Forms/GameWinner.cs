@@ -1,9 +1,4 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AZ_Kviz.Forms
 {
@@ -38,7 +33,7 @@ namespace AZ_Kviz.Forms
 
             TaskDialogResult result = dialog.Show();
 
-            return result == TaskDialogResult.Ok ? true : false;
+            return result == TaskDialogResult.Ok;
         }
     }
 }

@@ -98,7 +98,6 @@
             this.endGameAfterWinCheck.Text = "Ukončit hru při výhře";
             this.toolTip.SetToolTip(this.endGameAfterWinCheck, "Hra bude automaticky ukončena, jakmile jeden z hráčů spojí všechny 3 strany hrací" +
         "ho plánu.");
-            this.endGameAfterWinCheck.CheckedChanged += new System.EventHandler(this.RandomQuestionsCheck_CheckedChanged);
             // 
             // allowReplacementsCheck
             // 

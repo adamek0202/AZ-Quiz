@@ -125,6 +125,7 @@
             this.secondPlayerColorPanel.Name = "secondPlayerColorPanel";
             this.secondPlayerColorPanel.Size = new System.Drawing.Size(72, 21);
             this.secondPlayerColorPanel.TabIndex = 1;
+            this.secondPlayerColorPanel.Click += new System.EventHandler(this.PlayerColorPanel_Click);
             // 
             // firstPlayerColorPanel
             // 
@@ -134,7 +135,7 @@
             this.firstPlayerColorPanel.Name = "firstPlayerColorPanel";
             this.firstPlayerColorPanel.Size = new System.Drawing.Size(72, 21);
             this.firstPlayerColorPanel.TabIndex = 0;
-            this.firstPlayerColorPanel.Click += new System.EventHandler(this.FirstPlayerColorPanel_Click);
+            this.firstPlayerColorPanel.Click += new System.EventHandler(this.PlayerColorPanel_Click);
             // 
             // label4
             // 
@@ -226,7 +227,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(349, 141);
+            this.ClientSize = new System.Drawing.Size(349, 164);
             this.ControlBox = false;
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.startButton);

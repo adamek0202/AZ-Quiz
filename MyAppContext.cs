@@ -25,7 +25,7 @@ namespace AZ_Kviz
 
             selectForm.FormClosed += (s, e) =>
             {
-                if(selectForm.DialogResult == DialogResult.OK)
+                if (selectForm.DialogResult == DialogResult.OK)
                 {
                     _selectedSetId = selectForm.SelectedSetId;
                     ShowPlayersSetup();
@@ -55,6 +55,10 @@ namespace AZ_Kviz
 
                     StartGame();
                 }
+                else
+                {
+                    ShowQuestionSetSelect();
+                }
             };
 
             setupForm.Show();
@@ -70,10 +74,10 @@ namespace AZ_Kviz
             {
                 mainGameForm = new MainForm(_selectedSetId);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(ex, "Chyba při inicializaci hry.");
-                MsgBoxes.ErrorBox($"Během přípravy hry došlo k chybě");
+                MsgBoxes.ErrorBox("Během přípravy hry došlo k chybě");
                 ShowQuestionSetSelect();
                 return;
             }

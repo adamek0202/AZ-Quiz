@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace AZ_Kviz.Components
 {
-    internal partial class GameBoardBase : Control
+    internal class GameBoardBase : Control
     {
         protected readonly List<HexTile> tiles = new List<HexTile>();
         protected readonly Font labelFont;
@@ -23,7 +23,7 @@ namespace AZ_Kviz.Components
 
         public bool UpdateTile(uint id, TileManager.TileStates state)
         {
-            if (id < 0 || id >= tiles.Count)
+            if (id >= tiles.Count)
             {
                 Serilog.Log.Warning($"UpdateTile: index {id} je mimo rozsah (počet políček: {tiles.Count}).");
                 return false;
@@ -34,9 +34,9 @@ namespace AZ_Kviz.Components
             tiles[(int)id].State = state;
             Invalidate();
 
-            if(state == TileManager.TileStates.FirstPlayer_Used || state == TileManager.TileStates.SecondPlayer_Used)
+            if (state == TileManager.TileStates.FirstPlayer_Used || state == TileManager.TileStates.SecondPlayer_Used)
             {
-                if(WinChecker.CheckWin(tiles, state))
+                if (WinChecker.CheckWin(tiles, state))
                 {
                     Cursor.Current = Cursors.Default;
                     return true;
@@ -48,7 +48,7 @@ namespace AZ_Kviz.Components
 
         public void Reset()
         {
-            foreach(var item in tiles)
+            foreach (var item in tiles)
             {
                 item.FillColor = Color.White;
                 item.State = TileManager.TileStates.Clear;
@@ -59,7 +59,7 @@ namespace AZ_Kviz.Components
         protected override void OnPaint(PaintEventArgs pe)
         {
             pe.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            foreach(var tile in tiles)
+            foreach (var tile in tiles)
             {
                 tile.Draw(pe.Graphics, labelFont);
             }
@@ -67,13 +67,13 @@ namespace AZ_Kviz.Components
 
         private void LoadSvg(byte[] svgResource)
         {
-            using(var stream = new MemoryStream(svgResource))
+            using (var stream = new MemoryStream(svgResource))
             {
                 XDocument doc = XDocument.Load(stream);
                 XNamespace ns = "http://www.w3.org/2000/svg";
                 int index = 1;
 
-                foreach(var polygon in doc.Descendants(ns + "polygon"))
+                foreach (var polygon in doc.Descendants(ns + "polygon"))
                 {
                     string pointsAttr = polygon.Attribute("points")?.Value;
                     if (string.IsNullOrWhiteSpace(pointsAttr)) continue;

@@ -27,12 +27,8 @@ namespace AZ_Kviz.Forms
             try
             {
                 listView.Items.Clear();
-                List<QuestionSet> questionSets;
-                using (SqlCursorManager.Show())
-                {
-                    questionSets = DatabaseFunctions.GetAllQuestionSets();
-                }
-                foreach(var set in questionSets)
+                List<QuestionSet> questionSets = DatabaseFunctions.GetAllQuestionSets();
+                foreach (var set in questionSets)
                 {
                     var item = new ListViewItem(set.Name);
                     item.SubItems.Add(set.Scope);
@@ -41,16 +37,17 @@ namespace AZ_Kviz.Forms
 
                     listView.Items.Add(item);
                 }
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                Log.Error($"Chyba načítání sad otázek: {ex.Message}");
+                Log.Error(ex, "Chyba načítání sad otázek");
                 MsgBoxes.ErrorBox("Při načítání sad otázek došlo k chybě", "Chyba databáze");
             }
         }
 
         private void Start()
         {
-            if(listView.SelectedItems.Count == 1)
+            if (listView.SelectedItems.Count == 1)
             {
                 ListViewItem selectedItem = listView.SelectedItems[0];
                 if (selectedItem.Tag is QuestionSet selectedSet)
@@ -65,9 +62,9 @@ namespace AZ_Kviz.Forms
 
         private void CreateNewSetButton_Click(object sender, EventArgs e)
         {
-            using(var form = new QuestionSetParamsForm())
+            using (var form = new QuestionSetParamsForm())
             {
-                if(form.ShowDialog() == DialogResult.Cancel)
+                if (form.ShowDialog() == DialogResult.Cancel)
                 {
                     return;
                 }
@@ -79,11 +76,7 @@ namespace AZ_Kviz.Forms
 
                 try
                 {
-                    uint newSetId;
-                    using (SqlCursorManager.Show())
-                    {
-                        newSetId = DatabaseFunctions.CreateNewQuestionSet(setName.Trim(), scope.Trim(), difficulty);
-                    }
+                    uint newSetId = DatabaseFunctions.CreateNewQuestionSet(setName.Trim(), scope.Trim(), difficulty);
 
                     // 2. Otevřeme editor s příznakem isNewSet = true
                     using (var editorForm = new QuestionsEditorForm(newSetId, setName, isNewSet: true))
@@ -120,7 +113,7 @@ namespace AZ_Kviz.Forms
             }
         }
 
-        private void ExitButton_Click(object sender, System.EventArgs e)
+        private void ExitButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
@@ -133,7 +126,7 @@ namespace AZ_Kviz.Forms
 
         private void ListView_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 Start();
             }
@@ -146,10 +139,10 @@ namespace AZ_Kviz.Forms
 
         private void ListView_MouseClick(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
                 var focusedItem = listView.FocusedItem;
-                if(focusedItem != null && focusedItem.Bounds.Contains(e.Location))
+                if (focusedItem != null && focusedItem.Bounds.Contains(e.Location))
                 {
                     contextMenuStrip.Show(Cursor.Position);
                 }
@@ -158,8 +151,9 @@ namespace AZ_Kviz.Forms
 
         private void RemoveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ListViewItem selectedItem = listView.SelectedItems[0];
-            if (listView.SelectedItems.Count == 1 && MsgBoxes.QuestionBox("Opravdu chcete smazat vybranou sadu otázek?") && (selectedItem.Tag is QuestionSet selectedSet))
+            if (listView.SelectedItems.Count == 1 &&
+                MsgBoxes.QuestionBox("Opravdu chcete smazat vybranou sadu otázek?") &&
+                listView.SelectedItems[0].Tag is QuestionSet selectedSet)
             {
                 try
                 {
@@ -168,12 +162,13 @@ namespace AZ_Kviz.Forms
                 }
                 catch (Exception ex)
                 {
+                    Log.Error(ex, "Při mazání sady otázek {@setId} došlo k chybě", selectedSet.Id);
                     MsgBoxes.ErrorBox("Nepodařilo se smazat sadu otázek");
                 }
             }
         }
 
-        private void settingsButton_Click(object sender, EventArgs e)
+        private void SettingsButton_Click(object sender, EventArgs e)
         {
             new SettingsForm().ShowDialog();
         }

@@ -56,7 +56,7 @@ namespace AZ_Kviz
                 Log.Error("Složka se zvuky neexistuje");
             }
 
-            foreach(var file in AudioFiles.Values)
+            foreach (var file in AudioFiles.Values)
             {
                 string fullPath = Path.Combine(SoundsPath, file);
                 if (!File.Exists(fullPath))

@@ -22,7 +22,7 @@ namespace AZ_Kviz.Configuration
             try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(T));
-                using(StreamReader reader = new StreamReader(filePath, Encoding.UTF8))
+                using (StreamReader reader = new StreamReader(filePath, Encoding.UTF8))
                 {
                     return (T)serializer.Deserialize(reader);
                 }
@@ -41,7 +41,7 @@ namespace AZ_Kviz.Configuration
             }
         }
 
-        public static void Save<T>(string filePath, T config) where T :class
+        public static void Save<T>(string filePath, T config) where T : class
         {
             XmlSerializer serializer = new XmlSerializer(typeof(T));
             XmlWriterSettings settings = new XmlWriterSettings
@@ -55,7 +55,7 @@ namespace AZ_Kviz.Configuration
             XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
             namespaces.Add(string.Empty, string.Empty);
 
-            using(XmlWriter writer = XmlWriter.Create(filePath, settings))
+            using (XmlWriter writer = XmlWriter.Create(filePath, settings))
             {
                 serializer.Serialize(writer, config, namespaces);
             }
