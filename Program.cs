@@ -14,16 +14,26 @@ namespace AZ_Kviz
         [STAThread]
         static void Main()
         {
-            AppServices.Initialize();
-            InitLogger();
+            AppServices services = AppServices.Load();
+            InitLogger(services);
+            var database = new DatabaseFunctions(services.Config.Database.DatabaseFileName, services.Config);
             try
             {
                 Log.Information("Aplikace AZ-Kvíz se spouští...");
 
                 Application.SetCompatibleTextRenderingDefault(false);
-                if (DatabaseFunctions.InitDatabase())
+                if (database.InitDatabase())
                 {
-                    Application.Run(new MyAppContext());
+                    Application.Run(new MyAppContext(database, services));
+                }
+                else
+                {
+                    MsgBoxes.FatalBox("Integrita databáze byla porušena!", "Chyba databáze");
+                    if (MsgBoxes.QuestionBox("Chcete vytvořit novou (prázdnou) databázi?"))
+                    {
+                        database.RecreateDatabase();
+                        Application.Run(new MyAppContext(database, services));
+                    }
                 }
             }
             catch (Exception ex)
@@ -33,13 +43,14 @@ namespace AZ_Kviz
             }
             finally
             {
+                database.Dispose();
                 Log.CloseAndFlush();
             }
         }
 
-        private static void InitLogger()
+        private static void InitLogger(AppServices services)
         {
-            var cfg = AppServices.Config.System.Serilog;
+            var cfg = services.Config.System.Serilog;
             Enum.TryParse(cfg.MinimumLevel, true, out LogEventLevel minLevel);
             Enum.TryParse(cfg.RollingInterval, true, out RollingInterval interval);
 

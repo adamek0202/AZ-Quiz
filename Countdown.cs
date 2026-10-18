@@ -3,50 +3,82 @@ using System.Timers;
 
 namespace AZ_Kviz
 {
-    internal static class Countdown
+    internal sealed class Countdown : IDisposable
     {
-        private static Timer TimerDown;
+        private readonly Timer timer;
+        private readonly int timeoutSeconds;
+        private bool disposed;
 
-        public static int Remaining { get; private set; } = AppServices.Config.Gameplay.Timeouts.AnswerTimeoutSeconds;
+        public int Remaining { get; private set; }
 
-        public static event Action<int>? TimerTicked;
-        public static event Action? Start;
-        public static event Action? Finished;
+        public event Action<int>? TimerTicked;
+        public event Action? Start;
+        public event Action? Finished;
 
-        public static bool TimerRunning => TimerDown.Enabled;
+        public bool TimerRunning => timer.Enabled;
 
-        static Countdown()
+        public Countdown(int timeoutSeconds)
         {
-            TimerDown = new Timer(1000)
+            if (timeoutSeconds <= 0)
             {
-                AutoReset = true
-            };
-            TimerDown.Elapsed += OnTimerEvent;
+                throw new ArgumentOutOfRangeException(nameof(timeoutSeconds));
+            }
+
+            this.timeoutSeconds = timeoutSeconds;
+            Remaining = timeoutSeconds;
+            timer = new Timer(1000) { AutoReset = true };
+            timer.Elapsed += OnTimerEvent;
         }
 
-        public static void StartTimer()
+        public void StartTimer()
         {
-            Remaining = AppServices.Config.Gameplay.Timeouts.AnswerTimeoutSeconds;
-            Start?.Invoke(); // Bezpečné vyvolání
-            TimerDown.Start();
+            ThrowIfDisposed();
+            timer.Stop();
+            Remaining = timeoutSeconds;
+            Start?.Invoke();
+            timer.Start();
         }
 
-        public static void StopTimer()
+        public void StopTimer()
         {
-            TimerDown.Stop();
+            if (!disposed)
+            {
+                timer.Stop();
+            }
         }
 
-        private static void OnTimerEvent(object sender, ElapsedEventArgs e)
+        private void OnTimerEvent(object sender, ElapsedEventArgs e)
         {
             if (Remaining > 1)
             {
                 Remaining -= 1;
-                TimerTicked?.Invoke(Remaining); // Bezpečné vyvolání
+                TimerTicked?.Invoke(Remaining);
             }
             else
             {
                 StopTimer();
-                Finished?.Invoke(); // Bezpečné vyvolání
+                Finished?.Invoke();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            timer.Stop();
+            timer.Elapsed -= OnTimerEvent;
+            timer.Dispose();
+            disposed = true;
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (disposed)
+            {
+                throw new ObjectDisposedException(nameof(Countdown));
             }
         }
     }

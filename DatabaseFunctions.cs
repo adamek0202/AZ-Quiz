@@ -1,6 +1,6 @@
 ﻿using AZ_Kviz.Forms;
 using AZ_Kviz.Models;
-using AZ_Kviz.Utils;
+using AZ_Kviz.Configuration;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -10,27 +10,6 @@ using System.IO;
 
 namespace AZ_Kviz
 {
-    internal static class DatabaseConnection
-    {
-        private static SQLiteConnection _connection;
-        public static SQLiteConnection Connection
-        {
-            get
-            {
-                if (_connection != null) return _connection;
-                _connection = new SQLiteConnection($"Data Source={AppServices.Config.Database.DatabaseFileName};Version=3");
-                _connection.Open();
-                return _connection;
-            }
-        }
-
-        public static void CloseConnection()
-        {
-            _connection?.Close();
-            _connection = null;
-        }
-    }
-
     public enum QuestionSelectionMode
     {
         Random,
@@ -38,11 +17,35 @@ namespace AZ_Kviz
         Sequential
     }
 
-    internal static class DatabaseFunctions
+    internal sealed class DatabaseFunctions : IDisposable
     {
-        public static bool InitDatabase()
+        private readonly string databaseFileName;
+        private readonly AppConfig config;
+        private readonly Random random = new Random();
+        private SQLiteConnection connection;
+
+        private SQLiteConnection Connection
         {
-            if (!File.Exists(AppServices.Config.Database.DatabaseFileName))
+            get
+            {
+                if (connection == null)
+                {
+                    connection = new SQLiteConnection($"Data Source={databaseFileName};Version=3");
+                    connection.Open();
+                }
+                return connection;
+            }
+        }
+
+        public DatabaseFunctions(string databaseFileName, AppConfig config)
+        {
+            this.databaseFileName = databaseFileName ?? throw new ArgumentNullException(nameof(databaseFileName));
+            this.config = config ?? throw new ArgumentNullException(nameof(config));
+        }
+
+        public bool InitDatabase()
+        {
+            if (!File.Exists(databaseFileName))
             {
                 Log.Warning("Databáze neexistuje. Pokus o vytvoření nové...");
                 CreateDatabase();
@@ -50,43 +53,39 @@ namespace AZ_Kviz
             }
             try
             {
-                var _ = DatabaseConnection.Connection;
+                var _ = Connection;
             }
             catch (Exception ex)
             {
-                MsgBoxes.ErrorBox($"Nelze otevřít databázi: {ex.Message}");
-                Log.Error($"Selhalo otevření databáze: {ex.Message}");
-                return false;
+                Log.Error(ex, "Selhalo otevření databáze {DatabaseFile}", databaseFileName);
+                throw;
             }
             if (!CheckDatabaseIntegrity())
             {
-                MsgBoxes.FatalBox("Integrita databáze byla porušena!", "Chyba databáze");
                 Log.Fatal("Došlo k porušení integrity databáze");
-                if (MsgBoxes.QuestionBox("Chcete vytvořit novou (prázdnou) databázi?"))
-                {
-                    DatabaseConnection.CloseConnection(); // Musíme uvolnit zámek souboru
-                    File.Delete(AppServices.Config.Database.DatabaseFileName);
-                    CreateDatabase();
-                    return true;
-                }
                 return false;
             }
             return true;
         }
 
-        public static bool CheckDatabaseIntegrity()
+        public void RecreateDatabase()
         {
-            using (SqlCursorManager.Show())
-            using (var cmd = new SQLiteCommand("PRAGMA integrity_check;", DatabaseConnection.Connection))
+            CloseConnection();
+            File.Delete(databaseFileName);
+            CreateDatabase();
+        }
+
+        public bool CheckDatabaseIntegrity()
+        {
+            using (var cmd = new SQLiteCommand("PRAGMA integrity_check;", Connection))
             {
                 var result = cmd.ExecuteScalar()?.ToString();
                 return result == "ok";
             }
         }
 
-        public static void CreateDatabase()
+        public void CreateDatabase()
         {
-            MsgBoxes.ErrorBox("Databáze nebyla nalezena, bude vytvořena nová...", "Chybí databáze");
             Log.Information("Vytváření nové databáze...");
 
             // Nejdřív vytvoříme strukturu tabulek včetně chybějící QuestionSets a sloupce used
@@ -114,41 +113,36 @@ namespace AZ_Kviz
 
             try
             {
-                using (SqlCursorManager.Show())
-                using (var command = new SQLiteCommand(cmd, DatabaseConnection.Connection))
+                using (var command = new SQLiteCommand(cmd, Connection))
                 {
                     command.ExecuteNonQuery();
                 }
-                MsgBoxes.InfoBox("Databáze byla úspěšně vytvořena.");
                 Log.Information("Nová databáze byla úspěšně vytvořena");
             }
             catch (Exception ex)
             {
                 Log.Error($"Nastala chyba při vytváření tabulek: {ex.Message}");
-                MsgBoxes.ErrorBox($"Nastala chyba při vytváření tabulek: {ex.Message}");
+                throw new InvalidOperationException("Nepodařilo se vytvořit databázové tabulky.", ex);
             }
         }
 
-        public static bool TableNotEmpty(string table)
-        {
-            // Bezpečnější olemování názvu tabulky
-            string query = $"SELECT COUNT(*) from \"{table}\"";
-            using (SqlCursorManager.Show())
-            using (var cmd = new SQLiteCommand(query, DatabaseConnection.Connection))
-            {
-                long count = Convert.ToInt64(cmd.ExecuteScalar());
-                return count > 0;
-            }
-        }
-
-        public static DataTable GetTable(string sqlQuerry)
+        public DataTable GetQuestionTable(uint setId, bool replacement)
         {
             var dataTable = new DataTable();
+            const string query = @"SELECT id, set_id, text, answer, is_replacement,
+                                   ROW_NUMBER() OVER (ORDER BY id) AS DisplayOrder
+                                   FROM Questions
+                                   WHERE set_id = @set_id
+                                   AND ((@replacement = 1 AND is_replacement = 1)
+                                        OR (@replacement = 0 AND (is_replacement = 0 OR is_replacement IS NULL)))
+                                   ORDER BY id";
             try
             {
-                using (SqlCursorManager.Show())
-                using (var adapter = new SQLiteDataAdapter(sqlQuerry, DatabaseConnection.Connection))
+                using (var command = new SQLiteCommand(query, Connection))
+                using (var adapter = new SQLiteDataAdapter(command))
                 {
+                    command.Parameters.AddWithValue("@set_id", setId);
+                    command.Parameters.AddWithValue("@replacement", replacement ? 1 : 0);
                     adapter.Fill(dataTable);
                 }
             }
@@ -159,16 +153,15 @@ namespace AZ_Kviz
             return dataTable;
         }
 
-        public static void SaveTable(DataTable table, string selectQuerry)
+        public void SaveTable(DataTable table)
         {
             try
             {
-                using (SqlCursorManager.Show())
-                using (var transaction = DatabaseConnection.Connection.BeginTransaction())
+                using (var transaction = Connection.BeginTransaction())
                 {
                     using (var cmd = new SQLiteCommand(
                         "UPDATE Questions SET text = @text, answer = @answer WHERE id = @id AND set_id = @set_id",
-                        DatabaseConnection.Connection,
+                        Connection,
                         transaction))
                     {
                         var textParameter = cmd.Parameters.Add("@text", DbType.String);
@@ -201,18 +194,17 @@ namespace AZ_Kviz
             }
         }
 
-        public static uint CreateNewQuestionSet(string setName, string scope, uint difficulty)
+        public uint CreateNewQuestionSet(string setName, string scope, uint difficulty)
         {
             uint newSetId;
 
-            using (var transaction = DatabaseConnection.Connection.BeginTransaction())
+            using (var transaction = Connection.BeginTransaction())
             {
                 try
                 {
                     // 1. Vložíme novou sadu
                     string insertSetQuery = "INSERT INTO QuestionSets (name, scope, difficulty) VALUES (@name, @scope, @difficulty); SELECT last_insert_rowid();";
-                    using (SqlCursorManager.Show())
-                    using (var cmd = new SQLiteCommand(insertSetQuery, DatabaseConnection.Connection, transaction))
+                    using (var cmd = new SQLiteCommand(insertSetQuery, Connection, transaction))
                     {
                         cmd.Parameters.AddWithValue("@name", setName);
                         cmd.Parameters.AddWithValue("@scope", scope); // OPRAVENO: Už žádná složená závorka
@@ -222,8 +214,7 @@ namespace AZ_Kviz
 
                     // 2. Vygenerujeme 28 normálních a 28 náhradních otázek
                     string insertQuestionQuery = "INSERT INTO Questions (set_id, text, answer, is_replacement, setpos) VALUES (@set_id, @text, @answer, @isReplacement, @questionOrder)";
-                    using (SqlCursorManager.Show())
-                    using (var cmd = new SQLiteCommand(insertQuestionQuery, DatabaseConnection.Connection, transaction))
+                    using (var cmd = new SQLiteCommand(insertQuestionQuery, Connection, transaction))
                     {
                         // Parametry stačí založit jednou před cykly
                         cmd.Parameters.AddWithValue("@set_id", newSetId);
@@ -263,35 +254,31 @@ namespace AZ_Kviz
             return newSetId;
         }
 
-        public static void DeleteQuestionsSet(uint setId)
+        public void DeleteQuestionsSet(uint setId)
         {
             if (setId == 0)
             {
                 throw new ArgumentException("ID sady nemůže být nula");
             }
-            using (var transaction = DatabaseConnection.Connection.BeginTransaction())
+            using (var transaction = Connection.BeginTransaction())
             {
                 try
                 {
                     string deleteQuestionsQuery = "DELETE FROM Questions WHERE set_id = @set_Id";
-                    using (SqlCursorManager.Show())
-                    using (var cmd = new SQLiteCommand(deleteQuestionsQuery, DatabaseConnection.Connection, transaction))
+                    using (var cmd = new SQLiteCommand(deleteQuestionsQuery, Connection, transaction))
                     {
                         cmd.Parameters.AddWithValue("@set_Id", setId);
                         cmd.ExecuteNonQuery();
                     }
 
                     string deleteSetQuery = "DELETE FROM QuestionSets WHERE id = @set_Id";
-                    using (SqlCursorManager.Show())
+                    using (var cmd = new SQLiteCommand(deleteSetQuery, Connection, transaction))
                     {
-                        using (var cmd = new SQLiteCommand(deleteSetQuery, DatabaseConnection.Connection, transaction))
-                        {
-                            cmd.Parameters.AddWithValue("@set_Id", setId);
-                            cmd.ExecuteNonQuery();
-                        }
-
-                        transaction.Commit();
+                        cmd.Parameters.AddWithValue("@set_Id", setId);
+                        cmd.ExecuteNonQuery();
                     }
+
+                    transaction.Commit();
                     Log.Information($"Sada otázek {setId} byla úspěšně smazána");
                 }
                 catch (Exception ex)
@@ -302,123 +289,122 @@ namespace AZ_Kviz
             }
         }
 
-        public static Question GetQuestion(uint setId, uint fieldId, bool replacement = false)
+        public Question GetQuestion(uint setId, uint fieldId, bool replacement = false)
         {
-            if (!TableNotEmpty("Questions"))
-            {
-                throw new Exception("Tabulka neobsahuje žádná data.");
-            }
-
             QuestionSelectionMode mode;
-            if (AppServices.Config.Database.ShuffleQuestions)
+            if (config.Database.ShuffleQuestions)
             {
-                mode = AppServices.Config.System.RandomGeneratorSeed == 0 ? QuestionSelectionMode.Random : QuestionSelectionMode.RandomWithSeed;
+                mode = config.System.RandomGeneratorSeed.HasValue && config.System.RandomGeneratorSeed.Value != 0
+                    ? QuestionSelectionMode.RandomWithSeed
+                    : QuestionSelectionMode.Random;
             }
             else
             {
                 mode = QuestionSelectionMode.Sequential;
             }
 
-            int seed = AppServices.Config.System.RandomGeneratorSeed ?? 0;
-            List<uint> availableIds = new List<uint>();
-
-
-            string idQuerry = mode switch
+            int seed = config.System.RandomGeneratorSeed ?? 0;
+            string query = mode switch
             {
-                 QuestionSelectionMode.Sequential => @"SELECT id FROM Questions 
-                                             WHERE set_id = @set_id AND used = 0 AND is_replacement = @replacement 
-                                             ORDER BY setpos ASC",
-                _ => @"SELECT id FROM Questions 
-               WHERE set_id = @set_id AND used = 0 AND is_replacement = @replacement"
+                QuestionSelectionMode.Sequential => @"SELECT id, text, answer, used FROM Questions
+                    WHERE set_id = @set_id AND setpos = @field_id AND used = 0
+                    AND ((@replacement = 1 AND is_replacement = 1)
+                         OR (@replacement = 0 AND (is_replacement = 0 OR is_replacement IS NULL)))
+                    ORDER BY id LIMIT 1",
+                QuestionSelectionMode.RandomWithSeed => @"SELECT id, text, answer, used FROM Questions
+                    WHERE set_id = @set_id
+                    AND ((@replacement = 1 AND is_replacement = 1)
+                         OR (@replacement = 0 AND (is_replacement = 0 OR is_replacement IS NULL)))
+                    ORDER BY setpos, id",
+                _ => @"SELECT id, text, answer, used FROM Questions
+                    WHERE set_id = @set_id AND used = 0
+                    AND ((@replacement = 1 AND is_replacement = 1)
+                         OR (@replacement = 0 AND (is_replacement = 0 OR is_replacement IS NULL)))
+                    ORDER BY id"
             };
 
-            using (SqlCursorManager.Show())
-            using (var cmd = new SQLiteCommand(idQuerry, DatabaseConnection.Connection))
+            var candidates = new List<QuestionCandidate>();
+            using (var cmd = new SQLiteCommand(query, Connection))
             {
                 cmd.Parameters.AddWithValue("@set_id", setId);
                 cmd.Parameters.AddWithValue("@replacement", replacement ? 1 : 0);
-
-                using (var reader = cmd.ExecuteReader())
+                if (mode == QuestionSelectionMode.Sequential)
                 {
-                    while (reader.Read())
-                    {
-                        availableIds.Add(Convert.ToUInt32(reader["id"]));
-                    }
+                    cmd.Parameters.AddWithValue("@field_id", fieldId);
                 }
-            }
-            if (availableIds.Count == 0)
-            {
-                throw new EmptyDatasetException($"V sadě {setId} již nejsou žádné nepoužité otázky!");
-            }
-
-            uint selectedId;
-            switch (mode)
-            {
-                case QuestionSelectionMode.Sequential:
-                    selectedId = availableIds[0];
-                    break;
-
-                case QuestionSelectionMode.RandomWithSeed:
-                    availableIds.Sort();
-                    Random rng = new Random(seed);
-
-                    for (int i = availableIds.Count - 1; i > 0; i--)
-                    {
-                        int k = rng.Next(i + 1);
-                        uint temp = availableIds[i];
-                        availableIds[i] = availableIds[k];
-                        availableIds[k] = temp;
-                    }
-
-                    selectedId = availableIds[0];
-                    break;
-
-                case QuestionSelectionMode.Random:
-                default:
-                    Random defaultRng = new Random();
-                    selectedId = availableIds[defaultRng.Next(availableIds.Count)];
-                    break;
-            }
-
-            string questionQuerry = @"SELECT id, text, answer FROM Questions WHERE id = @id";
-            using (SqlCursorManager.Show())
-            using (var cmd = new SQLiteCommand(questionQuerry, DatabaseConnection.Connection))
-            {
-                cmd.Parameters.AddWithValue("@id", selectedId);
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        uint id = Convert.ToUInt32(reader["id"]);
-                        string text = reader["text"].ToString();
-                        string answer = reader["answer"].ToString();
-                        return new Question(text, answer, id);
+                        do
+                        {
+                            var question = new Question(
+                                reader["text"]?.ToString() ?? string.Empty,
+                                reader["answer"]?.ToString() ?? string.Empty,
+                                Convert.ToUInt32(reader["id"]));
+                            bool used = Convert.ToInt32(reader["used"]) != 0;
+                            candidates.Add(new QuestionCandidate(question, used));
+                        }
+                        while (reader.Read());
                     }
                 }
             }
 
-            throw new Exception("Chyba při načítání vybrané otázky.");
+            if (mode == QuestionSelectionMode.Sequential)
+            {
+                if (candidates.Count > 0)
+                {
+                    return candidates[0].Question;
+                }
+
+                throw new EmptyDatasetException($"Pro políčko {fieldId} v sadě {setId} není dostupná otázka.");
+            }
+
+            if (mode == QuestionSelectionMode.RandomWithSeed)
+            {
+                int deterministicSeed = unchecked(seed ^ (int)setId ^ (replacement ? int.MinValue : 0));
+                var seededRandom = new Random(deterministicSeed);
+                for (int i = candidates.Count - 1; i > 0; i--)
+                {
+                    int j = seededRandom.Next(i + 1);
+                    QuestionCandidate candidate = candidates[i];
+                    candidates[i] = candidates[j];
+                    candidates[j] = candidate;
+                }
+
+                foreach (QuestionCandidate candidate in candidates)
+                {
+                    if (!candidate.Used)
+                    {
+                        return candidate.Question;
+                    }
+                }
+            }
+            else if (candidates.Count > 0)
+            {
+                return candidates[random.Next(candidates.Count)].Question;
+            }
+
+            throw new EmptyDatasetException($"V sadě {setId} již nejsou žádné nepoužité otázky.");
         }
 
-        public static void MarkQuestionUsed(uint id)
+        public void MarkQuestionUsed(uint id)
         {
             string query = "UPDATE Questions SET used = 1 WHERE id = @id";
-            using (SqlCursorManager.Show())
-            using (var cmd = new SQLiteCommand(query, DatabaseConnection.Connection))
+            using (var cmd = new SQLiteCommand(query, Connection))
             {
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public static void ResetQuestionUsage(uint setId)
+        public void ResetQuestionUsage(uint setId)
         {
 
             string query = "UPDATE Questions SET used = 0 WHERE set_id = @set_id";
             try
             {
-                using (SqlCursorManager.Show())
-                using (var cmd = new SQLiteCommand(query, DatabaseConnection.Connection))
+                using (var cmd = new SQLiteCommand(query, Connection))
                 {
                     cmd.Parameters.AddWithValue("@set_id", setId);
                     cmd.ExecuteNonQuery();
@@ -427,19 +413,18 @@ namespace AZ_Kviz
             catch (Exception ex)
             {
                 Log.Error(ex, "Chyba ři resetování stavu použití otázek");
-                MsgBoxes.ErrorBox("Při resetování otázek došlo k chybě");
+                throw;
             }
         }
 
-        public static List<QuestionSet> GetAllQuestionSets()
+        public List<QuestionSet> GetAllQuestionSets()
         {
             var sets = new List<QuestionSet>();
             string querry = "SELECT id, name, scope, difficulty FROM QuestionSets ORDER BY id ASC";
 
             try
             {
-                using (SqlCursorManager.Show())
-                using (var cmd = new SQLiteCommand(querry, DatabaseConnection.Connection))
+                using (var cmd = new SQLiteCommand(querry, Connection))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -460,6 +445,29 @@ namespace AZ_Kviz
                 throw new Exception($"Chyba při načítání sad otázek z DB: {ex.Message}", ex);
             }
             return sets;
+        }
+
+        private sealed class QuestionCandidate
+        {
+            public Question Question { get; }
+            public bool Used { get; }
+
+            public QuestionCandidate(Question question, bool used)
+            {
+                Question = question;
+                Used = used;
+            }
+        }
+
+        private void CloseConnection()
+        {
+            connection?.Dispose();
+            connection = null;
+        }
+
+        public void Dispose()
+        {
+            CloseConnection();
         }
     }
 }

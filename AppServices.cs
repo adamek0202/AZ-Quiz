@@ -2,16 +2,21 @@
 
 namespace AZ_Kviz
 {
-    internal static class AppServices
+    internal sealed class AppServices
     {
-        public static AppConfig Config { get; private set; }
+        public AppConfig Config { get; }
 
-        public static void Initialize()
+        public AppServices(AppConfig config)
         {
-            Config = XmlConfigStore.Load<AppConfig>("Config.xml");
+            Config = config ?? throw new System.ArgumentNullException(nameof(config));
         }
 
-        public static void SaveConfig()
+        public static AppServices Load()
+        {
+            return new AppServices(XmlConfigStore.Load<AppConfig>("Config.xml"));
+        }
+
+        public void SaveConfig()
         {
             XmlConfigStore.Save("Config.xml", Config);
         }

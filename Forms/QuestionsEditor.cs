@@ -9,40 +9,24 @@ namespace AZ_Kviz.Forms
     internal partial class QuestionsEditorForm : BaseForm
     {
         private readonly uint _currentSetId;
+        private readonly DatabaseFunctions database;
         private readonly bool _isNewSet; // Víme, zda sadu zrovna zakládáme
         private bool _isSaved;   // Příznak, zda uživatel uložil změny
-        private readonly string _sqlNormal;
-        private readonly string _sqlReplacement;
 
         private DataTable _normalTable;
         private DataTable _replacementTable;
         private readonly BindingSource _normalQuestionsBinding = new BindingSource();
         private readonly BindingSource _replacementQuestionsBinding = new BindingSource();
 
-        public QuestionsEditorForm(uint setId, string setName, bool isNewSet)
+        public QuestionsEditorForm(uint setId, string setName, bool isNewSet, DatabaseFunctions database)
         {
             InitializeComponent();
+            this.database = database ?? throw new ArgumentNullException(nameof(database));
             WindowUtils.ReallyCenterToScreen(this);
 
             _currentSetId = setId;
             _isNewSet = isNewSet;
             this.Text = $"Editor otázek - Sada: {setName}";
-
-            // Dotaz pro normální otázky
-            _sqlNormal = $@"
-        SELECT id, set_id, text, answer, is_replacement,
-        ROW_NUMBER() OVER (ORDER BY id) as DisplayOrder 
-        FROM Questions 
-        WHERE set_id = {setId} AND (is_replacement = 0 OR is_replacement IS NULL)
-        ORDER BY id";
-
-            // Dotaz pro náhradní otázky
-            _sqlReplacement = $@"
-        SELECT id, set_id, text, answer, is_replacement,
-        ROW_NUMBER() OVER (ORDER BY id) as DisplayOrder 
-        FROM Questions 
-        WHERE set_id = {setId} AND is_replacement = 1
-        ORDER BY id";
 
             LoadQuestions();
         }
@@ -56,8 +40,8 @@ namespace AZ_Kviz.Forms
 
                 // Načteme každou skupinu do vlastní tabulky v paměti
                 Log.Information("Načítání otázek do editoru...");
-                _normalTable = DatabaseFunctions.GetTable(_sqlNormal);
-                _replacementTable = DatabaseFunctions.GetTable(_sqlReplacement);
+                _normalTable = database.GetQuestionTable(_currentSetId, replacement: false);
+                _replacementTable = database.GetQuestionTable(_currentSetId, replacement: true);
 
                 // Propojíme s BindingSource (už bez filtrů!)
                 _normalQuestionsBinding.DataSource = _normalTable;
@@ -148,8 +132,8 @@ namespace AZ_Kviz.Forms
                 _replacementQuestionsBinding.EndEdit();
 
                 // Uložíme obě tabulky zpět přes jejich původní SELECT dotazy
-                DatabaseFunctions.SaveTable(_normalTable, _sqlNormal);
-                DatabaseFunctions.SaveTable(_replacementTable, _sqlReplacement);
+                database.SaveTable(_normalTable);
+                database.SaveTable(_replacementTable);
 
                 _isSaved = true;
                 Cursor.Current = Cursors.Default;
@@ -244,7 +228,7 @@ namespace AZ_Kviz.Forms
                     // Tvorba NOVÉ sady byla přerušena -> komplet to vyčistíme
                     try
                     {
-                        DatabaseFunctions.DeleteQuestionsSet(_currentSetId);
+                        database.DeleteQuestionsSet(_currentSetId);
                     }
                     catch (Exception ex)
                     {

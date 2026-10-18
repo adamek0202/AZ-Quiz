@@ -13,22 +13,17 @@ namespace AZ_Kviz
             Blocked
         }
 
-        internal static class Colors
-        {
-            public static Color PlayerOneColor { get; set; }
-            public static Color PlayerTwoColor { get; set; }
-        }
     }
 
     internal static class TileStatesExtensions
     {
-        public static Color TileColor(this TileManager.TileStates s)
+        public static Color TileColor(this TileManager.TileStates s, Color playerOneColor, Color playerTwoColor)
         {
             return s switch
             {
                 TileManager.TileStates.Clear => Color.WhiteSmoke,
-                TileManager.TileStates.FirstPlayer_Used => TileManager.Colors.PlayerOneColor,
-                TileManager.TileStates.SecondPlayer_Used => TileManager.Colors.PlayerTwoColor,
+                TileManager.TileStates.FirstPlayer_Used => playerOneColor,
+                TileManager.TileStates.SecondPlayer_Used => playerTwoColor,
                 TileManager.TileStates.Incorrect => Color.Gray,
                 TileManager.TileStates.Blocked => Color.Black,
                 _ => Color.WhiteSmoke

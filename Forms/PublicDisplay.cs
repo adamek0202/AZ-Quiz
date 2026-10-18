@@ -8,23 +8,26 @@ namespace AZ_Kviz
     {
         private readonly Font activeFont = new Font("Segoe UI", 12, FontStyle.Underline);
         private readonly Font inactiveFont = new Font("Segoe UI", 12, FontStyle.Regular);
+        private readonly GameState gameState;
+        private readonly Countdown countdown;
 
-        public PublicDisplay()
+        public PublicDisplay(GameState gameState, Countdown countdown)
         {
             InitializeComponent();
+            this.gameState = gameState ?? throw new ArgumentNullException(nameof(gameState));
+            this.countdown = countdown ?? throw new ArgumentNullException(nameof(countdown));
+            gameBoard.SetPlayerColors(gameState.PlayerOne.Color, gameState.PlayerTwo.Color);
 
-            // Navázání odpočtu zůstává stejné
-            Countdown.Start += Countdown_Start;
-            Countdown.TimerTicked += Countdown_TimerTicked;
-            Countdown.Finished += Countdown_Finished;
+            countdown.Start += Countdown_Start;
+            countdown.TimerTicked += Countdown_TimerTicked;
+            countdown.Finished += Countdown_Finished;
 
-            // Změna na novou třídu Game
-            Game.PlayerChanged += Game_PlayerChanged;
-            Game.StatsChanged += Game_StatsChanged;
+            gameState.PlayerChanged += Game_PlayerChanged;
+            gameState.StatsChanged += Game_StatsChanged;
 
             // Nastavení reálných jmen hráčů pro zobrazení na veřejném monitoru
-            playerOneLabel.Text = Game.PlayerOne.Name;
-            playerTwoLabel.Text = Game.PlayerTwo.Name;
+            playerOneLabel.Text = gameState.PlayerOne.Name;
+            playerTwoLabel.Text = gameState.PlayerTwo.Name;
 
             // Inicializace výchozího stavu
             Game_PlayerChanged();
@@ -37,23 +40,23 @@ namespace AZ_Kviz
             conclusionPanel.Visible = true;
 
             // Statistiky na konci hry taháme přímo z instancí hráčů
-            playerOneCorrectBox.Text = Game.PlayerOne.Correct.ToString();
-            playerOneIncorrectBox.Text = Game.PlayerOne.Incorrect.ToString();
-            playerTwoCorrectBox.Text = Game.PlayerTwo.Correct.ToString();
-            playerTwoIncorrectBox.Text = Game.PlayerTwo.Incorrect.ToString();
+            playerOneCorrectBox.Text = gameState.PlayerOne.Correct.ToString();
+            playerOneIncorrectBox.Text = gameState.PlayerOne.Incorrect.ToString();
+            playerTwoCorrectBox.Text = gameState.PlayerTwo.Correct.ToString();
+            playerTwoIncorrectBox.Text = gameState.PlayerTwo.Incorrect.ToString();
         }
 
         private void Game_StatsChanged()
         {
             // Průběžné skóre během hry na tabuli diváků
-            playerOneScoreLabel.Text = Game.PlayerOne.Correct.ToString();
-            playerTwoScoreLabel.Text = Game.PlayerTwo.Correct.ToString();
+            playerOneScoreLabel.Text = gameState.PlayerOne.Correct.ToString();
+            playerTwoScoreLabel.Text = gameState.PlayerTwo.Correct.ToString();
         }
 
         private void Game_PlayerChanged()
         {
             // Zvýraznění podtržením podle toho, kdo je aktuálně na řadě
-            if (Game.CurrentPlayer == Game.PlayerOne)
+            if (gameState.CurrentPlayer == gameState.PlayerOne)
             {
                 playerOneLabel.Font = activeFont;
                 playerTwoLabel.Font = inactiveFont;
@@ -89,9 +92,9 @@ namespace AZ_Kviz
                 {
                     timeIndicator.Visible = true;
                     timeIndicator.AnimationSpeed = 0;
-                    timeIndicator.Value = AppServices.Config.Gameplay.Timeouts.AnswerTimeoutSeconds;
-                    timeIndicator.Maximum = AppServices.Config.Gameplay.Timeouts.AnswerTimeoutSeconds;
-                    timeIndicator.Text = AppServices.Config.Gameplay.Timeouts.AnswerTimeoutSeconds.ToString();
+                    timeIndicator.Value = countdown.Remaining;
+                    timeIndicator.Maximum = countdown.Remaining;
+                    timeIndicator.Text = countdown.Remaining.ToString();
                     timeIndicator.AnimationSpeed = 1000;
                 }));
             }
@@ -130,12 +133,12 @@ namespace AZ_Kviz
             base.OnFormClosing(e);
 
             // Korektní odhlášení všech eventů pro zamezení memory leaků
-            Countdown.Start -= Countdown_Start;
-            Countdown.TimerTicked -= Countdown_TimerTicked;
-            Countdown.Finished -= Countdown_Finished;
+            countdown.Start -= Countdown_Start;
+            countdown.TimerTicked -= Countdown_TimerTicked;
+            countdown.Finished -= Countdown_Finished;
 
-            Game.PlayerChanged -= Game_PlayerChanged;
-            Game.StatsChanged -= Game_StatsChanged;
+            gameState.PlayerChanged -= Game_PlayerChanged;
+            gameState.StatsChanged -= Game_StatsChanged;
         }
 
         private void UpdateCountdown(int seconds)

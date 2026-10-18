@@ -13,6 +13,8 @@ namespace AZ_Kviz.Components
     {
         protected readonly List<HexTile> tiles = new List<HexTile>();
         protected readonly Font labelFont;
+        private Color playerOneColor = Color.Orange;
+        private Color playerTwoColor = Color.DeepSkyBlue;
 
         public GameBoardBase(byte[] svgResource, Font font)
         {
@@ -30,7 +32,7 @@ namespace AZ_Kviz.Components
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            tiles[(int)id].FillColor = state.TileColor();
+            tiles[(int)id].FillColor = state.TileColor(playerOneColor, playerTwoColor);
             tiles[(int)id].State = state;
             Invalidate();
 
@@ -44,6 +46,12 @@ namespace AZ_Kviz.Components
             }
             Cursor.Current = Cursors.Default;
             return false;
+        }
+
+        public void SetPlayerColors(Color playerOneColor, Color playerTwoColor)
+        {
+            this.playerOneColor = playerOneColor;
+            this.playerTwoColor = playerTwoColor;
         }
 
         public void Reset()

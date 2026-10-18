@@ -221,8 +221,8 @@
     <Compile Include="Forms\SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game.cs" />
     <Compile Include="Forms\GlobalCursorFilter.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="HexTile.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>

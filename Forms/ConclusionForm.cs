@@ -4,21 +4,23 @@ namespace AZ_Kviz.Forms
 {
     public partial class ConclusionForm : Form
     {
+        private readonly GameState gameState;
         public bool RepeatGame { get; private set; } = false;
-        public ConclusionForm()
+        internal ConclusionForm(GameState gameState)
         {
             InitializeComponent();
+            this.gameState = gameState ?? throw new System.ArgumentNullException(nameof(gameState));
             FillData();
         }
 
         private void FillData()
         {
-            playerOneCorrect.Text = Game.PlayerOne.Correct.ToString();
-            playerOneIncorrect.Text = Game.PlayerOne.Incorrect.ToString();
-            playerTwoCorrect.Text = Game.PlayerTwo.Correct.ToString();
-            playerTwoIncorrect.Text = Game.PlayerTwo.Incorrect.ToString();
-            playerOneGroupBox.Text = Game.PlayerOne.Name;
-            playerTwoGroupBox.Text = Game.PlayerTwo.Name;
+            playerOneCorrect.Text = gameState.PlayerOne.Correct.ToString();
+            playerOneIncorrect.Text = gameState.PlayerOne.Incorrect.ToString();
+            playerTwoCorrect.Text = gameState.PlayerTwo.Correct.ToString();
+            playerTwoIncorrect.Text = gameState.PlayerTwo.Incorrect.ToString();
+            playerOneGroupBox.Text = gameState.PlayerOne.Name;
+            playerTwoGroupBox.Text = gameState.PlayerTwo.Name;
         }
 
         private void EndButton_Click(object sender, System.EventArgs e)

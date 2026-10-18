@@ -7,17 +7,19 @@ namespace AZ_Kviz.Forms
 {
     internal partial class PlayersSetupForm : BaseForm
     {
+        private readonly AppServices services;
         public string PlayerOneName => playerOneNameBox.Text.Trim();
         public string PlayerTwoName => playerTwoNameBox.Text.Trim();
         public Color PlayerOneColor => firstPlayerColorPanel.BackColor;
         public Color PlayerTwoColor => secondPlayerColorPanel.BackColor;
 
-        public PlayersSetupForm()
+        public PlayersSetupForm(AppServices services)
         {
             InitializeComponent();
+            this.services = services ?? throw new ArgumentNullException(nameof(services));
 
-            firstPlayerColorPanel.BackColor = ColorTranslator.FromHtml(AppServices.Config.AudioVisual.Colors.Player1DefaultColorHex);
-            secondPlayerColorPanel.BackColor = ColorTranslator.FromHtml(AppServices.Config.AudioVisual.Colors.Player2DefaultColorHex);
+            firstPlayerColorPanel.BackColor = ColorTranslator.FromHtml(services.Config.AudioVisual.Colors.Player1DefaultColorHex);
+            secondPlayerColorPanel.BackColor = ColorTranslator.FromHtml(services.Config.AudioVisual.Colors.Player2DefaultColorHex);
         }
 
         private void StartButton_Click(object sender, EventArgs e)

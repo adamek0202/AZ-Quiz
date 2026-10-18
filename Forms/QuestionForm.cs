@@ -9,19 +9,25 @@ namespace AZ_Kviz.Forms
     {
         private bool isReplacement;
         private bool timerStarted = false;
+        private readonly GameState gameState;
+        private readonly Countdown countdown;
+        private readonly DatabaseFunctions database;
 
         internal Answers Answer;
         internal uint QuestionId { get; private set; }
 
-        public QuestionForm(uint id, uint setId, bool isReplacement = false)
+        public QuestionForm(uint id, uint setId, bool isReplacement, GameState gameState, Countdown countdown, DatabaseFunctions database)
         {
             InitializeComponent();
 
+            this.gameState = gameState ?? throw new ArgumentNullException(nameof(gameState));
+            this.countdown = countdown ?? throw new ArgumentNullException(nameof(countdown));
+            this.database = database ?? throw new ArgumentNullException(nameof(database));
             this.isReplacement = isReplacement;
             this.Text = $"Otázka číslo {id}";
 
-            Countdown.TimerTicked += Countdown_TimerTicked;
-            Countdown.Finished += Countdown_Finished;
+            countdown.TimerTicked += Countdown_TimerTicked;
+            countdown.Finished += Countdown_Finished;
 
             LoadData(setId, id);
         }
@@ -52,7 +58,7 @@ namespace AZ_Kviz.Forms
         {
             try
             {
-                var question = DatabaseFunctions.GetQuestion(setId, id, isReplacement);
+                var question = database.GetQuestion(setId, id, isReplacement);
                 if (question == null)
                 {
                     throw new Exception("DB Logika vrátila prázdný objekt");
@@ -60,7 +66,7 @@ namespace AZ_Kviz.Forms
                 QuestionId = question.Id;
                 questionTextBox.Text = question.Text;
                 answerTextBox.Text = question.Answer;
-                playerTextBox.Text = Game.CurrentPlayer.ToString();
+                playerTextBox.Text = gameState.CurrentPlayer.ToString();
                 questionTypeTextBox.Text = !isReplacement ? "Normální" : "Náhradní";
             }
             catch (Exception ex)
@@ -92,7 +98,7 @@ namespace AZ_Kviz.Forms
         {
             if (!timerStarted)
             {
-                Countdown.StartTimer();
+                countdown.StartTimer();
                 timerStarted = true;
             }
         }
@@ -102,9 +108,9 @@ namespace AZ_Kviz.Forms
             base.OnFormClosing(e);
 
             // Zastavení odpočtu a korektní odhlášení eventů
-            Countdown.StopTimer();
-            Countdown.TimerTicked -= Countdown_TimerTicked;
-            Countdown.Finished -= Countdown_Finished;
+            countdown.StopTimer();
+            countdown.TimerTicked -= Countdown_TimerTicked;
+            countdown.Finished -= Countdown_Finished;
         }
 
         private void IncorrectButton_Click(object sender, EventArgs e) => Exit(Answers.Incorrect);

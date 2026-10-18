@@ -9,10 +9,14 @@ namespace AZ_Kviz.Forms
 {
     internal partial class QuestionSetSelectForm : BaseForm
     {
+        private readonly DatabaseFunctions database;
+        private readonly AppServices services;
         public uint SelectedSetId { get; private set; }
-        public QuestionSetSelectForm()
+        public QuestionSetSelectForm(DatabaseFunctions database, AppServices services)
         {
             InitializeComponent();
+            this.database = database ?? throw new ArgumentNullException(nameof(database));
+            this.services = services ?? throw new ArgumentNullException(nameof(services));
             WindowUtils.ReallyCenterToScreen(this);
 
             listView.View = View.Details;
@@ -27,7 +31,7 @@ namespace AZ_Kviz.Forms
             try
             {
                 listView.Items.Clear();
-                List<QuestionSet> questionSets = DatabaseFunctions.GetAllQuestionSets();
+                List<QuestionSet> questionSets = database.GetAllQuestionSets();
                 foreach (var set in questionSets)
                 {
                     var item = new ListViewItem(set.Name);
@@ -76,10 +80,10 @@ namespace AZ_Kviz.Forms
 
                 try
                 {
-                    uint newSetId = DatabaseFunctions.CreateNewQuestionSet(setName.Trim(), scope.Trim(), difficulty);
+                    uint newSetId = database.CreateNewQuestionSet(setName.Trim(), scope.Trim(), difficulty);
 
                     // 2. Otevřeme editor s příznakem isNewSet = true
-                    using (var editorForm = new QuestionsEditorForm(newSetId, setName, isNewSet: true))
+                    using (var editorForm = new QuestionsEditorForm(newSetId, setName, isNewSet: true, database: database))
                     {
                         editorForm.ShowDialog();
                     }
@@ -103,7 +107,7 @@ namespace AZ_Kviz.Forms
                 if (selectedItem.Tag is QuestionSet selectedSet)
                 {
                     // Otevíráme existující, takže isNewSet = false
-                    using (var editorForm = new QuestionsEditorForm(selectedSet.Id, selectedSet.Name, isNewSet: false))
+                    using (var editorForm = new QuestionsEditorForm(selectedSet.Id, selectedSet.Name, isNewSet: false, database: database))
                     {
                         editorForm.ShowDialog();
                     }
@@ -157,7 +161,7 @@ namespace AZ_Kviz.Forms
             {
                 try
                 {
-                    DatabaseFunctions.DeleteQuestionsSet(selectedSet.Id);
+                    database.DeleteQuestionsSet(selectedSet.Id);
                     LoadQuestionsSets();
                 }
                 catch (Exception ex)
@@ -170,7 +174,7 @@ namespace AZ_Kviz.Forms
 
         private void SettingsButton_Click(object sender, EventArgs e)
         {
-            new SettingsForm().ShowDialog();
+            new SettingsForm(services).ShowDialog();
         }
     }
 }

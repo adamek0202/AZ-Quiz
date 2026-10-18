@@ -7,15 +7,18 @@ namespace AZ_Kviz.Forms
 {
     internal partial class SettingsForm : BaseForm
     {
-        public SettingsForm()
+        private readonly SettingsManager settingsManager;
+
+        public SettingsForm(AppServices services)
         {
             InitializeComponent();
+            settingsManager = new SettingsManager(services);
             LoadValues();
         }
 
         private void LoadValues()
         {
-            var settings = SettingsManager.GetCurrentEditableSettings();
+            var settings = settingsManager.GetCurrentEditableSettings();
             endGameAfterWinCheck.Checked = settings.EndGameAfterWin;
             playSoundsCheck.Checked = settings.PlaySounds;
             randomQuestionsCheck.Checked = settings.RandomQuestions;
@@ -48,7 +51,7 @@ namespace AZ_Kviz.Forms
                 PlayerOneDefaultColor = playerOneColorPanel.BackColor,
                 PlayerTwoDefaultColor = playerTwoColorPanel.BackColor
             };
-            SettingsManager.SaveSettings(settings, out string error);
+            settingsManager.SaveSettings(settings, out string error);
             if (error != string.Empty)
             {
                 MsgBoxes.ErrorBox(error);
