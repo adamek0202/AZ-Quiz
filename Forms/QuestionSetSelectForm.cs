@@ -26,12 +26,17 @@ namespace AZ_Kviz.Forms
             LoadQuestionsSets();
         }
 
-        private void LoadQuestionsSets()
+        private async void LoadQuestionsSets()
         {
             try
             {
-                listView.Items.Clear();
-                List<QuestionSet> questionSets = database.GetAllQuestionSets();
+                //listView.Items.Clear();
+                List<QuestionSet> questionSets;
+                using (SqlCursorManager.Show())
+                {
+                    questionSets = await database.GetAllQuestionsSetsAsync();
+                }
+                if (questionSets == null) throw new NullReferenceException();
                 foreach (var set in questionSets)
                 {
                     var item = new ListViewItem(set.Name);
@@ -64,7 +69,7 @@ namespace AZ_Kviz.Forms
             }
         }
 
-        private void CreateNewSetButton_Click(object sender, EventArgs e)
+        async private void CreateNewSetButton_Click(object sender, EventArgs e)
         {
             using (var form = new QuestionSetParamsForm())
             {
@@ -80,7 +85,7 @@ namespace AZ_Kviz.Forms
 
                 try
                 {
-                    uint newSetId = database.CreateNewQuestionSet(setName.Trim(), scope.Trim(), difficulty);
+                     uint newSetId = await database.CreateNewQuestionSetAsync(setName.Trim(), scope.Trim(), difficulty);
 
                     // 2. Otevřeme editor s příznakem isNewSet = true
                     using (var editorForm = new QuestionsEditorForm(newSetId, setName, isNewSet: true, database: database))
@@ -93,7 +98,7 @@ namespace AZ_Kviz.Forms
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"Chyba při vytváření sady otázek {ex.Message}");
+                    Log.Error(ex, "Při vytváření sady otázek došlo k chybě");
                     MsgBoxes.ErrorBox("Při vytváření sady otázek došlo k chybě");
                 }
             }

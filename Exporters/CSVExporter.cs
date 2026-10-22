@@ -6,7 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace AZ_Kviz
+namespace AZ_Kviz.Exporters
 {
     internal static class CSVExporter
     {

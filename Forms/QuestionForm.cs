@@ -100,17 +100,19 @@ namespace AZ_Kviz.Forms
             {
                 countdown.StartTimer();
                 timerStarted = true;
+
+                startButton.Enabled = false;
             }
         }
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
+        protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            base.OnFormClosing(e);
-
-            // Zastavení odpočtu a korektní odhlášení eventů
             countdown.StopTimer();
+
             countdown.TimerTicked -= Countdown_TimerTicked;
             countdown.Finished -= Countdown_Finished;
+
+            base.OnFormClosed(e);
         }
 
         private void IncorrectButton_Click(object sender, EventArgs e) => Exit(Answers.Incorrect);

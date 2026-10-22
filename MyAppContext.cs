@@ -11,9 +11,15 @@ namespace AZ_Kviz
     {
         private readonly DatabaseFunctions database;
         private readonly AppServices services;
+
         private uint _selectedSetId;
-        private string _playerOneName, _playerTwoName;
-        private Color _playerOneColor, _playerTwoColor;
+
+        private string _playerOneName;
+        private string _playerTwoName;
+
+        private Color _playerOneColor;
+        private Color _playerTwoColor;
+
         public MyAppContext(DatabaseFunctions database, AppServices services)
         {
             this.database = database ?? throw new ArgumentNullException(nameof(database));
@@ -24,8 +30,6 @@ namespace AZ_Kviz
         private void ShowQuestionSetSelect()
         {
             var selectForm = new QuestionSetSelectForm(database, services);
-
-            this.MainForm = selectForm;
 
             selectForm.FormClosed += (s, e) =>
             {
@@ -45,17 +49,17 @@ namespace AZ_Kviz
 
         private void ShowPlayersSetup()
         {
-            var setupForm = new PlayersSetupForm(services);
-            this.MainForm = setupForm;
+            var form = new PlayersSetupForm(services);
 
-            setupForm.FormClosed += (s, e) =>
+            form.FormClosed += (s, e) =>
             {
-                if (setupForm.DialogResult == DialogResult.OK)
+                if (form.DialogResult == DialogResult.OK)
                 {
-                    _playerOneName = setupForm.PlayerOneName;
-                    _playerOneColor = setupForm.PlayerOneColor;
-                    _playerTwoName = setupForm.PlayerTwoName;
-                    _playerTwoColor = setupForm.PlayerTwoColor;
+                    _playerOneName = form.PlayerOneName;
+                    _playerTwoName = form.PlayerTwoName;
+
+                    _playerOneColor = form.PlayerOneColor;
+                    _playerTwoColor = form.PlayerTwoColor;
 
                     StartGame();
                 }
@@ -65,7 +69,7 @@ namespace AZ_Kviz
                 }
             };
 
-            setupForm.Show();
+            form.Show();
         }
 
         private void StartGame()

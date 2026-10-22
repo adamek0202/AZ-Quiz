@@ -1,15 +1,16 @@
-﻿using AZ_Kviz.Utils;
+﻿using DocumentFormat.OpenXml.Drawing;
+using AZ_Kviz.Utils;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace AZ_Kviz.Forms
 {
-    public partial class MainForm : Form
+    internal partial class MainForm : BaseForm
     {
         private readonly PublicDisplay pd;
-        private readonly Font activeFont = new Font("Segoe UI", 12, FontStyle.Underline);
-        private readonly Font inactiveFont = new Font("Segoe UI", 12, FontStyle.Regular);
+        private readonly Font activeFont = new Font("Arial", 14.25F, FontStyle.Underline);
+        private readonly Font inactiveFont = new Font("Arial", 14.25F, FontStyle.Regular);
 
         private readonly uint currentSetId;
         private readonly GameState gameState;
@@ -49,6 +50,16 @@ namespace AZ_Kviz.Forms
             Game_StatsChanged();
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            MessageBox.Show(
+                $"GameBoard: {gameBoard.Width} × {gameBoard.Height}\n" +
+                $"Dock: {gameBoard.Dock}\n" +
+                $"Parent: {gameBoard.Parent?.Name}");
+        }
+
         private void OnGameBoardTileClicked(uint index, HexTile tile)
         {
             if (tile.State == TileManager.TileStates.Clear)
@@ -80,8 +91,10 @@ namespace AZ_Kviz.Forms
         {
             using (var qf = new QuestionForm(index + 1, currentSetId, isAlternativeQuestion, gameState, countdown, database))
             {
+                pd.HighlightField(index);
                 if (qf.ShowDialog() == DialogResult.OK)
                 {
+                    pd.ClearHighlight();
                     try
                     {
                         database.MarkQuestionUsed(qf.QuestionId);
@@ -200,7 +213,7 @@ namespace AZ_Kviz.Forms
 
         private void EvaluateButton_Click(object sender, EventArgs e)
         {
-            if (gameState.PlayerOne.Points == 0 || gameState.PlayerTwo.Points == 0)
+            if (gameState.PlayerOne.AnswerCount == 0 || gameState.PlayerTwo.AnswerCount == 0)
             {
                 MsgBoxes.ErrorBox("Pro vyhodnocení musí mít každý hráč\nzodpovězenou alespoň jednu otázku.");
                 return;

@@ -4,12 +4,10 @@ namespace AZ_Kviz
 {
     internal static class WinChecker
     {
-        // Indexy políček tvořících okraje trojúhelníku (0 až 27)
         private static readonly HashSet<int> LeftEdge = new HashSet<int> { 0, 1, 3, 6, 10, 15, 21 };
         private static readonly HashSet<int> RightEdge = new HashSet<int> { 0, 2, 5, 9, 14, 20, 27 };
         private static readonly HashSet<int> BottomEdge = new HashSet<int> { 21, 22, 23, 24, 25, 26, 27 };
 
-        // Definice sousedů pro každé z 28 políček (podle jejich indexu 0-27)
         private static readonly int[][] Neighbors = new int[][]
         {
             /* 0 (1) */  new int[] { 1, 2 },
@@ -42,12 +40,8 @@ namespace AZ_Kviz
             /* 27 (28) */ new int[] { 20, 26 }
         };
 
-        /// <summary>
-        /// Zkontroluje, zda daný stav políčka (hráč) spojil všechny 3 strany trojúhelníku.
-        /// </summary>
         public static bool CheckWin(List<HexTile> tiles, TileManager.TileStates playerState)
         {
-            // Validace, zda kontrolujeme hráče 1 nebo hráče 2
             if (playerState != TileManager.TileStates.FirstPlayer_Used &&
                 playerState != TileManager.TileStates.SecondPlayer_Used)
                 return false;
@@ -58,7 +52,6 @@ namespace AZ_Kviz
             bool hitLeft = false;
             bool hitRight = false;
 
-            // 1. Najdeme všechna políčka na SPODNÍ hraně, která patří kontrolovanému hráči
             foreach (int index in BottomEdge)
             {
                 if (index < tiles.Count && tiles[index].State == playerState)
@@ -68,27 +61,19 @@ namespace AZ_Kviz
                 }
             }
 
-            // Pokud hráč nemá obsazené ani jedno políčko na spodní řadě, nemohl spojit všechny tři strany
             if (queue.Count == 0) return false;
 
-            // 2. Prohledávání do šířky (BFS) - "rozlévání vody"
             while (queue.Count > 0)
             {
                 int current = queue.Dequeue();
 
-                // Kontrola, zda jsme vlnou narazili na levou nebo pravou stranu
                 if (LeftEdge.Contains(current)) hitLeft = true;
                 if (RightEdge.Contains(current)) hitRight = true;
 
-                // Pokud jsme během rozlévání ze spodu už dosáhli na levou i pravou stranu -> máme vítěze!
                 if (hitLeft && hitRight) return true;
 
-                // Projdeme všechny sousedy aktuálního políčka
                 foreach (int neighbor in Neighbors[current])
                 {
-                    // Do fronty přidáme souseda pouze pokud:
-                    // - jsme ho ještě nenavštívili
-                    // - patří stejnému hráči
                     if (!visited.Contains(neighbor) && neighbor < tiles.Count && tiles[neighbor].State == playerState)
                     {
                         visited.Add(neighbor);

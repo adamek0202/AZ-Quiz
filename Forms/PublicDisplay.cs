@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace AZ_Kviz
 {
     internal partial class PublicDisplay : Form
     {
-        private readonly Font activeFont = new Font("Segoe UI", 12, FontStyle.Underline);
-        private readonly Font inactiveFont = new Font("Segoe UI", 12, FontStyle.Regular);
+        private readonly Font activeFont = new Font("Arial", 99.75f, FontStyle.Underline);
+        private readonly Font inactiveFont = new Font("Arial", 99.75f, FontStyle.Regular);
         private readonly GameState gameState;
         private readonly Countdown countdown;
 
@@ -16,7 +17,6 @@ namespace AZ_Kviz
             InitializeComponent();
             this.gameState = gameState ?? throw new ArgumentNullException(nameof(gameState));
             this.countdown = countdown ?? throw new ArgumentNullException(nameof(countdown));
-            gameBoard.SetPlayerColors(gameState.PlayerOne.Color, gameState.PlayerTwo.Color);
 
             countdown.Start += Countdown_Start;
             countdown.TimerTicked += Countdown_TimerTicked;
@@ -46,11 +46,16 @@ namespace AZ_Kviz
             playerTwoIncorrectBox.Text = gameState.PlayerTwo.Incorrect.ToString();
         }
 
+        public void HighlightField(uint fieldId) => gameBoard.HighlightField(fieldId);
+
+        public void ClearHighlight() => gameBoard.ClearHighlight();
+
+
         private void Game_StatsChanged()
         {
             // Průběžné skóre během hry na tabuli diváků
-            playerOneScoreLabel.Text = gameState.PlayerOne.Correct.ToString();
-            playerTwoScoreLabel.Text = gameState.PlayerTwo.Correct.ToString();
+            playerOneScoreLabel.Text = gameState.PlayerOne.Points.ToString();
+            playerTwoScoreLabel.Text = gameState.PlayerTwo.Points.ToString();
         }
 
         private void Game_PlayerChanged()
@@ -111,21 +116,20 @@ namespace AZ_Kviz
             gameBoard.Reset();
         }
 
-        protected override void OnShown(EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
-            base.OnShown(e);
+            base.OnLoad(e);
 
-            var screens = Screen.AllScreens;
-
-            if (screens.Length > 1)
+            var external = Screen.AllScreens.FirstOrDefault(s => !s.Primary);
+            if(external == null)
             {
-                // Druhý monitor (projektor / televize)
-                var external = screens[1];
-
-                this.StartPosition = FormStartPosition.Manual;
-                this.Location = external.WorkingArea.Location;
-                this.WindowState = FormWindowState.Maximized;
+                return;
             }
+
+            WindowState = FormWindowState.Normal;
+            StartPosition = FormStartPosition.Manual;
+            FormBorderStyle = FormBorderStyle.None;
+            Bounds = external.Bounds;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)

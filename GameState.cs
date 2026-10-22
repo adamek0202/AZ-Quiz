@@ -46,6 +46,7 @@ namespace AZ_Kviz
                     break;
 
                 case Answers.SecondCorrect:
+                    CurrentPlayer.Incorrect++;
                     otherPlayer.Correct++;
                     tileState = otherPlayer == PlayerOne
                         ? TileManager.TileStates.FirstPlayer_Used

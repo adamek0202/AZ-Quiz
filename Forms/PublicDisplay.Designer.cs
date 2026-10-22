@@ -46,7 +46,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.gameBoard = new AZ_Kviz.Components.GameBoard_L();
+            this.gameBoard = new AZ_Kviz.Components.GameBoard();
             this.conclusionPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,7 +65,7 @@
             this.timeIndicator.MarqueeAnimationSpeed = 2000;
             this.timeIndicator.Maximum = 10;
             this.timeIndicator.Name = "timeIndicator";
-            this.timeIndicator.OuterColor = System.Drawing.Color.Gray;
+            this.timeIndicator.OuterColor = System.Drawing.Color.PaleGoldenrod;
             this.timeIndicator.OuterMargin = -25;
             this.timeIndicator.OuterWidth = 26;
             this.timeIndicator.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
@@ -89,7 +89,8 @@
             // 
             // playerOneScoreLabel
             // 
-            this.playerOneScoreLabel.AutoSize = true;
+            this.playerOneScoreLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.playerOneScoreLabel.BackColor = System.Drawing.Color.Transparent;
             this.playerOneScoreLabel.Font = new System.Drawing.Font("Arial", 99.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playerOneScoreLabel.ForeColor = System.Drawing.Color.Orange;
             this.playerOneScoreLabel.Location = new System.Drawing.Point(12, 922);
@@ -100,7 +101,8 @@
             // 
             // playerTwoScoreLabel
             // 
-            this.playerTwoScoreLabel.AutoSize = true;
+            this.playerTwoScoreLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.playerTwoScoreLabel.BackColor = System.Drawing.Color.Transparent;
             this.playerTwoScoreLabel.Font = new System.Drawing.Font("Arial", 99.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playerTwoScoreLabel.ForeColor = System.Drawing.Color.DeepSkyBlue;
             this.playerTwoScoreLabel.Location = new System.Drawing.Point(1771, 922);
@@ -111,30 +113,33 @@
             // 
             // playerTwoLabel
             // 
-            this.playerTwoLabel.AutoSize = true;
+            this.playerTwoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.playerTwoLabel.BackColor = System.Drawing.Color.Transparent;
             this.playerTwoLabel.Font = new System.Drawing.Font("Arial", 99.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playerTwoLabel.ForeColor = System.Drawing.Color.DeepSkyBlue;
-            this.playerTwoLabel.Location = new System.Drawing.Point(1475, 9);
+            this.playerTwoLabel.Location = new System.Drawing.Point(1058, 9);
             this.playerTwoLabel.Name = "playerTwoLabel";
-            this.playerTwoLabel.Size = new System.Drawing.Size(433, 149);
+            this.playerTwoLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.playerTwoLabel.Size = new System.Drawing.Size(850, 149);
             this.playerTwoLabel.TabIndex = 4;
             this.playerTwoLabel.Text = "Tým 2";
+            this.playerTwoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // playerOneLabel
             // 
-            this.playerOneLabel.AutoSize = true;
+            this.playerOneLabel.BackColor = System.Drawing.Color.Transparent;
             this.playerOneLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.playerOneLabel.Font = new System.Drawing.Font("Arial", 99.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playerOneLabel.ForeColor = System.Drawing.Color.Orange;
-            this.playerOneLabel.Location = new System.Drawing.Point(12, 9);
+            this.playerOneLabel.Location = new System.Drawing.Point(12, 0);
             this.playerOneLabel.Name = "playerOneLabel";
-            this.playerOneLabel.Size = new System.Drawing.Size(433, 149);
+            this.playerOneLabel.Size = new System.Drawing.Size(850, 149);
             this.playerOneLabel.TabIndex = 4;
             this.playerOneLabel.Text = "Tým 1";
             // 
             // conclusionPanel
             // 
-            this.conclusionPanel.BackColor = System.Drawing.Color.Gray;
+            this.conclusionPanel.BackColor = System.Drawing.Color.DodgerBlue;
             this.conclusionPanel.Controls.Add(this.playerTwoIncorrectBox);
             this.conclusionPanel.Controls.Add(this.playerOneIncorrectBox);
             this.conclusionPanel.Controls.Add(this.playerTwoCorrectBox);
@@ -275,11 +280,13 @@
             // gameBoard
             // 
             this.gameBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gameBoard.FitToTiles = false;
+            this.gameBoard.Interactive = true;
             this.gameBoard.Location = new System.Drawing.Point(0, 0);
             this.gameBoard.Name = "gameBoard";
             this.gameBoard.Size = new System.Drawing.Size(1920, 1080);
-            this.gameBoard.TabIndex = 2;
-            this.gameBoard.Text = "gameBoard_L1";
+            this.gameBoard.TabIndex = 6;
+            this.gameBoard.Text = "gameBoard1";
             // 
             // PublicDisplay
             // 
@@ -288,9 +295,9 @@
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(1920, 1080);
             this.ControlBox = false;
-            this.Controls.Add(this.conclusionPanel);
-            this.Controls.Add(this.playerOneLabel);
             this.Controls.Add(this.playerTwoLabel);
+            this.Controls.Add(this.playerOneLabel);
+            this.Controls.Add(this.conclusionPanel);
             this.Controls.Add(this.playerTwoScoreLabel);
             this.Controls.Add(this.playerOneScoreLabel);
             this.Controls.Add(this.timeIndicator);
@@ -307,12 +314,10 @@
             this.conclusionPanel.ResumeLayout(false);
             this.conclusionPanel.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-        private AZ_Kviz.Components.GameBoard_L gameBoard;
         private CircularProgressBar.CircularProgressBar timeIndicator;
         private System.Windows.Forms.Label playerOneScoreLabel;
         private System.Windows.Forms.Label playerTwoScoreLabel;
@@ -330,5 +335,6 @@
         private System.Windows.Forms.TextBox playerOneCorrectBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label4;
+        private Components.GameBoard gameBoard;
     }
 }

@@ -42,53 +42,54 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 10);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(33, 15);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(39, 15);
+            this.label1.Size = new System.Drawing.Size(62, 22);
             this.label1.TabIndex = 0;
             this.label1.Text = "Název";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(30, 40);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(47, 59);
+            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(34, 15);
+            this.label2.Size = new System.Drawing.Size(53, 22);
             this.label2.TabIndex = 0;
             this.label2.Text = "Obor";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 69);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(6, 101);
+            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 15);
+            this.label3.Size = new System.Drawing.Size(92, 22);
             this.label3.TabIndex = 0;
             this.label3.Text = "Obtížnost";
             // 
             // nameTextBox
             // 
-            this.nameTextBox.Location = new System.Drawing.Point(72, 7);
-            this.nameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.nameTextBox.Location = new System.Drawing.Point(113, 10);
+            this.nameTextBox.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             this.nameTextBox.Name = "nameTextBox";
-            this.nameTextBox.Size = new System.Drawing.Size(241, 23);
+            this.nameTextBox.Size = new System.Drawing.Size(376, 29);
             this.nameTextBox.TabIndex = 1;
             // 
             // scopeTextBox
             // 
-            this.scopeTextBox.Location = new System.Drawing.Point(72, 37);
-            this.scopeTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.scopeTextBox.Location = new System.Drawing.Point(113, 54);
+            this.scopeTextBox.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             this.scopeTextBox.Name = "scopeTextBox";
-            this.scopeTextBox.Size = new System.Drawing.Size(241, 23);
+            this.scopeTextBox.Size = new System.Drawing.Size(376, 29);
             this.scopeTextBox.TabIndex = 2;
             // 
             // difficultyNumeric
             // 
-            this.difficultyNumeric.Location = new System.Drawing.Point(72, 67);
-            this.difficultyNumeric.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.difficultyNumeric.AutoSize = true;
+            this.difficultyNumeric.Location = new System.Drawing.Point(113, 98);
+            this.difficultyNumeric.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             this.difficultyNumeric.Maximum = new decimal(new int[] {
             10,
             0,
@@ -100,7 +101,7 @@
             0,
             0});
             this.difficultyNumeric.Name = "difficultyNumeric";
-            this.difficultyNumeric.Size = new System.Drawing.Size(61, 23);
+            this.difficultyNumeric.Size = new System.Drawing.Size(96, 29);
             this.difficultyNumeric.TabIndex = 3;
             this.difficultyNumeric.Value = new decimal(new int[] {
             1,
@@ -110,10 +111,11 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(234, 66);
-            this.okButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.okButton.AutoSize = true;
+            this.okButton.Location = new System.Drawing.Point(368, 97);
+            this.okButton.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(79, 27);
+            this.okButton.Size = new System.Drawing.Size(124, 40);
             this.okButton.TabIndex = 4;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
@@ -121,11 +123,12 @@
             // 
             // cancelButton
             // 
+            this.cancelButton.AutoSize = true;
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(141, 66);
-            this.cancelButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.cancelButton.Location = new System.Drawing.Point(222, 97);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(88, 27);
+            this.cancelButton.Size = new System.Drawing.Size(138, 40);
             this.cancelButton.TabIndex = 5;
             this.cancelButton.Text = "Storno";
             this.cancelButton.UseVisualStyleBackColor = true;
@@ -134,10 +137,10 @@
             // QuestionSetParamsForm
             // 
             this.AcceptButton = this.okButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(323, 102);
+            this.ClientSize = new System.Drawing.Size(501, 144);
             this.ControlBox = false;
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
@@ -147,9 +150,9 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "QuestionSetParamsForm";

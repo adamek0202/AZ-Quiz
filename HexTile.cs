@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace AZ_Kviz
 {
@@ -22,14 +23,18 @@ namespace AZ_Kviz
 
         public PointF GetCenter()
         {
-            if (Points == null || Points.Length == 0) return PointF.Empty;
-            float x = 0, y = 0;
-            foreach (var pt in Points)
-            {
-                x += pt.X;
-                y += pt.Y;
-            }
-            return new PointF(x / Points.Length, y / Points.Length);
+            if (Points == null || Points.Length == 0)
+                return PointF.Empty;
+
+            float minX = Points.Min(p => p.X);
+            float maxX = Points.Max(p => p.X);
+            float minY = Points.Min(p => p.Y);
+            float maxY = Points.Max(p => p.Y);
+
+            return new PointF(
+                (minX + maxX) / 2f,
+                (minY + maxY) / 2f
+            );
         }
 
         public void Draw(Graphics g, Font font)

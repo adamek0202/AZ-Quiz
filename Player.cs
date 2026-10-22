@@ -8,7 +8,8 @@ namespace AZ_Kviz
         public Color Color { get; set; }
         public int Correct { get; set; }
         public int Incorrect { get; set; }
-        public int Points => Correct + Incorrect;
+        public int Points => Correct - Incorrect;
+        public int AnswerCount => Correct + Incorrect;
 
         public Player(string name, Color color)
         {

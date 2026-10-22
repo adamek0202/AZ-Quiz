@@ -15,6 +15,7 @@ namespace AZ_Kviz.Forms
 
         private void FillData()
         {
+            Text = $"Výsledky hry — {gameState.PlayerOne.Points} : {gameState.PlayerTwo.Points}";
             playerOneCorrect.Text = gameState.PlayerOne.Correct.ToString();
             playerOneIncorrect.Text = gameState.PlayerOne.Incorrect.ToString();
             playerTwoCorrect.Text = gameState.PlayerTwo.Correct.ToString();

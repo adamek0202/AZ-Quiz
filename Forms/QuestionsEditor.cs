@@ -3,6 +3,9 @@ using Serilog;
 using System;
 using System.Data;
 using System.Windows.Forms;
+using AZ_Kviz.Exporters;
+using AZ_Kviz.Importers;
+using System.Threading.Tasks;
 
 namespace AZ_Kviz.Forms
 {
@@ -10,8 +13,9 @@ namespace AZ_Kviz.Forms
     {
         private readonly uint _currentSetId;
         private readonly DatabaseFunctions database;
-        private readonly bool _isNewSet; // Víme, zda sadu zrovna zakládáme
-        private bool _isSaved;   // Příznak, zda uživatel uložil změny
+        private readonly bool _isNewSet;
+        private bool _isSaved;
+        private bool _importInProgress = false;
 
         private DataTable _normalTable;
         private DataTable _replacementTable;
@@ -31,7 +35,7 @@ namespace AZ_Kviz.Forms
             LoadQuestions();
         }
 
-        private void LoadQuestions()
+        private async void LoadQuestions()
         {
             try
             {
@@ -40,8 +44,8 @@ namespace AZ_Kviz.Forms
 
                 // Načteme každou skupinu do vlastní tabulky v paměti
                 Log.Information("Načítání otázek do editoru...");
-                _normalTable = database.GetQuestionTable(_currentSetId, replacement: false);
-                _replacementTable = database.GetQuestionTable(_currentSetId, replacement: true);
+                _normalTable = await database.GetQuestionTableAsync(_currentSetId, replacement: false);
+                _replacementTable = await database.GetQuestionTableAsync(_currentSetId, replacement: true);
 
                 // Propojíme s BindingSource (už bez filtrů!)
                 _normalQuestionsBinding.DataSource = _normalTable;
@@ -116,7 +120,7 @@ namespace AZ_Kviz.Forms
             }
         }
 
-        private void SaveButton_Click(object sender, EventArgs e)
+        private void SaveMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -209,13 +213,6 @@ namespace AZ_Kviz.Forms
             return true;
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            // Zavřením se automaticky vyvolá metoda OnFormClosing níže
-            DialogResult = DialogResult.Cancel;
-            Close();
-        }
-
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
@@ -249,44 +246,115 @@ namespace AZ_Kviz.Forms
             }
         }
 
-        private void ImportData()
+        private async Task ImportDataAsync()
         {
-            bool isNormalSelected = (tabControl.SelectedTab == normalQuestionsPage);
-            DataTable targetTable = isNormalSelected ? _normalTable : _replacementTable;
-            BindingSource targetBinding = isNormalSelected ? _normalQuestionsBinding : _replacementQuestionsBinding;
-            string tabName = isNormalSelected ? "NORMÁLNÍCH" : "NÁHRADNÍCH";
+            if (_importInProgress)
+                return;
 
-            bool confirmResult = MsgBoxes.QuestionBox($"Opravdu chcete přepsat všech 28 záznamů v tabulce {tabName} otázek daty z CSV souboru?", "Potvrdit import");
+            bool isNormalSelected =
+                tabControl.SelectedTab == normalQuestionsPage;
 
-            if (!confirmResult) return;
+            DataTable targetTable = isNormalSelected
+                ? _normalTable
+                : _replacementTable;
+
+            BindingSource targetBinding = isNormalSelected
+                ? _normalQuestionsBinding
+                : _replacementQuestionsBinding;
+
+            string tabName = isNormalSelected
+                ? "NORMÁLNÍCH"
+                : "NÁHRADNÍCH";
 
             string selectedFilePath;
-            using (var openFileDialog = new OpenFileDialog())
+            using (var dialog = new OpenFileDialog())
             {
-                openFileDialog.Filter = "CSV soubory (*.csv)|*.csv";
-                openFileDialog.Title = $"Import {tabName.ToLower()} otázek z CSV";
-                openFileDialog.Multiselect = false;
+                dialog.Title = $"Import {tabName.ToLower()} otázek";
+                dialog.Filter =
+                    "Podporované soubory (*.csv;*.xlsx)|*.csv;*.xlsx|" +
+                    "CSV soubory (*.csv)|*.csv|" +
+                    "Excel soubory (*.xlsx)|*.xlsx";
 
-                if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-                selectedFilePath = openFileDialog.FileName;
+                dialog.FilterIndex = 1;
+                dialog.Multiselect = false;
+                dialog.CheckFileExists = true;
+                dialog.CheckPathExists = true;
+
+                if (dialog.ShowDialog() != DialogResult.OK) return;
+                selectedFilePath = dialog.FileName;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
+            bool confirmed = MsgBoxes.QuestionBox(
+                $"Opravdu chceš přepsat všech {Importer.MaxRows} záznamů " +
+                $"v tabulce {tabName} otázek daty z vybraného souboru?",
+                "Potvrdit import");
+
+            if (!confirmed)
+                return;
+
+            bool originalTabEnabled = tabControl.Enabled;
+            bool originalWaitCursor = UseWaitCursor;
+
+            _importInProgress = true;
+
             try
             {
-                var result = CSVImporter.ImportToDataTable(selectedFilePath, targetTable);
-                targetBinding.ResetBindings(false);
+                tabControl.Enabled = false;
+                UseWaitCursor = true;
+
+
+                DataTable tempTable = targetTable.Copy();
+
+                ImportResult result = await Task.Run(() => Importer.ImportFile(selectedFilePath, tempTable));
+
+                if (result.Success)
+                {
+                    ApplyImportedData(tempTable, targetTable, targetBinding);
+                }
+
                 ShowImportSummary(result, tabName);
             } catch(Exception ex)
             {
-                Log.Error(ex, "Chyba importu CSV");
-                MsgBoxes.ErrorBox("Při importu dat z CSV došlo k chybě");
+                Log.Error(ex,
+                    "Chyba při importu souboru {FilePath}",
+                    selectedFilePath);
+
+                MsgBoxes.ErrorBox(
+                    "Při importu dat došlo k neočekávané chybě.");
             }
             finally
             {
-                Cursor.Current = Cursors.Default;
+                tabControl.Enabled = originalTabEnabled;
+                UseWaitCursor = originalWaitCursor;
+
+                _importInProgress = false;
             }
             
+        }
+
+        private static void ApplyImportedData(DataTable source, DataTable target, BindingSource binding)
+        {
+            if (source.Rows.Count < Importer.MaxRows ||
+                target.Rows.Count < Importer.MaxRows)
+            {
+                throw new InvalidOperationException("Nesprávný počet řádků v tabulce.");
+            }
+
+            binding.RaiseListChangedEvents = false;
+
+            try
+            {
+                for (int i = 0; i < Importer.MaxRows; i++)
+                {
+                    target.Rows[i]["text"] = source.Rows[i]["text"];
+                    target.Rows[i]["answer"] = source.Rows[i]["answer"];
+                }
+            }
+            finally
+            {
+                binding.RaiseListChangedEvents = true;
+                binding.ResetBindings(false);
+            }
         }
 
         private void ShowImportSummary(ImportResult result, string tabName)
@@ -365,19 +433,25 @@ namespace AZ_Kviz.Forms
             }
         }
 
-        private void ImportButton_Click(object sender, EventArgs e)
-        {
-            ImportData();
-        }
-
-        private void ExportButton_Click(object sender, EventArgs e)
-        {
-            ExportData();
-        }
-
         private void QuestionsEditorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing) { }
+        }
+
+        private async void LoadCsvMenuItem_Click(object sender, EventArgs e)
+        {
+            dgvNormal.EndEdit();
+            dgvReplacement.EndEdit();
+
+            _normalQuestionsBinding.EndEdit();
+            _replacementQuestionsBinding.EndEdit();
+            await ImportDataAsync();
+        }
+
+        private void CancelMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
     }
 }
